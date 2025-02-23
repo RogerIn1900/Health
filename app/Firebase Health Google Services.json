@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "600701578082",
+    "project_id": "health-e79eb",
+    "storage_bucket": "health-e79eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600701578082:android:ee6bd0da811072f7785a3b",
+        "android_client_info": {
+          "package_name": "com.health"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmoUtpzwstI7RbAkZNRHk4v1eqJZXJEew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

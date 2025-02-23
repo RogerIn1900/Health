@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Health</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Setting</string>
+    <string name="health">健康</string>
+    <string name="move">运动</string>
+    <string name="service">设备</string>
+    <string name="mine">我的</string>
+</resources>
