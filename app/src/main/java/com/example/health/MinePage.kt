@@ -121,8 +121,8 @@ fun MinePart5() {
 @Composable
 fun PreviewMinePage() {
     Column {
-//        MinePart1()
-//        MinePart2()
+        MinePart1()
+        MinePart2()
         MinePage()
     }
 }
