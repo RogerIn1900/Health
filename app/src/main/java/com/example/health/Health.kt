@@ -33,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.health.IndeterminateCircularIndicator
 import com.example.health.LinearDeterminateIndicator
+import com.example.health.MinePage
 import com.example.health.MyHealth
 import com.example.health.R
 
@@ -70,7 +71,7 @@ fun MainApp() {
             composable(Screen.Health.route) { MyHealth() }
             composable(Screen.Move.route) { SearchScreen() }
             composable(Screen.Service.route) { ProfileScreen() }
-            composable(Screen.Mine.route) { SettingsScreen() }
+            composable(Screen.Mine.route) { MinePage() }
         }
     }
 }
