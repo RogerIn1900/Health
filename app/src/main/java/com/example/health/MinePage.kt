@@ -1,24 +1,31 @@
 package com.example.health
 
+import android.graphics.fonts.FontStyle
+import android.provider.ContactsContract.CommonDataKinds.Im
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,10 +44,18 @@ fun MinePage(){
             MinePart4()
             Spacer(modifier = Modifier.height(10.dp))
             MinePart5()
+            Spacer(modifier = Modifier.height(10.dp))
+            MinePart6()
+            Spacer(modifier = Modifier.height(10.dp))
+            MinePart7()
+            Spacer(modifier = Modifier.height(10.dp))
+            MinePart8()
         }
 
     }
 }
+
+
 
 @Composable
 fun MinePart1() {
@@ -223,15 +238,98 @@ fun MinePart5() {
                 )
             }
             Spacer(modifier = Modifier.height(5.dp))
-            Row{
-            MineCard4()
-            MineCard4()
-            MineCard4()
-            MineCard4()
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,  //j均匀分布
+            ) {
+                MineCard4()
+                MineCard4()
+                MineCard4()
+                MineCard4()
+            }
         }
     }
 }
+
+
+@Composable
+fun MinePart6() {
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.height(130.dp) // 设置 Card 尺寸
+
+    ) {
+        Box(modifier = Modifier.fillMaxSize()
+            .padding(start = 10.dp,end = 5.dp)
+
+        ) {
+            // 设置背景图片
+            Image(
+                painter = painterResource(id = R.mipmap.heart_white), // 替换为你的图片资源
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
+            )
+            // 在这里添加 Card 的内容
+            Column {
+                Text("广告", modifier = Modifier
+                    .fillMaxWidth(),
+                        textAlign = TextAlign.End // 设置文本右对齐,
+                    , fontSize = 12.sp
+                )
+                Text("运动健康装备GO", fontSize = 20.sp)
+                Text("智能好物带回家", fontSize = 15.sp)
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically, // 垂直居中
+
+                ) {
+                    Text("立即查看", fontSize = 16.sp)
+                    Image(
+                        painter = painterResource(id = R.mipmap.arrow_light),
+                        contentDescription = "",
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun MinePart7() {
+//    TODO("Not yet implemented")
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.height(130.dp) // 设置 Card ����
+            .fillMaxWidth()
+
+    ) {
+        Column (
+            modifier = Modifier.padding(5.dp)
+
+        ){
+            Text("健康问诊", fontSize = 20.sp, fontWeight = FontWeight(10))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.mipmap.sleep),
+                    contentDescription = ""
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text("平安健康", fontSize = 18.sp)
+                Spacer(modifier = Modifier.weight(1f))
+                Image(
+                    painter = painterResource(id = R.mipmap.arrow_light),
+                    contentDescription = "",
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun MineCard4(
@@ -247,16 +345,29 @@ fun MineCard4(
             contentDescription = "",
 
         )
-        Text(content, modifier = Modifier.width(64.dp))
+        Text(content,
+            modifier = Modifier.width(50.dp),
+            maxLines = 2,
+        )
     }
+}
+
+
+@Composable
+fun MinePart8() {
+//    TODO("Not yet implemented")
 }
 
 @Preview
 @Composable
 fun PreviewMinePage() {
-    Column {
+    HealthTheme {
+
+        Column {
 //        MinePart1()
 //        MinePart2()
-        MinePage()
+            MinePage()
+//            MinePart6()
+        }
     }
 }
