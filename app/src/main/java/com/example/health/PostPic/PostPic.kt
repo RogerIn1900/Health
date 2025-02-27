@@ -27,11 +27,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+
 @Composable
 fun ImageUploaderScreen() {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var uploadStatus by remember { mutableStateOf("") }
-    val context = LocalContext.current // 获取当前上下文
+    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
     }
@@ -61,7 +62,7 @@ fun ImageUploaderScreen() {
 
         Button(onClick = {
             imageUri?.let { uri ->
-                uploadImage(uri, context) { status -> // 传递上下文
+                uploadImage(uri, context) { status ->
                     uploadStatus = status
                 }
             }
@@ -83,7 +84,9 @@ fun getRealPathFromURI(context: Context, uri: Uri): String? {
         }
     }
     return null
-}fun uploadImage(uri: Uri, context: Context, onStatusChange: (String) -> Unit) {
+}
+
+fun uploadImage(uri: Uri, context: Context, onStatusChange: (String) -> Unit) {
     val filePath = getRealPathFromURI(context, uri)
     if (filePath != null) {
         val file = File(filePath)

@@ -51,6 +51,8 @@ android {
 
 dependencies {
 
+    implementation ("com.squareup.okhttp3:okhttp:4.0.0") // 使用最新版本
+
     implementation("io.coil-kt:coil-compose:2.0.0") // 根据最新版本更新
 
     implementation ("androidx.activity:activity-compose:1.3.1") // 用于支持 Compose 的 Activity
