@@ -35,6 +35,7 @@ import com.example.health.IndeterminateCircularIndicator
 import com.example.health.LinearDeterminateIndicator
 import com.example.health.MinePage
 import com.example.health.MyHealth
+import com.example.health.PostPic.ImageUploaderScreen
 import com.example.health.R
 
 class MainActivity : ComponentActivity() {
@@ -70,7 +71,7 @@ fun MainApp() {
         ) {
             composable(Screen.Health.route) { MyHealth() }
             composable(Screen.Move.route) { SearchScreen() }
-            composable(Screen.Service.route) { ProfileScreen() }
+            composable(Screen.Service.route) { ImageUploaderScreen() }
             composable(Screen.Mine.route) { MinePage() }
         }
     }
