@@ -275,10 +275,10 @@ fun SettingsScreen() {
 }
 
 sealed class Screen(val route: String, val resourceId: Int, val icon: ImageVector,selectedIcon :Int ,unselectedIcon :Int) {
-    object Health : Screen("health", R.string.health, Icons.Default.Home,R.mipmap.health_orange,R.mipmap.health_gray)
-    object Move : Screen("move", R.string.move, Icons.Default.Search,R.mipmap.move_orange,R.mipmap.move_gray)
-    object Service : Screen("service", R.string.service, Icons.Default.Person,R.mipmap.device_orange,R.mipmap.device_gray)
-    object Mine : Screen("mine", R.string.mine, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
+    object Health : Screen("health", R.string.health_c, Icons.Default.Home,R.mipmap.health_orange,R.mipmap.health_gray)
+    object Move : Screen("move", R.string.move_c, Icons.Default.Search,R.mipmap.move_orange,R.mipmap.move_gray)
+    object Service : Screen("service", R.string.service_c, Icons.Default.Person,R.mipmap.device_orange,R.mipmap.device_gray)
+    object Mine : Screen("mine", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
 }
 
 

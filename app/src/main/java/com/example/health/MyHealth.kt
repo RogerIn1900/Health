@@ -1,5 +1,6 @@
 package com.example.health
 
+import android.widget.GridLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,15 +46,12 @@ import com.example.health.ui.theme.sleep_background
 @Composable
 fun MyHealth() {
     HealthTheme {
-        Column {
-            Row { }
-            Column {
+        LazyColumn {
+            item {
                 Part1()
                 Part2()
-                Part3()
+                GridLayoutExample()
             }
-            Row { }
-
         }
     }
 }
@@ -219,6 +217,49 @@ fun Part3() {
     }
 }
 
+
+@Composable
+fun GridLayoutExample() {
+    val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6","Item 7","Item 8")
+    Column(
+        modifier = Modifier.padding(8.dp)
+    ) {
+        // 使用 Row 来创建每一行
+        for (i in items.indices step 2) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp) // 行间距
+            ) {
+                // 第一列
+                Card(
+                    modifier = Modifier.weight(1f),
+                ) {
+//                    Text(text = items[i], modifier = Modifier.padding(16.dp))
+                    CardMy()
+                }
+
+                // 检查是否有第二列
+                if (i + 1 < items.size) {
+                    Card(
+                        modifier = Modifier.weight(1f),
+                    ) {
+//                        Text(text = items[i + 1], modifier = Modifier.padding(16.dp))
+                        CardMy()
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp)) // 行间距
+        }
+    }
+}
+
+
+//@Composable
+//fun Part3() {
+//    val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6")
+//
+//}
+
 @Composable
 fun CardA() {
     HealthTheme {
@@ -323,7 +364,7 @@ fun PreviewPart1() {
         Column {
             Part1()
             Part2()
-            Part3()
+            GridLayoutExample()
         }
     }
 }

@@ -8,4 +8,8 @@
     <string name="move">运动</string>
     <string name="service">设备</string>
     <string name="mine">我的</string>
+    <string name="health_c">健康</string>
+    <string name="move_c">运动</string>
+    <string name="service_c">设备</string>
+    <string name="mine_c">我的</string>
 </resources>
