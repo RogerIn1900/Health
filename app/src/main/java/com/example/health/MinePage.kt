@@ -15,9 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,28 +34,37 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.health.ui.theme.HealthTheme
+import com.example.health.Database.Mine
+
 
 @Composable
 fun MinePage(){
     HealthTheme {
-        Column {
-            MinePart1()
-            Spacer(modifier = Modifier.height(5.dp))
-            MinePart2(modifier = Modifier.fillMaxWidth())
-            Spacer(modifier = Modifier.height(10.dp))
-            MinePart3()
-            Spacer(modifier = Modifier.height(10.dp))
-            MinePart4()
-            Spacer(modifier = Modifier.height(10.dp))
-            MinePart5()
-            Spacer(modifier = Modifier.height(10.dp))
-            MinePart6()
-            Spacer(modifier = Modifier.height(10.dp))
-            MinePart7()
-            Spacer(modifier = Modifier.height(10.dp))
-            MinePart8()
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+                .padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp) // Add space between items
+        ){
+            item {
+                MinePart1()
+                Spacer(modifier = Modifier.height(10.dp))
+                MinePart2(modifier = Modifier.fillMaxWidth())
+                Spacer(modifier = Modifier.height(10.dp))
+                MinePart3()
+                Spacer(modifier = Modifier.height(10.dp))
+                MinePart4()
+                Spacer(modifier = Modifier.height(10.dp))
+                MinePart5()
+                Spacer(modifier = Modifier.height(10.dp))
+                MinePart6()
+                Spacer(modifier = Modifier.height(10.dp))
+                MinePart7()
+                Spacer(modifier = Modifier.height(10.dp))
+                MinePart8()
+                Spacer(modifier = Modifier.height(10.dp))
+                MinePart9()
+            }
         }
-
     }
 }
 
@@ -128,7 +141,10 @@ fun MineCard(pic:Int = R.mipmap.sleep,title:String = "我的睡眠") {
 fun MinePart3() {
 //    TODO("Not yet implemented")
     Card {
-        Row {
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(10.dp)
+        ){
             Image(
                 painter = painterResource(id = R.mipmap.sleep ),
                 contentDescription = "head",
@@ -136,15 +152,12 @@ fun MinePart3() {
             )
             Spacer(modifier = Modifier.width(10.dp))
             Column {
-                Text("广告内容")
-                Spacer(modifier = Modifier.height(5.dp))
-                Text("info")
+                Text("课程会员")
+//                Spacer(modifier = Modifier.height(2.dp))
+                Text("开通会员畅练千节好课", fontSize = 14.sp)
             }
             Spacer(modifier = Modifier.weight(1f))
-            Card (
-                modifier = Modifier.background(Color.Gray)
-
-            ){
+            Button (onClick = {}) {
                 Text("立即开通")
             }
         }
@@ -225,7 +238,7 @@ fun MinePart5() {
 //        modifier = Modifier.padding(8.dp)
     ) {
         Column(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(10.dp)
         ) {
             Row {
                 Text("我的勋章")
@@ -306,8 +319,7 @@ fun MinePart7() {
 
     ) {
         Column (
-            modifier = Modifier.padding(5.dp)
-
+            modifier = Modifier.padding(10.dp)
         ){
             Text("健康问诊", fontSize = 20.sp, fontWeight = FontWeight(10))
             Row(
@@ -353,8 +365,56 @@ fun MineCard4(
 }
 
 
+data class MineData(val imagePath: Int,val name:String ,val version :String  = "")
 @Composable
 fun MinePart8() {
+//    TODO("Not yet implemented")
+    val mineDatas = listOf(
+        MineData(R.mipmap.sleep,"我的路线库"),
+        MineData(R.mipmap.sleep,"App设置"),
+        MineData(R.mipmap.sleep,"三方数据管理"),
+        MineData(R.mipmap.sleep,"设备授权管理"),
+        MineData(R.mipmap.sleep,"系统权限"),
+        MineData(R.mipmap.sleep,"帮助与反馈"),
+        MineData(R.mipmap.sleep,"设备共享"),
+        MineData(R.mipmap.sleep,"版本更新","3.38.0"),
+        MineData(R.mipmap.sleep,"关于"),
+    )
+    Card {
+        Column (
+        ){
+            for (mineData in mineDatas){
+                Row(
+                    modifier = Modifier.padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = mineData.imagePath),
+                        contentDescription = "",
+                        modifier = Modifier.size(40.dp)
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Column {
+                        Text(mineData.name)
+                        if(mineData.version != ""){
+                            Text(mineData.version, fontSize = 16.sp)
+                        }
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Image(
+                        painter = painterResource(id = R.mipmap.arrow_light),
+                        contentDescription = "",
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun MinePart9() {
 //    TODO("Not yet implemented")
 }
 
@@ -367,7 +427,7 @@ fun PreviewMinePage() {
 //        MinePart1()
 //        MinePart2()
             MinePage()
-//            MinePart6()
+//        MinePart6()
         }
     }
 }
