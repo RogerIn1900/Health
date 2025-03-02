@@ -50,8 +50,15 @@ android {
 }
 
 dependencies {
+
+
     //蓝牙相关的依赖
     implementation ("com.google.android.gms:play-services-location:19.0.1")
+    implementation ("androidx.compose.ui:ui:1.0.0")
+    implementation ("androidx.compose.material:material:1.0.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
+    implementation ("androidx.activity:activity-compose:1.4.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     //网络相关依赖
     implementation ("com.squareup.okhttp3:okhttp:4.0.0") // 使用最新版本
     implementation("io.coil-kt:coil-compose:2.0.0") // 根据最新版本更新
@@ -64,6 +71,7 @@ dependencies {
     implementation ("androidx.compose.material:material:1.6.4")
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.android)
+    implementation(libs.androidx.ui.test.android)
     androidTestImplementation ("androidx.navigation:navigation-testing:$rootProject.composeNavigationVersion")
 
     implementation(libs.androidx.core.ktx)
