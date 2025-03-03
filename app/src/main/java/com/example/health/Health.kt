@@ -18,12 +18,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -33,11 +30,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.health.IndeterminateCircularIndicator
 import com.example.health.LinearDeterminateIndicator
+import com.example.health.MainViewModel.MainViewModel
 import com.example.health.MinePage
-import com.example.health.MyHealth
+import com.example.health.Myhealth.MyHealth
+import com.example.health.Myhealth.VitalityIndex
 import com.example.health.PostPic.ImageUploaderScreen
 import com.example.health.R
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +45,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//val viewModel = MainViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainApp() {
+fun MainApp(viewModel: MainViewModel = MainViewModel()) {
     val navController = rememberNavController()
+//    val isBottomVisible by viewModel.isBottomVisible.collectAsState()
+    val isBottomBarVisible by viewModel.isBottomBarVisible.collectAsState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val title :String = when (currentRoute){
@@ -69,13 +71,19 @@ fun MainApp() {
             startDestination = Screen.Health.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Health.route) { MyHealth() }
+            composable(Screen.Health.route) { MyHealth(navController) }
             composable(Screen.Move.route) { SearchScreen() }
             composable(Screen.Service.route) { ImageUploaderScreen() }
             composable(Screen.Mine.route) { MinePage() }
+
+            //Health页面的导航页
+            composable("Vitality") { VitalityIndex(navController) }
+
         }
     }
 }
+
+
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
@@ -279,6 +287,8 @@ sealed class Screen(val route: String, val resourceId: Int, val icon: ImageVecto
     object Move : Screen("move", R.string.move_c, Icons.Default.Search,R.mipmap.move_orange,R.mipmap.move_gray)
     object Service : Screen("service", R.string.service_c, Icons.Default.Person,R.mipmap.device_orange,R.mipmap.device_gray)
     object Mine : Screen("mine", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
+    //object Vitality : Screen("mine", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
+
 }
 
 
