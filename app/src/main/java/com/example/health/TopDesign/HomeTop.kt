@@ -154,7 +154,7 @@ fun DropdownMenuButton() {
 }
 
 
-//Todo：扫一扫功能
+//：扫一扫功能
 @Composable
 fun ScanQRCodeScreen(
     isScanning: Boolean, // 控制是否显示扫一扫界面
