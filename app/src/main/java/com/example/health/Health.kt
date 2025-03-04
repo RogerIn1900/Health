@@ -24,10 +24,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.health.IndeterminateCircularIndicator
 import com.example.health.LinearDeterminateIndicator
 import com.example.health.MainViewModel.MainViewModel
@@ -36,6 +38,9 @@ import com.example.health.Myhealth.MyHealth
 import com.example.health.Myhealth.VitalityIndex
 import com.example.health.PostPic.ImageUploaderScreen
 import com.example.health.R
+import com.example.health.TopDesign.DropdownMenuButton
+import com.example.health.TopDesign.HomeTop
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +57,6 @@ class MainActivity : ComponentActivity() {
 fun MainApp(viewModel: MainViewModel = MainViewModel()) {
     val navController = rememberNavController()
 //    val isBottomVisible by viewModel.isBottomVisible.collectAsState()
-    val isBottomBarVisible by viewModel.isBottomBarVisible.collectAsState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val title :String = when (currentRoute){
@@ -62,9 +66,41 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
         Screen.Mine.route  ->  stringResource(id = R.string.mine)
         else -> "Unknown"
     }
+    val isBottomBarVisible = when (currentRoute){
+        Screen.Health.route -> true
+        Screen.Move.route  -> true
+        Screen.Service.route  ->  true
+        Screen.Mine.route  ->  true
+        else -> false
+    }
+    val isTopBarVisible = when (currentRoute){
+        Screen.Health.route -> true
+        Screen.Move.route  -> true
+        Screen.Service.route  ->  true
+        Screen.Mine.route  ->  true
+        else -> false
+    }
+
     Scaffold(
-        topBar = { TopAppBar(title = { Text(title.toString()) }) },
-        bottomBar = { BottomNavigationBar(navController) }
+        topBar = {
+//            TopAppBar(title = { Text(title.toString()) })
+//            HomeTop(title)
+            TopAppBar(
+                title = { Text(title.toString()) },
+                actions = {
+                    // 搜索按钮
+//                    IconButton(onClick = { /* 处理搜索操作 */ }) {
+//                        Icon(Icons.Default.Search, contentDescription = "搜索")
+//                    }
+                    // 更多选项菜单
+                    DropdownMenuButton()
+                }
+            )
+
+                 },
+        bottomBar = {
+            if (isBottomBarVisible)BottomNavigationBar(navController)
+        }
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -78,7 +114,18 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
 
             //Health页面的导航页
             composable("Vitality") { VitalityIndex(navController) }
+             // 1. 定义参数化路由
+            // 1. 定义参数化路由
+            composable(
+                "detail_screen/{itemId}",
+                arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val itemId = backStackEntry.arguments?.getInt("itemId")
+                VitalityIndex(navController)
+            }
 
+// 2. 跳转时传递参数
+//            navController.navigate("detail_screen/123")
         }
     }
 }

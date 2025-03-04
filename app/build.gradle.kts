@@ -73,6 +73,10 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.ui.test.android)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
     androidTestImplementation ("androidx.navigation:navigation-testing:$rootProject.composeNavigationVersion")
 
     implementation(libs.androidx.core.ktx)
