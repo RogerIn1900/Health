@@ -51,7 +51,18 @@ android {
 }
 
 dependencies {
-
+    //扫一扫
+    // CameraX 依赖
+    implementation ("com.google.accompanist:accompanist-permissions:0.31.5-alpha")
+    implementation ("androidx.compose.runtime:runtime:1.0.0") // 或者你使用的 Compose 版本
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation ("androidx.camera:camera-core:1.2.3")
+    implementation ("androidx.camera:camera-camera2:1.2.3")
+    implementation ("androidx.camera:camera-lifecycle:1.2.3")
+    implementation ("androidx.camera:camera-view:1.2.3")
+    implementation ("com.google.accompanist:accompanist-permissions:0.37.2")
+    // ZXing 依赖
+    implementation ("com.google.zxing:core:3.4.1")
 
     //蓝牙相关的依赖
     implementation ("com.google.android.gms:play-services-location:19.0.1")

@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
+    <!-- 相机使用权限 -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,9 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Health"
         tools:targetApi="31" >
-        <activity
-            android:name=".Myhealth.health"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
