@@ -58,6 +58,16 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
+@Composable
+fun HomeTop(title: String) {
+    TopAppBar(
+        title = { Text(title.toString()) },
+        actions = {
+            DropdownMenuButton()
+        }
+    )
+}
+
 //右上角的展开按钮
 @Composable
 fun DropdownMenuButton() {
@@ -152,53 +162,6 @@ fun DropdownMenuButton() {
 
     }
 }
-
-
-
-//全屏幕的扫一扫
-//@Composable
-//fun ScanQrCodeScreen() {
-//    var scanResult by remember { mutableStateOf("Scan a QR code or barcode") }
-//    val context = LocalContext.current
-//
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(16.dp),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        // 显示扫码结果
-//        Text(
-//            text = scanResult,
-//            style = MaterialTheme.typography.bodyLarge,
-//            modifier = Modifier.padding(bottom = 16.dp)
-//        )
-//
-//        // 扫码视图
-//        AndroidView(
-//            factory = { ctx ->
-//                val barcodeView = DecoratedBarcodeView(ctx)
-//                barcodeView.decodeContinuous(object : BarcodeCallback {
-//                    override fun barcodeResult(result: BarcodeResult) {
-//                        // 获取扫码结果
-//                        scanResult = result.text ?: "No result"
-//                    }
-//
-//                    override fun possibleResultPoints(resultPoints: List<com.google.zxing.ResultPoint>) {
-//                        // 处理可能的扫码点（可选）
-//                    }
-//                })
-//                barcodeView.resume()
-//                barcodeView
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(300.dp)
-//        )
-//    }
-//}
-
 
 
 //：扫一扫功能

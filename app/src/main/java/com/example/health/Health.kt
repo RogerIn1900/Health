@@ -40,6 +40,7 @@ import com.example.health.PostPic.ImageUploaderScreen
 import com.example.health.R
 import com.example.health.TopDesign.DropdownMenuButton
 import com.example.health.TopDesign.HomeTop
+import com.example.health.TopDesign.vitalityTop
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,17 +86,19 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
         topBar = {
 //            TopAppBar(title = { Text(title.toString()) })
 //            HomeTop(title)
-            TopAppBar(
-                title = { Text(title.toString()) },
-                actions = {
-                    // 搜索按钮
-//                    IconButton(onClick = { /* 处理搜索操作 */ }) {
-//                        Icon(Icons.Default.Search, contentDescription = "搜索")
-//                    }
-                    // 更多选项菜单
-                    DropdownMenuButton()
+            if(isTopBarVisible){
+
+            }
+            when(isTopBarVisible){
+                true -> {
+                    HomeTop(title)
                 }
-            )
+                false -> {
+                    //活力Top测试
+                    vitalityTop(navController)
+                }
+            }
+
 
                  },
         bottomBar = {
