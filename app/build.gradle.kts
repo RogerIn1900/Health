@@ -63,6 +63,7 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-permissions:0.37.2")
     // ZXing 依赖
     implementation ("com.google.zxing:core:3.4.1")
+    //implementation ("com.journeyapps:barcodescanner:3.6.0") // 使用最新版本
 
     //蓝牙相关的依赖
     implementation ("com.google.android.gms:play-services-location:19.0.1")
@@ -81,6 +82,7 @@ dependencies {
     //导航相关依赖
     implementation ("androidx.navigation:navigation-compose:2.7.7")
     implementation ("androidx.compose.material:material:1.6.4")
+    implementation ("androidx.compose.material3:material3:1.2.0") // 使用最新版本
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.ui.test.android)

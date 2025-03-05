@@ -1,6 +1,6 @@
 package com.example.health.TopDesign
 
-
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +40,9 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
@@ -55,17 +58,11 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-
-
-@Composable
-fun HomeTop(title: String){
-    TopAppBar(title = { Text(title.toString(),modifier = Modifier.size(36.dp))})
-}
-
+//右上角的展开按钮
 @Composable
 fun DropdownMenuButton() {
     var showDialog by remember { mutableStateOf(false) }
-//扫一扫
+    //扫一扫
     var isScanning by remember { mutableStateOf(false) }
     var scanResult by remember { mutableStateOf<String?>(null) }
 
@@ -143,15 +140,65 @@ fun DropdownMenuButton() {
     }
 
     if (isScanning) {
-        ScanQRCodeScreen(
-            isScanning = isScanning,
-            onScanResult = { qrCode ->
-                isScanning = false
-                scanResult = qrCode
-            }
-        )
+        Dialog(onDismissRequest = { }) {
+            ScanQRCodeScreen(
+                isScanning = isScanning,
+                onScanResult = { qrCode ->
+                    isScanning = false
+                    scanResult = qrCode
+                }
+            )
+        }
+
     }
 }
+
+
+
+//全屏幕的扫一扫
+//@Composable
+//fun ScanQrCodeScreen() {
+//    var scanResult by remember { mutableStateOf("Scan a QR code or barcode") }
+//    val context = LocalContext.current
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(16.dp),
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        // 显示扫码结果
+//        Text(
+//            text = scanResult,
+//            style = MaterialTheme.typography.bodyLarge,
+//            modifier = Modifier.padding(bottom = 16.dp)
+//        )
+//
+//        // 扫码视图
+//        AndroidView(
+//            factory = { ctx ->
+//                val barcodeView = DecoratedBarcodeView(ctx)
+//                barcodeView.decodeContinuous(object : BarcodeCallback {
+//                    override fun barcodeResult(result: BarcodeResult) {
+//                        // 获取扫码结果
+//                        scanResult = result.text ?: "No result"
+//                    }
+//
+//                    override fun possibleResultPoints(resultPoints: List<com.google.zxing.ResultPoint>) {
+//                        // 处理可能的扫码点（可选）
+//                    }
+//                })
+//                barcodeView.resume()
+//                barcodeView
+//            },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(300.dp)
+//        )
+//    }
+//}
+
 
 
 //：扫一扫功能
