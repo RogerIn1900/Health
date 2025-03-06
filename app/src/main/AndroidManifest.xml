@@ -2,15 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" >
     <!-- 网络链接需要的权限 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+
+    <!-- 蓝牙和位置权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"/> <!-- 不需要蓝牙定位 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 蓝牙链接需要的权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- For Android 12 and above -->
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- 相机使用权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <application

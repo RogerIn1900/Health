@@ -319,3 +319,9 @@ class QRCodeAnalyzer(private val onQrCodeScanned: (String) -> Unit) : ImageAnaly
 fun DefaultPreview() {
 //    CameraPermission()
 }
+
+//蓝牙连接功能
+@Composable
+fun BluetoothConnectionButton() {
+
+}

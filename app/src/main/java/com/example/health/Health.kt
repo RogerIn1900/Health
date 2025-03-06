@@ -200,94 +200,6 @@ fun BottomNavigationBar(navController: NavHostController) {
 }
 
 
-//
-//@Composable
-//fun BottomNavigationBar(navController: NavHostController) {
-//    val items = listOf(
-//        Screen.Health,
-//        Screen.Move,
-//        Screen.Service,
-//        Screen.Mine
-//    )
-
-
-      //map的使用不对，map的键是Screen类型，但是调用map内容的时候是String类型
-//    val pics_Selected = mapOf(
-//        Screen.Health to R.mipmap.health_orange,
-//        Screen.Move to R.mipmap.move_orange,
-//        Screen.Service to R.mipmap.device_orange,
-//        Screen.Mine to R.mipmap.mine_orange
-//    )
-//    val pics_unselected = mapOf(
-//        Screen.Health to R.mipmap.health_gray,
-//        Screen.Move to R.mipmap.move_gray,
-//        Screen.Service to R.mipmap.device_gray,
-//        Screen.Mine to R.mipmap.mine_gray
-//    )
-//
-//    val pic_unselected = mapOf(
-//        "health" to R.mipmap.health_gray,
-//        "move" to  R.mipmap.move_gray,
-//        "service" to R.mipmap.device_gray,
-//        "mine" to R.mipmap.mine_gray
-//    )
-//
-//    val pic_selected = mapOf(
-//        "health"  to R.mipmap.health_orange,
-//        "move" to R.mipmap.move_orange,
-//        "service" to R.mipmap.device_orange,
-//        "mine"  to R.mipmap.mine_orange
-//    )
-//
-//    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//    val currentRoute = navBackStackEntry?.destination?.route
-//
-//    BottomNavigation(
-//        backgroundColor = Color.White,
-//        elevation = 10.dp
-//    ) {
-//        items.forEach { screen ->
-//            BottomNavigationItem(
-//                icon = {
-//      color = Color.  //不同类型的对象不能进行比较screen是一个Screen对象和navController?.currentDestination是NavDestination对象
-                        //可以比较screen.route和currentRoute进行比较，都是String类型
-////                    val iconResoource = if(screen == navController?.currentDestination){
-//////                        Icons.Filled.Home
-////                        pic_selected[screen]
-////                    }else {
-////                       pic_unselected[screen]
-////                    }
-//                    val iconResource = if (screen == navController?.currentDestination) {
-//                        pic_selected[screen.route] ?: R.mipmap.sleep
-//                    }
-//                    else {
-//                        pic_unselected[screen.route] ?: R.mipmap.sleep
-//                    }
-//
-//                    Image(painter = painterResource(id = iconResource), contentDescription = null, modifier = Modifier.size(24.dp))
-//                       },
-//
-//
-////                icon = {
-////                    Icon(
-////                        imageVector = if (currentRoute == screen.route) screen.selectedIcon else screen.unselectedIcon,
-////                        contentDescription = screen.route
-////                    )
-////                },
-                  //这里的标签没有在Screen中定义，需要在Screen类中定义
-//                label = { Text(stringResource(screen.resourceId)) },
-//                selected = currentRoute == screen.route,
-//                onClick = {
-//                    navController.navigate(screen.route) {
-//                        popUpTo(navController.graph.startDestinationId)
-//                        launchSingleTop = true
-//                    }
-//                }
-//            )
-//        }
-//    }
-//}
-
 @Composable
 fun HomeScreen() {
     Box(
@@ -350,3 +262,91 @@ fun DefaultPreview() {
     MainApp()
 }
 
+
+//
+//@Composable
+//fun BottomNavigationBar(navController: NavHostController) {
+//    val items = listOf(
+//        Screen.Health,
+//        Screen.Move,
+//        Screen.Service,
+//        Screen.Mine
+//    )
+
+
+//map的使用不对，map的键是Screen类型，但是调用map内容的时候是String类型
+//    val pics_Selected = mapOf(
+//        Screen.Health to R.mipmap.health_orange,
+//        Screen.Move to R.mipmap.move_orange,
+//        Screen.Service to R.mipmap.device_orange,
+//        Screen.Mine to R.mipmap.mine_orange
+//    )
+//    val pics_unselected = mapOf(
+//        Screen.Health to R.mipmap.health_gray,
+//        Screen.Move to R.mipmap.move_gray,
+//        Screen.Service to R.mipmap.device_gray,
+//        Screen.Mine to R.mipmap.mine_gray
+//    )
+//
+//    val pic_unselected = mapOf(
+//        "health" to R.mipmap.health_gray,
+//        "move" to  R.mipmap.move_gray,
+//        "service" to R.mipmap.device_gray,
+//        "mine" to R.mipmap.mine_gray
+//    )
+//
+//    val pic_selected = mapOf(
+//        "health"  to R.mipmap.health_orange,
+//        "move" to R.mipmap.move_orange,
+//        "service" to R.mipmap.device_orange,
+//        "mine"  to R.mipmap.mine_orange
+//    )
+//
+//    val navBackStackEntry by navController.currentBackStackEntryAsState()
+//    val currentRoute = navBackStackEntry?.destination?.route
+//
+//    BottomNavigation(
+//        backgroundColor = Color.White,
+//        elevation = 10.dp
+//    ) {
+//        items.forEach { screen ->
+//            BottomNavigationItem(
+//                icon = {
+//      color = Color.  //不同类型的对象不能进行比较screen是一个Screen对象和navController?.currentDestination是NavDestination对象
+//可以比较screen.route和currentRoute进行比较，都是String类型
+////                    val iconResoource = if(screen == navController?.currentDestination){
+//////                        Icons.Filled.Home
+////                        pic_selected[screen]
+////                    }else {
+////                       pic_unselected[screen]
+////                    }
+//                    val iconResource = if (screen == navController?.currentDestination) {
+//                        pic_selected[screen.route] ?: R.mipmap.sleep
+//                    }
+//                    else {
+//                        pic_unselected[screen.route] ?: R.mipmap.sleep
+//                    }
+//
+//                    Image(painter = painterResource(id = iconResource), contentDescription = null, modifier = Modifier.size(24.dp))
+//                       },
+//
+//
+////                icon = {
+////                    Icon(
+////                        imageVector = if (currentRoute == screen.route) screen.selectedIcon else screen.unselectedIcon,
+////                        contentDescription = screen.route
+////                    )
+////                },
+//这里的标签没有在Screen中定义，需要在Screen类中定义
+//                label = { Text(stringResource(screen.resourceId)) },
+//                selected = currentRoute == screen.route,
+//                onClick = {
+//                    navController.navigate(screen.route) {
+//                        popUpTo(navController.graph.startDestinationId)
+//                        launchSingleTop = true
+//                    }
+//                }
+//            )
+//        }
+//    }
+//}

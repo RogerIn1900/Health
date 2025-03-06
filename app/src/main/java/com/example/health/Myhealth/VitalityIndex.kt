@@ -30,7 +30,7 @@ import com.example.health.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VitalityIndex(navController:NavController) {
-//TODO: 一周日期图表
+// 一周日期图表
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -41,6 +41,7 @@ fun VitalityIndex(navController:NavController) {
         }
     }
 //TODO: 当日图表
+
 //TODO: 当日数据
 //TODO: 卡路里图表
 //TODO: 步数图表
