@@ -53,8 +53,6 @@ android {
 
 dependencies {
     //图表依赖
-    implementation ("com.github.madrapps:compose-charts:0.2.1")
-    implementation("androidx.compose.ui:ui:1.6.7")
 
     //扫一扫
     // CameraX 依赖
@@ -113,3 +111,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+

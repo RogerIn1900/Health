@@ -40,6 +40,11 @@ import com.example.health.MineCard2
 import com.example.health.R
 import org.intellij.lang.annotations.PrintFormat
 import java.util.Date
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.unit.dp
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +54,7 @@ fun VitalityIndex(navController:NavController) {
         vitalityPart1()
         vitalityPart2()
         vitalityPart3()
-
+        BarChartScreen()
     }
 }
 
@@ -166,7 +171,7 @@ fun vitalityPartTest2() {
 
 @Composable
 fun vitalityPart3() {
-    TODO("Not yet implemented")
+//    TODO("Not yet implemented")
 }
 
 
@@ -284,10 +289,56 @@ fun ChartScreen() {
 }
 
 
+@Composable
+fun BarChart(data: List<Float>) {
+    // 获取数据中的最大值，用于计算柱子的高度
+    val maxValue = data.maxOrNull() ?: 1f
+    Canvas(modifier = Modifier
+        .fillMaxWidth()
+        .size(200.dp)
+        .padding(16.dp)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val barWidth = (canvasWidth / data.size) * 0.2f // 柱子的宽度
+        val gapWidth = (canvasWidth / data.size) * 0.8f // 柱子之间的间距
+
+        // 绘制柱子
+        data.forEachIndexed { index, value ->
+            val barHeight = (value / maxValue) * canvasHeight // 柱子的高度
+            val left = index * (barWidth + gapWidth) // 柱子的左边界
+            val top = canvasHeight - barHeight // 柱子的顶部位置
+
+            // 绘制柱子
+            drawRect(
+                color = Color.Blue,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight)
+            )
+
+            // 绘制柱子的边框
+            drawRect(
+                color = Color.Black,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight),
+                style = Stroke(width = 2f)
+            )
+        }
+    }
+
+}
+@Composable
+fun BarChartScreen() {
+    val sampleData = listOf(
+        10f, 20f, 15f, 30f, 25f, 40f, 35f
+    )
+
+    BarChart(data = sampleData)
+}
 
 @Preview
 @Composable
 fun previewVitalityPartTest2() {
 //    vitalityPartTest2()
-    ChartScreen()
+    BarChartScreen()
 }
