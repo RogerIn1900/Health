@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         }
         if (bluetoothAdapter?.isEnabled == false) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }
     }
 }
