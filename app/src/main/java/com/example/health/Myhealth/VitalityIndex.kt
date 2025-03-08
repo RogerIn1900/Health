@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +42,12 @@ import com.example.health.R
 import org.intellij.lang.annotations.PrintFormat
 import java.util.Date
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 
@@ -54,7 +60,7 @@ fun VitalityIndex(navController:NavController) {
         vitalityPart1()
         vitalityPart2()
         vitalityPart3()
-        BarChartScreen()
+        HealthBarChartWithLabelsAndImages()
     }
 }
 
@@ -323,22 +329,939 @@ fun BarChart(data: List<Float>) {
                 size = Size(barWidth, barHeight),
                 style = Stroke(width = 2f)
             )
+
         }
+
     }
 
 }
+
+@Composable
+fun BarChartWithLabels(data: List<Float>) {
+    // 获取数据中的最大值，用于计算柱子的高度
+    val maxValue = data.maxOrNull() ?: 1f
+
+    // 用于测量文本大小
+    val textMeasurer = rememberTextMeasurer()
+
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val barWidth = (canvasWidth / data.size) * 0.8f // 柱子的宽度
+        val gapWidth = (canvasWidth / data.size) * 0.2f // 柱子之间的间距
+
+        // 绘制柱子
+        data.forEachIndexed { index, value ->
+            val barHeight = (value / maxValue) * canvasHeight // 柱子的高度
+            val left = index * (barWidth + gapWidth) // 柱子的左边界
+            val top = canvasHeight - barHeight // 柱子的顶部位置
+
+            // 绘制柱子
+            drawRect(
+                color = Color.Blue,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight)
+            )
+
+            // 绘制柱子的边框
+            drawRect(
+                color = Color.Black,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight),
+                style = Stroke(width = 2f)
+            )
+
+            // 在柱子顶部绘制数值标签
+            val label = value.toInt().toString()
+            val textLayoutResult = textMeasurer.measure(
+                text = label,
+                style = TextStyle(
+                    color = Color.Black,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center
+                )
+            )
+            val textOffset = Offset(
+                x = left + (barWidth - textLayoutResult.size.width) / 2,
+                y = top - textLayoutResult.size.height - 4.dp.toPx() // 将标签放在柱子上方
+            )
+            drawText(
+                textLayoutResult = textLayoutResult,
+                topLeft = textOffset
+            )
+        }
+    }
+}
+
+
+@Composable
+fun BarChartWithAxisLabels(data: List<Float>, xLabels: List<String>) {
+    // 获取数据中的最大值，用于计算柱子的高度
+    val maxValue = data.maxOrNull() ?: 1f
+
+    // 用于测量文本大小
+    val textMeasurer = rememberTextMeasurer()
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val barWidth = (canvasWidth / data.size) * 0.8f // 柱子的宽度
+        val gapWidth = (canvasWidth / data.size) * 0.2f // 柱子之间的间距
+
+        // 绘制 Y 轴
+        val yAxisWidth = 2f
+        drawLine(
+            color = Color.Black,
+            start = Offset(0f, canvasHeight),
+            end = Offset(0f, 0f),
+            strokeWidth = yAxisWidth
+        )
+
+        // 绘制 Y 轴刻度
+        val yAxisSteps = 5 // Y 轴刻度数量
+        val yStepHeight = canvasHeight / yAxisSteps
+        for (i in 0..yAxisSteps) {
+            val y = canvasHeight - i * yStepHeight
+            // 绘制刻度线
+            drawLine(
+                color = Color.Gray,
+                start = Offset(0f, y),
+                end = Offset(10f, y), // 刻度线长度
+                strokeWidth = 1f
+            )
+            // 绘制刻度值
+            val label = "%.1f".format(i * (maxValue / yAxisSteps))
+            val textLayoutResult = textMeasurer.measure(
+                text = label,
+                style = TextStyle(
+                    color = Color.Black,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.End
+                )
+            )
+            drawText(
+                textLayoutResult = textLayoutResult,
+                topLeft = Offset(-textLayoutResult.size.width - 8.dp.toPx(), y - textLayoutResult.size.height / 2)
+            )
+        }
+
+        // 绘制 X 轴
+        val xAxisHeight = 2f
+        drawLine(
+            color = Color.Black,
+            start = Offset(0f, canvasHeight),
+            end = Offset(canvasWidth, canvasHeight),
+            strokeWidth = xAxisHeight
+        )
+
+        // 绘制柱子
+        data.forEachIndexed { index, value ->
+            val barHeight = (value / maxValue) * canvasHeight // 柱子的高度
+            val left = index * (barWidth + gapWidth) // 柱子的左边界
+            val top = canvasHeight - barHeight // 柱子的顶部位置
+
+            // 绘制柱子
+            drawRect(
+                color = Color.Blue,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight)
+            )
+
+            // 绘制柱子的边框
+            drawRect(
+                color = Color.Black,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight),
+                style = Stroke(width = 2f)
+            )
+
+            // 在柱子底部绘制 X 轴标签
+            if (index < xLabels.size) {
+                val label = xLabels[index]
+                val textLayoutResult = textMeasurer.measure(
+                    text = label,
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
+                    )
+                )
+                drawText(
+                    textLayoutResult = textLayoutResult,
+                    topLeft = Offset(
+                        left + (barWidth - textLayoutResult.size.width) / 2,
+                        canvasHeight + 4.dp.toPx() // 将标签放在 X 轴下方
+                    )
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun BarChartWithAxisLabelsAndDashedLine(data: List<Float>, xLabels: List<String>) {
+    // 获取数据中的最大值，用于计算柱子的高度
+    val maxValue = data.maxOrNull() ?: 1f
+
+    // 用于测量文本大小
+    val textMeasurer = rememberTextMeasurer()
+
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val barWidth = (canvasWidth / data.size) * 0.8f // 柱子的宽度
+        val gapWidth = (canvasWidth / data.size) * 0.2f // 柱子之间的间距
+
+        // 绘制 Y 轴
+        val yAxisWidth = 2f
+        drawLine(
+            color = Color.Black,
+            start = Offset(0f, canvasHeight),
+            end = Offset(0f, 0f),
+            strokeWidth = yAxisWidth
+        )
+
+        // 绘制 Y 轴刻度
+        val yAxisSteps = 5 // Y 轴刻度数量
+        val yStepHeight = canvasHeight / yAxisSteps
+        for (i in 0..yAxisSteps) {
+            val y = canvasHeight - i * yStepHeight
+            // 绘制刻度线
+            drawLine(
+                color = Color.Gray,
+                start = Offset(0f, y),
+                end = Offset(10f, y), // 刻度线长度
+                strokeWidth = 1f
+            )
+            // 绘制刻度值
+            val label = "%.1f".format(i * (maxValue / yAxisSteps))
+            val textLayoutResult = textMeasurer.measure(
+                text = label,
+                style = TextStyle(
+                    color = Color.Black,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.End
+                )
+            )
+            drawText(
+                textLayoutResult = textLayoutResult,
+                topLeft = Offset(-textLayoutResult.size.width - 8.dp.toPx(), y - textLayoutResult.size.height / 2)
+            )
+        }
+
+        // 绘制 X 轴
+        val xAxisHeight = 2f
+        drawLine(
+            color = Color.Black,
+            start = Offset(0f, canvasHeight),
+            end = Offset(canvasWidth, canvasHeight),
+            strokeWidth = xAxisHeight
+        )
+
+        // 绘制柱子
+        data.forEachIndexed { index, value ->
+            val barHeight = (value / maxValue) * canvasHeight // 柱子的高度
+            val left = index * (barWidth + gapWidth) // 柱子的左边界
+            val top = canvasHeight - barHeight // 柱子的顶部位置
+
+            // 绘制柱子
+            drawRect(
+                color = Color.Blue,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight)
+            )
+
+            // 绘制柱子的边框
+            drawRect(
+                color = Color.Black,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight),
+                style = Stroke(width = 2f)
+            )
+
+            // 在柱子底部绘制 X 轴标签
+            if (index < xLabels.size) {
+                val label = xLabels[index]
+                val textLayoutResult = textMeasurer.measure(
+                    text = label,
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
+                    )
+                )
+                drawText(
+                    textLayoutResult = textLayoutResult,
+                    topLeft = Offset(
+                        left + (barWidth - textLayoutResult.size.width) / 2,
+                        canvasHeight + 4.dp.toPx() // 将标签放在 X 轴下方
+                    )
+                )
+            }
+        }
+
+        // 在值为 20 的位置绘制一条虚线
+        val targetValue = 20f
+        if (targetValue <= maxValue) {
+            val y = canvasHeight - (targetValue / maxValue) * canvasHeight
+            drawLine(
+                color = Color.Red,
+                start = Offset(0f, y),
+                end = Offset(canvasWidth, y),
+                strokeWidth = 2f,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f) // 虚线效果
+            )
+
+            // 在虚线右侧添加标签
+            val label = "Target: $targetValue"
+            val textLayoutResult = textMeasurer.measure(
+                text = label,
+                style = TextStyle(
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.End
+                )
+            )
+            drawText(
+                textLayoutResult = textLayoutResult,
+                topLeft = Offset(
+                    canvasWidth - textLayoutResult.size.width - 8.dp.toPx(),
+                    y - textLayoutResult.size.height / 2
+                )
+            )
+        }
+    }
+}
+
+
+@Composable
+fun BarChartWithRightYAxis(data: List<Float>, xLabels: List<String>) {
+    // 获取数据中的最大值，用于计算柱子的高度
+    val maxValue = data.maxOrNull() ?: 1f
+
+    // 用于测量文本大小
+    val textMeasurer = rememberTextMeasurer()
+
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val barWidth = (canvasWidth / data.size) * 0.8f // 柱子的宽度
+        val gapWidth = (canvasWidth / data.size) * 0.2f // 柱子之间的间距
+
+        // 绘制 Y 轴（右侧）
+        val yAxisWidth = 2f
+        drawLine(
+            color = Color.Black,
+            start = Offset(canvasWidth, canvasHeight),
+            end = Offset(canvasWidth, 0f),
+            strokeWidth = yAxisWidth
+        )
+
+        // 绘制 Y 轴刻度
+        val yAxisSteps = 5 // Y 轴刻度数量
+        val yStepHeight = canvasHeight / yAxisSteps
+        for (i in 0..yAxisSteps) {
+            val y = canvasHeight - i * yStepHeight
+            // 绘制刻度线
+            drawLine(
+                color = Color.Gray,
+                start = Offset(canvasWidth, y),
+                end = Offset(canvasWidth - 10f, y), // 刻度线长度
+                strokeWidth = 1f
+            )
+            // 绘制刻度值
+            val label = "%.1f".format(i * (maxValue / yAxisSteps))
+            val textLayoutResult = textMeasurer.measure(
+                text = label,
+                style = TextStyle(
+                    color = Color.Black,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Start
+                )
+            )
+            drawText(
+                textLayoutResult = textLayoutResult,
+                topLeft = Offset(
+                    canvasWidth - textLayoutResult.size.width - 8.dp.toPx(),
+                    y - textLayoutResult.size.height / 2
+                )
+            )
+        }
+
+        // 绘制 X 轴
+        val xAxisHeight = 2f
+        drawLine(
+            color = Color.Black,
+            start = Offset(0f, canvasHeight),
+            end = Offset(canvasWidth, canvasHeight),
+            strokeWidth = xAxisHeight
+        )
+
+        // 绘制柱子
+        data.forEachIndexed { index, value ->
+            val barHeight = (value / maxValue) * canvasHeight // 柱子的高度
+            val left = index * (barWidth + gapWidth) // 柱子的左边界
+            val top = canvasHeight - barHeight // 柱子的顶部位置
+
+            // 绘制柱子
+            drawRect(
+                color = Color.Blue,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight)
+            )
+
+            // 绘制柱子的边框
+            drawRect(
+                color = Color.Black,
+                topLeft = Offset(left, top),
+                size = Size(barWidth, barHeight),
+                style = Stroke(width = 2f)
+            )
+
+            // 在柱子底部绘制 X 轴标签
+            if (index < xLabels.size) {
+                val label = xLabels[index]
+                val textLayoutResult = textMeasurer.measure(
+                    text = label,
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
+                    )
+                )
+                drawText(
+                    textLayoutResult = textLayoutResult,
+                    topLeft = Offset(
+                        left + (barWidth - textLayoutResult.size.width) / 2,
+                        canvasHeight + 4.dp.toPx() // 将标签放在 X 轴下方
+                    )
+                )
+            }
+        }
+
+        // 在值为 20 的位置绘制一条虚线
+        val targetValue = 20f
+        if (targetValue <= maxValue) {
+            val y = canvasHeight - (targetValue / maxValue) * canvasHeight
+            drawLine(
+                color = Color.Red,
+                start = Offset(0f, y),
+                end = Offset(canvasWidth, y),
+                strokeWidth = 2f,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f) // 虚线效果
+            )
+
+            // 在虚线右侧添加标签
+            val label = "Target: $targetValue"
+            val textLayoutResult = textMeasurer.measure(
+                text = label,
+                style = TextStyle(
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.End
+                )
+            )
+            drawText(
+                textLayoutResult = textLayoutResult,
+                topLeft = Offset(
+                    canvasWidth - textLayoutResult.size.width - 8.dp.toPx(),
+                    y - textLayoutResult.size.height / 2
+                )
+            )
+        }
+    }
+}
+
+
+@Composable
+fun HealthBarChart() {
+    // 数据
+    val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
+    val xLabels = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日") // X 轴标签
+    val yLabels = listOf("0", "35", "70", "105", "140") // Y 轴刻度值
+
+    // 获取数据中的最大值，用于计算柱子的高度
+    val maxValue = data.maxOrNull() ?: 1f
+
+    // 用于测量文本大小
+    val textMeasurer = rememberTextMeasurer()
+
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ){
+                val canvasWidth = size.width
+                val canvasHeight = size.height
+                val barWidth = (canvasWidth / data.size) * 0.8f // 柱子的宽度
+                val gapWidth = (canvasWidth / data.size) * 0.2f // 柱子之间的间距
+
+                // 绘制 Y 轴
+                val yAxisWidth = 2f
+                drawLine(
+                    color = Color.Black,
+                    start = Offset(0f, canvasHeight),
+                    end = Offset(0f, 0f),
+                    strokeWidth = yAxisWidth
+                )
+
+                // 绘制 Y 轴刻度
+                val yAxisSteps = yLabels.size - 1 // Y 轴刻度数量
+                val yStepHeight = canvasHeight / yAxisSteps
+                for (i in 0..yAxisSteps) {
+                    val y = canvasHeight - i * yStepHeight
+                    // 绘制刻度线
+                    drawLine(
+                        color = Color.Gray,
+                        start = Offset(0f, y),
+                        end = Offset(10f, y), // 刻度线长度
+                        strokeWidth = 1f
+                    )
+                    // 绘制刻度值
+                    val label = yLabels[i]
+                    val textLayoutResult = textMeasurer.measure(
+                        text = label,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.End
+                        )
+                    )
+                    drawText(
+                        textLayoutResult = textLayoutResult,
+                        topLeft = Offset(-textLayoutResult.size.width - 8.dp.toPx(), y - textLayoutResult.size.height / 2)
+                    )
+                }
+
+                // 绘制 X 轴
+                val xAxisHeight = 2f
+                drawLine(
+                    color = Color.Black,
+                    start = Offset(0f, canvasHeight),
+                    end = Offset(canvasWidth, canvasHeight),
+                    strokeWidth = xAxisHeight
+                )
+
+                // 绘制柱子
+                data.forEachIndexed { index, value ->
+                    val barHeight = (value / maxValue) * canvasHeight // 柱子的高度
+                    val left = index * (barWidth + gapWidth) // 柱子的左边界
+                    val top = canvasHeight - barHeight // 柱子的顶部位置
+
+                    // 绘制柱子
+                    drawRect(
+                        color = Color.Blue,
+                        topLeft = Offset(left, top),
+                        size = Size(barWidth, barHeight)
+                    )
+
+                    // 绘制柱子的边框
+                    drawRect(
+                        color = Color.Black,
+                        topLeft = Offset(left, top),
+                        size = Size(barWidth, barHeight),
+                        style = Stroke(width = 2f)
+                    )
+
+                    // 在柱子底部绘制 X 轴标签
+                    if (index < xLabels.size) {
+                        val label = xLabels[index]
+                        val textLayoutResult = textMeasurer.measure(
+                            text = label,
+                            style = TextStyle(
+                                color = Color.Black,
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                        drawText(
+                            textLayoutResult = textLayoutResult,
+                            topLeft = Offset(
+                                left + (barWidth - textLayoutResult.size.width) / 2,
+                                canvasHeight + 4.dp.toPx() // 将标签放在 X 轴下方
+                            )
+                        )
+                    }
+                }
+            }
+}
+
+@Composable
+fun HealthBarChartWithImage() {
+    // 数据
+    val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
+    val xLabels = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日") // X 轴标签
+    val yLabels = listOf("0", "35", "70", "105", "140") // Y 轴刻度值
+
+    // 获取数据中的最大值，用于计算柱子的高度
+    val maxValue = data.maxOrNull() ?: 1f
+
+    // 用于测量文本大小
+    val textMeasurer = rememberTextMeasurer()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    val canvasWidth = size.width
+                    val canvasHeight = size.height
+                    val barWidth = (canvasWidth / data.size) * 0.8f // 柱子的宽度
+                    val gapWidth = (canvasWidth / data.size) * 0.2f // 柱子之间的间距
+
+                    // 绘制 Y 轴（右侧）
+                    val yAxisWidth = 2f
+                    drawLine(
+                        color = Color.Black,
+                        start = Offset(canvasWidth, canvasHeight),
+                        end = Offset(canvasWidth, 0f),
+                        strokeWidth = yAxisWidth
+                    )
+
+                    // 绘制 Y 轴刻度
+                    val yAxisSteps = yLabels.size - 1 // Y 轴刻度数量
+                    val yStepHeight = canvasHeight / yAxisSteps
+                    for (i in 0..yAxisSteps) {
+                        val y = canvasHeight - i * yStepHeight
+                        // 绘制刻度线
+                        drawLine(
+                            color = Color.Gray,
+                            start = Offset(canvasWidth, y),
+                            end = Offset(canvasWidth - 10f, y), // 刻度线长度
+                            strokeWidth = 1f
+                        )
+                        // 绘制刻度值
+                        val label = yLabels[i]
+                        val textLayoutResult = textMeasurer.measure(
+                            text = label,
+                            style = TextStyle(
+                                color = Color.Black,
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.Start
+                            )
+                        )
+                        drawText(
+                            textLayoutResult = textLayoutResult,
+                            topLeft = Offset(
+                                canvasWidth - textLayoutResult.size.width - 8.dp.toPx(),
+                                y - textLayoutResult.size.height / 2
+                            )
+                        )
+                    }
+
+                    // 绘制 X 轴
+                    val xAxisHeight = 2f
+                    drawLine(
+                        color = Color.Black,
+                        start = Offset(0f, canvasHeight),
+                        end = Offset(canvasWidth, canvasHeight),
+                        strokeWidth = xAxisHeight
+                    )
+
+                    // 绘制柱子
+                    data.forEachIndexed { index, value ->
+                        val barHeight = (value / maxValue) * canvasHeight // 柱子的高度
+                        val left = index * (barWidth + gapWidth) // 柱子的左边界
+                        val top = canvasHeight - barHeight // 柱子的顶部位置
+
+                        // 绘制柱子
+                        drawRect(
+                            color = Color.Blue,
+                            topLeft = Offset(left, top),
+                            size = Size(barWidth, barHeight)
+                        )
+
+                        // 绘制柱子的边框
+                        drawRect(
+                            color = Color.Black,
+                            topLeft = Offset(left, top),
+                            size = Size(barWidth, barHeight),
+                            style = Stroke(width = 2f)
+                        )
+                    }
+
+                    // 在值为 35 的位置绘制一条虚线
+                    val targetValue = 35f
+                    if (targetValue <= maxValue) {
+                        val y = canvasHeight - (targetValue / maxValue) * canvasHeight
+                        drawLine(
+                            color = Color.Red,
+                            start = Offset(0f, y),
+                            end = Offset(canvasWidth, y),
+                            strokeWidth = 2f,
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f) // 虚线效果
+                        )
+
+                        // 在虚线右侧添加标签
+                        val label = "Target: $targetValue"
+                        val textLayoutResult = textMeasurer.measure(
+                            text = label,
+                            style = TextStyle(
+                                color = Color.Red,
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.End
+                            )
+                        )
+                        drawText(
+                            textLayoutResult = textLayoutResult,
+                            topLeft = Offset(
+                                canvasWidth - textLayoutResult.size.width - 8.dp.toPx(),
+                                y - textLayoutResult.size.height / 2
+                            )
+                        )
+                    }
+                }
+
+                // 在每条柱子下方添加标签和图片
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    data.forEachIndexed { index, _ ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            // 添加图片（替换为你的图片资源）
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_launcher_foreground), // 替换为你的图片资源
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            // 添加标签
+                            Text(
+                                text = xLabels[index],
+                                style = TextStyle(
+                                    color = Color.Black,
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+}
+
+@Composable
+fun HealthBarChartWithLabelsAndImages() {
+    // 数据
+    val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
+    val xLabels = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日") // X 轴标签
+    val yLabels = listOf("0", "35", "70", "105", "140") // Y 轴刻度值
+
+    // 获取数据中的最大值，用于计算柱子的高度
+    val maxValue = data.maxOrNull() ?: 1f
+
+    // 用于测量文本大小
+    val textMeasurer = rememberTextMeasurer()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
+    ) {
+        // 图表部分
+        Box(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                val canvasWidth = size.width
+                val canvasHeight = size.height
+                val barWidth = (canvasWidth / data.size) * 0.8f // 柱子的宽度
+                val gapWidth = (canvasWidth / data.size) * 0.2f // 柱子之间的间距
+
+                // 绘制 Y 轴（右侧）
+                val yAxisWidth = 2f
+                drawLine(
+                    color = Color.Black,
+                    start = Offset(canvasWidth, canvasHeight),
+                    end = Offset(canvasWidth, 0f),
+                    strokeWidth = yAxisWidth
+                )
+
+                // 绘制 Y 轴刻度
+                val yAxisSteps = yLabels.size - 1 // Y 轴刻度数量
+                val yStepHeight = canvasHeight / yAxisSteps
+                for (i in 0..yAxisSteps) {
+                    val y = canvasHeight - i * yStepHeight
+                    // 绘制刻度线
+                    drawLine(
+                        color = Color.Gray,
+                        start = Offset(canvasWidth, y),
+                        end = Offset(canvasWidth - 10f, y), // 刻度线长度
+                        strokeWidth = 1f
+                    )
+                    // 绘制刻度值（放在 Y 轴右侧）
+                    val label = yLabels[i]
+                    val textLayoutResult = textMeasurer.measure(
+                        text = label,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.Start
+                        )
+                    )
+                    drawText(
+                        textLayoutResult = textLayoutResult,
+                        topLeft = Offset(
+                            canvasWidth + 8.dp.toPx(), // 将标签放在 Y 轴右侧
+                            y - textLayoutResult.size.height / 2
+                        )
+                    )
+                }
+
+                // 绘制 X 轴
+                val xAxisHeight = 2f
+                drawLine(
+                    color = Color.Black,
+                    start = Offset(0f, canvasHeight),
+                    end = Offset(canvasWidth, canvasHeight),
+                    strokeWidth = xAxisHeight
+                )
+
+                // 绘制柱子
+                data.forEachIndexed { index, value ->
+                    val barHeight = (value / maxValue) * canvasHeight // 柱子的高度
+                    val left = index * (barWidth + gapWidth) // 柱子的左边界
+                    val top = canvasHeight - barHeight // 柱子的顶部位置
+
+                    // 绘制柱子
+                    drawRect(
+                        color = Color.Blue,
+                        topLeft = Offset(left, top),
+                        size = Size(barWidth, barHeight)
+                    )
+
+                    // 绘制柱子的边框
+                    drawRect(
+                        color = Color.Black,
+                        topLeft = Offset(left, top),
+                        size = Size(barWidth, barHeight),
+                        style = Stroke(width = 2f)
+                    )
+                }
+
+                // 在值为 35 的位置绘制一条虚线
+                val targetValue = 35f
+                if (targetValue <= maxValue) {
+                    val y = canvasHeight - (targetValue / maxValue) * canvasHeight
+                    drawLine(
+                        color = Color.LightGray,
+                        start = Offset(0f, y),
+                        end = Offset(canvasWidth, y),
+                        strokeWidth = 2f,
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f) // 虚线效果
+                    )
+
+                    // 在虚线右侧添加标签
+                    val label = "Target: $targetValue"
+                    val textLayoutResult = textMeasurer.measure(
+                        text = label,
+                        style = TextStyle(
+                            color = Color.LightGray,
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.End
+                        )
+                    )
+//                    drawText(
+//                        textLayoutResult = textLayoutResult,
+//                        topLeft = Offset(
+//                            canvasWidth - textLayoutResult.size.width - 8.dp.toPx(),
+//                            y - textLayoutResult.size.height / 2
+//                        )
+//                    )
+                }
+            }
+        }
+
+        // X 轴标签和图片部分
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            data.forEachIndexed { index, _ ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // 添加标签
+                    Text(
+                        text = xLabels[index],
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                    // 添加图片（替换为你的图片资源）
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // 替换为你的图片资源
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun BarChartScreen() {
     val sampleData = listOf(
         10f, 20f, 15f, 30f, 25f, 40f, 35f
     )
 
-    BarChart(data = sampleData)
+//    BarChart(data = sampleData)
+    BarChartWithLabels(data = sampleData)
+
+}
+
+@Composable
+fun BarChartScreen2() {
+    val sampleData = listOf(
+        10f, 20f, 15f, 30f, 25f, 40f, 35f
+    )
+    val xLabels = listOf(
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    )
+
+    BarChartWithRightYAxis(data = sampleData, xLabels = xLabels)
 }
 
 @Preview
 @Composable
 fun previewVitalityPartTest2() {
 //    vitalityPartTest2()
-    BarChartScreen()
+//    BarChartScreen()
+//    BarChartScreen2()
+//    HealthBarChart()
+    HealthBarChartWithLabelsAndImages()
 }
