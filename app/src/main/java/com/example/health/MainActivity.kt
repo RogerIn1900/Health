@@ -26,6 +26,8 @@ class MainActivity : ComponentActivity() {
                 MainApp()
             }
         }
+
+
     }
 }
 

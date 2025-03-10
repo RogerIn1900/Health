@@ -30,9 +30,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Dialog
 
 import android.Manifest
+import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.ImageFormat
+import android.util.Log
 import android.util.Size
 import android.view.Surface
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
@@ -43,10 +56,16 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -54,12 +73,15 @@ import com.google.zxing.BinaryBitmap
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.common.HybridBinarizer
+import java.io.IOException
+import java.util.UUID
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
 @Composable
 fun HomeTop(title: String) {
+
     TopAppBar(
         title = { Text(title.toString()) },
         actions = {
@@ -75,7 +97,8 @@ fun DropdownMenuButton() {
     //扫一扫
     var isScanning by remember { mutableStateOf(false) }
     var scanResult by remember { mutableStateOf<String?>(null) }
-
+    //蓝牙
+    var isBluetooth by remember { mutableStateOf(false) }
 
     IconButton(onClick = { showDialog = true }) {
         Icon(Icons.Default.AddCircle,
@@ -113,10 +136,12 @@ fun DropdownMenuButton() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
 
+                        //蓝牙添加设备
                         Button(
                             colors = ButtonDefaults.buttonColors(Color.White),
                             onClick = {
                                 showDialog = false
+                                isBluetooth = true
                             },
                             modifier = Modifier
                                 .width(200.dp)
@@ -125,6 +150,7 @@ fun DropdownMenuButton() {
                         ) {
                             Text("添加设备")
                         }
+                        //使用相机扫一扫
                         Button(
                             colors = ButtonDefaults.buttonColors(Color.White),
                             onClick = {
@@ -160,6 +186,13 @@ fun DropdownMenuButton() {
             )
         }
 
+    }
+
+    if (isBluetooth) {
+        Dialog(onDismissRequest = {}) {
+            BluetoothScreen()
+
+        }
     }
 }
 
@@ -313,6 +346,154 @@ class QRCodeAnalyzer(private val onQrCodeScanned: (String) -> Unit) : ImageAnaly
     }
 }
 
+//蓝牙功能
+
+@Composable
+fun DeviceList(
+    devices: List<BluetoothDevice>,
+    onDeviceClick: (BluetoothDevice) -> Unit,
+) {
+    val context = LocalContext.current
+
+    LazyColumn {
+        items(devices) { device ->
+            Button(
+                onClick = { onDeviceClick(device) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return@Button
+                }
+                Text(
+                    text = device.name ?: "Unknown Device",
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BluetoothScreen() {
+    val context = LocalContext.current
+    val bluetoothAdapter = remember { BluetoothAdapter.getDefaultAdapter() }
+    val devices = remember { mutableStateListOf<BluetoothDevice>() }
+    val isScanning = remember { mutableStateOf(false) }
+    val connectedDevice = remember { mutableStateOf<BluetoothDevice?>(null) }
+    val isConnected = remember { mutableStateOf(false) }
+
+    // 扫描设备
+    val scanCallback = remember {
+        object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult) {
+                super.onScanResult(callbackType, result)
+                val device = result.device
+                if (!devices.contains(device)) {
+                    devices.add(device)
+                }
+            }
+        }
+    }
+
+    fun startScan() {
+        isScanning.value = true
+        devices.clear()
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        bluetoothAdapter?.bluetoothLeScanner?.startScan(scanCallback)
+    }
+
+    // 权限请求
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            startScan()
+        }
+    }
+
+    // 开启蓝牙
+    val enableBluetoothLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            startScan()
+        }
+    }
+
+
+
+
+
+    fun stopScan() {
+        isScanning.value = false
+        bluetoothAdapter?.bluetoothLeScanner?.stopScan(scanCallback)
+    }
+
+    // 连接设备
+    fun connectToDevice(device: BluetoothDevice) {
+        val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+        val socket = device.createRfcommSocketToServiceRecord(uuid)
+        try {
+            socket.connect()
+            connectedDevice.value = device
+            isConnected.value = true
+        } catch (e: IOException) {
+            Log.e("Bluetooth", "连接失败: ${e.message}")
+        }
+    }
+
+    // UI
+    Column {
+        Button(onClick = {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (bluetoothAdapter?.isEnabled == true) {
+                    startScan()
+                } else {
+                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                    enableBluetoothLauncher.launch(enableBtIntent)
+                }
+            } else {
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }) {
+            Text(if (isScanning.value) "停止扫描" else "开始扫描")
+        }
+
+        DeviceList(devices) { device ->
+            connectToDevice(device)
+        }
+
+        if (isConnected.value) {
+            Text("已连接到: ${connectedDevice.value?.name}")
+        }
+    }
+}
 
 @androidx.compose.ui.tooling.preview.Preview
 @Composable
