@@ -56,7 +56,8 @@ fun VitalityIndex(navController:NavController) {
             vitalityPart1()
             vitalityPart2()
             vitalityPart3()
-            HealthBarChartWithInteractionsAndImage()
+            Spacer(modifier = Modifier.height(10.dp))
+            vitalityCard3()
 
         }
     }
@@ -271,15 +272,26 @@ fun vitalityCard3(){
     val name = "卡路里（千卡）"
     val a = true
     val content = when(a) {
-        true  -> "在燃烧384千卡，才能完成今日卡路里目标"
+        true  -> "再燃烧384千卡，才能完成今日卡路里目标"
         false -> ""
     }
 
-    Card {
+    Card(
+        modifier = Modifier
+            .height(400.dp)
+            .width(500.dp)
+    ) {
 
-        Column {
+        Column(
+            modifier = Modifier.padding(10.dp)
+                .height(400.dp)
+                .width(500.dp)
+
+        ) {
 //                        Spacer(modifier = Modifier.height(10.dp))
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Image(
                     painter = painterResource(id = pic),
                     contentDescription = "",
@@ -291,20 +303,21 @@ fun vitalityCard3(){
                 Image(
                     painter = painterResource(R.mipmap.arrow_light),
                     contentDescription = "",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(14.dp)
                 )
             }
 
             HealthBarChartWithInteractionsAndImage()
 
-            Spacer(modifier = Modifier.height(20.dp))
+//            Spacer(modifier = Modifier.height(20.dp))
 
             Card(
                 modifier = Modifier.padding(10.dp),
                 colors = CardColors(Color.White, Color.White, Color.White, Color.White)
             ) {
                 Text(
-                    content
+                    content,
+                    modifier = Modifier.padding(4.dp)
                 )
             }
         }
@@ -313,7 +326,7 @@ fun vitalityCard3(){
 
 //单元图表
 @Composable
-fun HealthBarChartWithInteractionsAndImage() {
+fun HealthBarChartWithInteractionsAndImage2() {
     // 数据
     val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
     val xLabels = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日") // X 轴标签
@@ -336,7 +349,6 @@ fun HealthBarChartWithInteractionsAndImage() {
         modifier = Modifier
             .fillMaxSize()
             .height(400.dp)
-            .padding(16.dp)
     ) {
         // 图表上方显示的图片（当柱子被点击时显示）
             Box(
@@ -363,13 +375,13 @@ fun HealthBarChartWithInteractionsAndImage() {
                 .weight(1f)
                 .height(200.dp)
                 .fillMaxSize()
-                .padding(20.dp)
         ) {
 
             //-----------------------------------------
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(10.dp)
                     .pointerInput(Unit) {
                         detectTapGestures { offset ->
                             // 计算点击的柱子索引
@@ -564,8 +576,250 @@ fun HealthBarChartWithInteractionsAndImage() {
     }
 }
 
+@Composable
+fun HealthBarChartWithInteractionsAndImage() {
+    // 数据
+    val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
+    val xLabels = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日") // X 轴标签
+    val yLabels = listOf("0", "35", "70", "105", "140") // Y 轴刻度值
+
+    // 获取数据中的最大值，用于计算柱子的高度
+    val maxValue = data.maxOrNull() ?: 1f
+
+    // 用于测量文本大小
+    val textMeasurer = rememberTextMeasurer()
+
+    // 状态：记录被点击的柱子索引
+    var clickedBarIndex by remember { mutableStateOf<Int?>(null) }
+
+    // 状态：记录是否点击了值为 35 的虚线
+    var isTargetLineClicked by remember { mutableStateOf(false) }
+    var targetLineClickPosition by remember { mutableStateOf(Offset.Zero) }
+
+    Column(
+        modifier = Modifier
+//            .fillMaxSize()
+            .padding(start = 16.dp, end = 16.dp)
+            .height(300.dp)
+            .width(510.dp)
+    ) {
+        // 图表上方显示的图片（当柱子被点击时显示）
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+//                .background(Color.White)
+                .padding(4.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            if (clickedBarIndex != null) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // 替换为你的图片资源
+                    contentDescription = "Clicked Bar Image",
+                    modifier = Modifier.size(40.dp)
+                )
+            } else {
+                Row (
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier.fillMaxSize()
+                ){
+                    Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+
+                    ) {
+                        Text("340")
+                        Text("当前消耗")
+                    }
+                    Column (
+                        horizontalAlignment = Alignment.CenterHorizontally
+
+                    ){
+                        Text("340")
+                        Text("当前消耗")
+                    }
+                }
+            }
+        }
+
+        // 图表部分
+        Box(
+            modifier = Modifier
+                .weight(1f)
+//                .fillMaxSize()
+                .height(300.dp)
+                .width(510.dp)
+                .padding(10.dp) // 添加 10.dp 的 padding
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTapGestures { offset ->
+                            // 计算点击的柱子索引
+                            val barWidth = (size.width / data.size) * 0.2f
+                            val gapWidth = (size.width / data.size) * 0.8f
+                            val index = (offset.x / (barWidth + gapWidth)).toInt()
+                            if (index in data.indices) {
+                                clickedBarIndex = index
+                            }
+
+                            // 检查是否点击了值为 35 的虚线
+                            val targetY = size.height - (35f / maxValue) * size.height
+
+                            if (offset.y in (targetY - 10f)..(targetY + 10f)) {
+                                isTargetLineClicked = true
+                                targetLineClickPosition = offset
+                            } else {
+                                isTargetLineClicked = false
+                            }
+                        }
+                    }
+            ) {
+                val canvasWidth = size.width
+                val canvasHeight = size.height
+                val barWidth = (canvasWidth / data.size) * 0.2f // 柱子的宽度
+                val gapWidth = (canvasWidth / data.size) * 0.8f // 柱子之间的间距
+                val yAxisOffset = 20f
+
+                // 绘制图表外围的灰色边框
+                drawRect(
+                    color = Color.Gray,
+                    topLeft = Offset(0f, 0f),
+                    size = Size(canvasWidth, canvasHeight),
+                    style = Stroke(width = 2f) // 边框宽度
+                )
+
+                // 绘制 Y 轴刻度
+                val yAxisSteps = yLabels.size - 1 // Y 轴刻度数量
+                val yStepHeight = canvasHeight / yAxisSteps
+                for (i in 0..yAxisSteps) {
+                    val y = canvasHeight - i * yStepHeight
+                    // 绘制刻度线
+                    drawLine(
+                        color = Color.Gray,
+                        start = Offset(canvasWidth, y),
+                        end = Offset(canvasWidth - 10f, y), // 刻度线长度
+                        strokeWidth = 1f
+                    )
+                    // 绘制刻度值（放在 Y 轴右侧）
+                    val label = yLabels[i]
+                    val textLayoutResult = textMeasurer.measure(
+                        text = label,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.Start
+                        )
+                    )
+                    drawText(
+                        textLayoutResult = textLayoutResult,
+                        topLeft = Offset(
+                            canvasWidth + 8.dp.toPx(), // 将标签放在 Y 轴右侧
+                            y - textLayoutResult.size.height / 2
+                        )
+                    )
+                }
+
+                // 绘制柱子
+                data.forEachIndexed { index, value ->
+                    val barHeight = (value / maxValue) * canvasHeight // 柱子的高度
+                    val left = index * (barWidth + gapWidth) + gapWidth / 2 // 柱子的左边界
+                    val top = canvasHeight - barHeight // 柱子的顶部位置
+
+                    // 绘制柱子
+                    drawRect(
+                        color = Color.Blue,
+                        topLeft = Offset(left, top),
+                        size = Size(barWidth, barHeight)
+                    )
+
+                    // 绘制柱子的边框
+                    drawRect(
+                        color = Color.Black,
+                        topLeft = Offset(left, top),
+                        size = Size(barWidth, barHeight),
+                        style = Stroke(width = 2f)
+                    )
+                }
+
+                // 在值为 35 的位置绘制一条虚线
+                val targetValue = 35f
+                if (targetValue <= maxValue) {
+                    val y = canvasHeight - (targetValue / maxValue) * canvasHeight
+                    drawLine(
+                        color = Color.LightGray,
+                        start = Offset(0f, y),
+                        end = Offset(canvasWidth, y),
+                        strokeWidth = 2f,
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f) // 虚线效果
+                    )
+                }
+
+                // 在被点击的柱子中间绘制一条虚线
+                clickedBarIndex?.let { index ->
+                    val left = index * (barWidth + gapWidth) + gapWidth / 2
+                    val centerX = left + barWidth / 2
+                    drawLine(
+                        color = Color.Green,
+                        start = Offset(centerX, 0f),
+                        end = Offset(centerX, canvasHeight),
+                        strokeWidth = 2f,
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f) // 虚线效果
+                    )
+                }
+
+                // 在点击值为 35 的虚线位置上方绘制一个小图形
+                if (isTargetLineClicked) {
+                    drawCircle(
+                        color = Color.Magenta,
+                        radius = 10f,
+                        center = Offset(targetLineClickPosition.x, targetLineClickPosition.y - 20f)
+                    )
+                }
+            }
+        }
+
+        // X 轴标签和图片部分
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .width(490.dp)
+//                .padding(top = 8.dp),
+                .padding(start = 10.dp, end = 10.dp),
+
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            data.forEachIndexed { index, _ ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+
+//                    modifier = Modifier.padding(start = 15.dp, end = 15.dp)
+                ) {
+
+                    // 添加标签
+                    Text(
+                        text = xLabels[index],
+                        style = TextStyle(
+                            color = Color.Black,
+//                            fontSize = 10.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                    // 添加图片（替换为你的图片资源）
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // 替换为你的图片资源
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 fun previewVitalityPartTest2() {
-    HealthBarChartWithInteractionsAndImage()
+    vitalityCard3()
 }
