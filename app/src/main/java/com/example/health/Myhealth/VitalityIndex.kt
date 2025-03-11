@@ -56,10 +56,7 @@ fun VitalityIndex(navController:NavController) {
             vitalityPart1()
             vitalityPart2()
             vitalityPart3()
-            Column {
-                HealthBarChartWithInteractionsAndImage()
-                vitalityCard3()
-            }
+            HealthBarChartWithInteractionsAndImage()
 
         }
     }
@@ -278,41 +275,40 @@ fun vitalityCard3(){
         false -> ""
     }
 
-                Card {
+    Card {
 
-                    Column {
+        Column {
 //                        Spacer(modifier = Modifier.height(10.dp))
-                        Row {
-                            Image(
-                                painter = painterResource(id = pic),
-                                contentDescription = "",
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(Modifier.width(10.dp))
-                            Text(name)
-                            Spacer(modifier = Modifier.weight(1f))
-                            Image(
-                                painter = painterResource(R.mipmap.arrow_light),
-                                contentDescription = "",
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+            Row {
+                Image(
+                    painter = painterResource(id = pic),
+                    contentDescription = "",
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(name)
+                Spacer(modifier = Modifier.weight(1f))
+                Image(
+                    painter = painterResource(R.mipmap.arrow_light),
+                    contentDescription = "",
+                    modifier = Modifier.size(20.dp)
+                )
+            }
 
-                        HealthBarChartWithInteractionsAndImage()
+            HealthBarChartWithInteractionsAndImage()
 
-                        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-                        Card(
-                            modifier = Modifier.padding(10.dp),
-                            colors = CardColors(Color.White,Color.White,Color.White,Color.White)
-                        ) {
-                            Text(
-                                content
-                            )
-                        }
-                    }
-                }
-
+            Card(
+                modifier = Modifier.padding(10.dp),
+                colors = CardColors(Color.White, Color.White, Color.White, Color.White)
+            ) {
+                Text(
+                    content
+                )
+            }
+        }
+    }
 }
 
 //单元图表
@@ -339,10 +335,10 @@ fun HealthBarChartWithInteractionsAndImage() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .height(400.dp)
             .padding(16.dp)
     ) {
         // 图表上方显示的图片（当柱子被点击时显示）
-        if (clickedBarIndex != null) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -351,6 +347,8 @@ fun HealthBarChartWithInteractionsAndImage() {
                     .padding(4.dp),
                 contentAlignment = Alignment.Center
             ) {
+                if (clickedBarIndex != null) {
+
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground), // 替换为你的图片资源
                     contentDescription = "Clicked Bar Image",
@@ -363,8 +361,12 @@ fun HealthBarChartWithInteractionsAndImage() {
         Box(
             modifier = Modifier
                 .weight(1f)
+                .height(200.dp)
+                .fillMaxSize()
                 .padding(20.dp)
         ) {
+
+            //-----------------------------------------
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
@@ -561,7 +563,6 @@ fun HealthBarChartWithInteractionsAndImage() {
         }
     }
 }
-
 
 @Preview
 @Composable
