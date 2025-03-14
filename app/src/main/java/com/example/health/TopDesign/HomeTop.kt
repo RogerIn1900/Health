@@ -53,12 +53,23 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
@@ -175,17 +186,74 @@ fun DropdownMenuButton() {
         Text("Scanned QR Code: $scanResult")
     }
 
+    var onBackPressed:() -> Unit = {isScanning = false}
     if (isScanning) {
         Dialog(onDismissRequest = { }) {
-            ScanQRCodeScreen(
-                isScanning = isScanning,
-                onScanResult = { qrCode ->
-                    isScanning = false
-                    scanResult = qrCode
-                }
-            )
-        }
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ){
 
+                ScanQRCodeScreen(
+                    isScanning = isScanning,
+                    onScanResult = { qrCode ->
+                        isScanning = false
+                        scanResult = qrCode
+                    }
+                )
+
+                // 返回按钮
+                IconButton(
+                    onClick = onBackPressed,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White
+                    )
+                }
+
+                // 白色方框和扫描线
+                if (isScanning) {
+                    val transition = rememberInfiniteTransition()
+                    val scanLinePosition by transition.animateFloat(
+                        initialValue = 0f,
+                        targetValue = 1f,
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(1000, easing = LinearEasing),
+                            repeatMode = RepeatMode.Restart
+                        )
+                    )
+
+                    Canvas(modifier = Modifier.fillMaxSize()) {
+                        val boxWidth = size.width * 0.7f
+                        val boxHeight = boxWidth
+                        val boxLeft = (size.width - boxWidth) / 2
+                        val boxTop = (size.height - boxHeight) / 2
+
+                        // 绘制白色方框
+                        drawRect(
+                            color = Color.White,
+                            topLeft = Offset(boxLeft, boxTop),
+                            size = androidx.compose.ui.geometry.Size(boxWidth, boxHeight),
+                            style = Stroke(width = 2f)
+                        )
+
+                        // 绘制扫描线
+                        val scanLineY = boxTop + boxHeight * scanLinePosition
+                        drawLine(
+                            color = Color.White,
+                            start = Offset(boxLeft, scanLineY),
+                            end = Offset(boxLeft + boxWidth, scanLineY),
+                            strokeWidth = 2f,
+                            cap = StrokeCap.Round
+                        )
+                    }
+                }
+            }
+        }
     }
 
     if (isBluetooth) {
@@ -404,6 +472,8 @@ fun BluetoothScreen() {
                 if (!devices.contains(device)) {
                     devices.add(device)
                 }
+                devices.add(device)
+
             }
         }
     }
@@ -455,6 +525,7 @@ fun BluetoothScreen() {
         bluetoothAdapter?.bluetoothLeScanner?.stopScan(scanCallback)
     }
 
+
     // 连接设备
     fun connectToDevice(device: BluetoothDevice) {
         val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
@@ -485,6 +556,7 @@ fun BluetoothScreen() {
             Text(if (isScanning.value) "停止扫描" else "开始扫描")
         }
 
+        Text("扫描到的内容")
         DeviceList(devices) { device ->
             connectToDevice(device)
         }
