@@ -45,7 +45,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
-
+import java.time.LocalDate
 
 
 @Composable
@@ -189,7 +189,7 @@ fun graph(){
 }
 //TODO: 当日数据
 
-data class VitalityData(val pic:Int,val name:String,var data:Int,val afterData:String)
+data class VitalityDataOfDay(val pic:Int,val name:String,var data:Int,val afterData:String)
 
 @Composable
 fun dataPart(){
@@ -197,11 +197,11 @@ fun dataPart(){
     var feet = 253
     var time = 253
 
-    var data = VitalityData (pic = 0,name = "",data = 1,afterData = "")
+    var data = VitalityDataOfDay (pic = 0,name = "",data = 1,afterData = "")
     var datas = arrayOf(
-        VitalityData (pic = R.mipmap.calorie,name = "卡路里（千卡）",data =calorie,afterData = "/400"),
-        VitalityData (pic = R.mipmap.shoe,name = "步数（步）",data =feet,afterData = "/400"),
-        VitalityData (pic = R.mipmap.clock,name = "中高强度（分）",data = time,afterData = "/400")
+        VitalityDataOfDay (pic = R.mipmap.calorie,name = "卡路里（千卡）",data =calorie,afterData = "/400"),
+        VitalityDataOfDay (pic = R.mipmap.shoe,name = "步数（步）",data =feet,afterData = "/400"),
+        VitalityDataOfDay (pic = R.mipmap.clock,name = "中高强度（分）",data = time,afterData = "/400")
     )
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -248,7 +248,7 @@ fun VitalityCard(day: Int,modifier: Modifier) {
 }
 
 @Composable
-fun vitalityCard2(data: VitalityData,modifier: Modifier = Modifier) {
+fun vitalityCard2(data: VitalityDataOfDay,modifier: Modifier = Modifier) {
     Column(
     ) {
         Row {
@@ -266,11 +266,25 @@ fun vitalityCard2(data: VitalityData,modifier: Modifier = Modifier) {
     }
 }
 
+data class VitalityDataOfCalories( var day: Int, var data:Int)
+
 @Composable
-fun vitalityCard3(){
-    val pic = R.mipmap.calorie
-    val name = "卡路里（千卡）"
-    val a = true
+fun vitalityCard3(
+     pic :Int = R.mipmap.calorie,
+     name :String = "卡路里（千卡）",
+     a : Boolean = true,
+
+){
+//    var vitalityDataOfCalories = VitalityDataOfCalories()
+    var datas = arrayOf(
+        VitalityDataOfCalories(1,340),
+        VitalityDataOfCalories(2,444),
+        VitalityDataOfCalories(3,380),
+        VitalityDataOfCalories(4,717),
+        VitalityDataOfCalories(5,419),
+        VitalityDataOfCalories(6,0),
+        VitalityDataOfCalories(7,0)
+    )
     val content = when(a) {
         true  -> "再燃烧384千卡，才能完成今日卡路里目标"
         false -> ""
@@ -577,9 +591,12 @@ fun HealthBarChartWithInteractionsAndImage2() {
 }
 
 @Composable
-fun HealthBarChartWithInteractionsAndImage() {
+fun HealthBarChartWithInteractionsAndImage(
+    data :List<Float> = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
+
+) {
     // 数据
-    val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
+//    val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
     val xLabels = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日") // X 轴标签
     val yLabels = listOf("0", "35", "70", "105", "140") // Y 轴刻度值
 
