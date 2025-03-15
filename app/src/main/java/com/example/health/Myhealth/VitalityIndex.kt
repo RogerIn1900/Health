@@ -57,8 +57,31 @@ fun VitalityIndex(navController:NavController) {
             vitalityPart2()
             vitalityPart3()
             Spacer(modifier = Modifier.height(10.dp))
-            vitalityCard3()
+            vitalityCard3(
+                pic = R.mipmap.calorie,
+                name = "卡路里（千卡）",
+                data  =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
 
+            vitalityCard3(
+                pic = R.mipmap.shoe,
+                name = "卡路里（千卡）",
+                data  =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            vitalityCard3(
+                pic = R.mipmap.clock,
+                name = "卡路里（千卡）",
+                data  =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
+            )
+//            fun vitalityCard3(
+//                pic :Int = R.mipmap.calorie,
+//                name :String = "卡路里（千卡）",
+//                a : Boolean = true,
+//                data:List<Float> =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
+//            ){
         }
     }
 }
@@ -273,7 +296,7 @@ fun vitalityCard3(
      pic :Int = R.mipmap.calorie,
      name :String = "卡路里（千卡）",
      a : Boolean = true,
-
+     data:List<Float> =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
 ){
 //    var vitalityDataOfCalories = VitalityDataOfCalories()
     var datas = arrayOf(
@@ -285,6 +308,8 @@ fun vitalityCard3(
         VitalityDataOfCalories(6,0),
         VitalityDataOfCalories(7,0)
     )
+//    val data :List<Float> = data// 对应周一至周日的数据
+
     val content = when(a) {
         true  -> "再燃烧384千卡，才能完成今日卡路里目标"
         false -> ""
@@ -321,7 +346,9 @@ fun vitalityCard3(
                 )
             }
 
-            HealthBarChartWithInteractionsAndImage()
+            HealthBarChartWithInteractionsAndImage(
+                data = data // 对应周一至周日的数据
+            )
 
 //            Spacer(modifier = Modifier.height(20.dp))
 
@@ -593,7 +620,6 @@ fun HealthBarChartWithInteractionsAndImage2() {
 @Composable
 fun HealthBarChartWithInteractionsAndImage(
     data :List<Float> = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
-
 ) {
     // 数据
 //    val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
@@ -677,8 +703,18 @@ fun HealthBarChartWithInteractionsAndImage(
                             val barWidth = (size.width / data.size) * 0.2f
                             val gapWidth = (size.width / data.size) * 0.8f
                             val index = (offset.x / (barWidth + gapWidth)).toInt()
+
+                            // 判断是否点击了柱子
                             if (index in data.indices) {
-                                clickedBarIndex = index
+                                val left = index * (barWidth + gapWidth) + gapWidth / 2
+                                val right = left + barWidth
+                                if (offset.x in left..right) {
+                                    clickedBarIndex = index
+                                } else {
+                                    clickedBarIndex = null
+                                }
+                            } else {
+                                clickedBarIndex = null
                             }
 
                             // 检查是否点击了值为 35 的虚线
