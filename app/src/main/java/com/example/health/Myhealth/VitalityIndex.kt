@@ -67,14 +67,14 @@ fun VitalityIndex(navController:NavController) {
             vitalityCard3(
                 pic = R.mipmap.shoe,
                 name = "卡路里（千卡）",
-                data  =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
+                data  =  listOf(120f, 15f, 50f, 125f, 30f, 50f, 90f)
             )
             Spacer(modifier = Modifier.height(10.dp))
 
             vitalityCard3(
                 pic = R.mipmap.clock,
                 name = "卡路里（千卡）",
-                data  =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
+                data  =  listOf(33f,44f,55f,66f,77f,88f,99f)
             )
 //            fun vitalityCard3(
 //                pic :Int = R.mipmap.calorie,
