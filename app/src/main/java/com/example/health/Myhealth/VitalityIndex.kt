@@ -60,21 +60,24 @@ fun VitalityIndex(navController:NavController) {
             vitalityCard3(
                 pic = R.mipmap.calorie,
                 name = "卡路里（千卡）",
-                data  =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
+                data  =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f),
+                mycolor = Color.Red
             )
             Spacer(modifier = Modifier.height(10.dp))
 
             vitalityCard3(
                 pic = R.mipmap.shoe,
                 name = "卡路里（千卡）",
-                data  =  listOf(120f, 15f, 50f, 125f, 30f, 50f, 90f)
+                data  =  listOf(120f, 15f, 50f, 125f, 30f, 50f, 90f),
+                mycolor = Color.Yellow
             )
             Spacer(modifier = Modifier.height(10.dp))
 
             vitalityCard3(
                 pic = R.mipmap.clock,
                 name = "卡路里（千卡）",
-                data  =  listOf(33f,44f,55f,66f,77f,88f,99f)
+                data  =  listOf(33f,44f,55f,66f,77f,88f,99f),
+                mycolor = Color.Blue
             )
 //            fun vitalityCard3(
 //                pic :Int = R.mipmap.calorie,
@@ -296,7 +299,8 @@ fun vitalityCard3(
      pic :Int = R.mipmap.calorie,
      name :String = "卡路里（千卡）",
      a : Boolean = true,
-     data:List<Float> =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
+     data:List<Float> =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f),
+     mycolor: Color = Color.Yellow
 ){
 //    var vitalityDataOfCalories = VitalityDataOfCalories()
     var datas = arrayOf(
@@ -347,7 +351,8 @@ fun vitalityCard3(
             }
 
             HealthBarChartWithInteractionsAndImage(
-                data = data // 对应周一至周日的数据
+                data = data, // 对应周一至周日的数据
+                mycolor = mycolor
             )
 
 //            Spacer(modifier = Modifier.height(20.dp))
@@ -619,7 +624,8 @@ fun HealthBarChartWithInteractionsAndImage2() {
 
 @Composable
 fun HealthBarChartWithInteractionsAndImage(
-    data :List<Float> = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
+    data :List<Float> = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f), // 对应周一至周日的数据
+    mycolor:Color = Color.Yellow
 ) {
     // 数据
 //    val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
@@ -638,6 +644,7 @@ fun HealthBarChartWithInteractionsAndImage(
     // 状态：记录是否点击了值为 35 的虚线
     var isTargetLineClicked by remember { mutableStateOf(false) }
     var targetLineClickPosition by remember { mutableStateOf(Offset.Zero) }
+//    val mycolor = Color.Yellow
 
     Column(
         modifier = Modifier
@@ -782,7 +789,7 @@ fun HealthBarChartWithInteractionsAndImage(
 
                     // 绘制柱子
                     drawRect(
-                        color = Color.Blue,
+                        color = mycolor,
                         topLeft = Offset(left, top),
                         size = Size(barWidth, barHeight)
                     )
