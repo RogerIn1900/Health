@@ -317,6 +317,7 @@ fun CameraPermission(onScanResult: (String) -> Unit) {
 fun CameraScanner(onScanResult: (String) -> Unit) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val navController = rememberNavController()
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = { ctx ->
@@ -340,9 +341,7 @@ fun CameraScanner(onScanResult: (String) -> Unit) {
 //                            println("Scanned QR Code: $qrCode")
                             Log.d("MainActivity","Scanned QR Code: $qrCode\"")
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(qrCode))
-                            val id = intent.data
-
-
+                            context.startActivity(intent)
 
                             onScanResult(qrCode) // 将扫描结果传递给回调
                         })
