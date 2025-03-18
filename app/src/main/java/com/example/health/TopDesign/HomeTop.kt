@@ -40,6 +40,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.ImageFormat
+import android.net.Uri
 import android.util.Log
 import android.util.Size
 import android.view.Surface
@@ -77,6 +78,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -92,7 +94,14 @@ import java.util.concurrent.Executors
 
 @Composable
 fun HomeTop(title: String) {
+//
+//    val url =  "http://Practicemakesperfect.cambridge.org"
+//    val navController = rememberNavController()
+//    val intent = Intent(Intent.ACTION_VIEW,Uri.parse(url))
+//    val context = LocalContext.current
+//    context.startActivity(intent)
 
+    rememberNavController()
     TopAppBar(
         title = { Text(title.toString()) },
         actions = {
@@ -174,6 +183,19 @@ fun DropdownMenuButton() {
 
                         ) {
                             Text("扫一扫")
+                        }
+                        val url =  "http://Practicemakesperfect.cambridge.org"
+                        val navController = rememberNavController()
+                        val intent = Intent(Intent.ACTION_VIEW,Uri.parse(url))
+                        val context = LocalContext.current
+                        //url跳转测试
+                        Button(
+                            onClick = {
+
+                                context.startActivity(intent)
+                            }
+                        ){
+                            Text("跳转")
                         }
                     }
                 }
@@ -316,6 +338,12 @@ fun CameraScanner(onScanResult: (String) -> Unit) {
                         it.setAnalyzer(cameraExecutor, QRCodeAnalyzer { qrCode ->
                             // 处理扫描到的二维码信息
 //                            println("Scanned QR Code: $qrCode")
+                            Log.d("MainActivity","Scanned QR Code: $qrCode\"")
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(qrCode))
+                            val id = intent.data
+
+
+
                             onScanResult(qrCode) // 将扫描结果传递给回调
                         })
                     }
