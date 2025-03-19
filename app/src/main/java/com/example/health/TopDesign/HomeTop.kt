@@ -184,19 +184,7 @@ fun DropdownMenuButton() {
                         ) {
                             Text("扫一扫")
                         }
-                        val url =  "http://Practicemakesperfect.cambridge.org"
-                        val navController = rememberNavController()
-                        val intent = Intent(Intent.ACTION_VIEW,Uri.parse(url))
-                        val context = LocalContext.current
-                        //url跳转测试
-                        Button(
-                            onClick = {
 
-                                context.startActivity(intent)
-                            }
-                        ){
-                            Text("跳转")
-                        }
                     }
                 }
             }
@@ -343,7 +331,7 @@ fun CameraScanner(onScanResult: (String) -> Unit) {
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(qrCode))
                             context.startActivity(intent)
 
-                            onScanResult(qrCode) // 将扫描结果传递给回调
+//                            onScanResult(qrCode) // 将扫描结果传递给回调
                         })
                     }
 

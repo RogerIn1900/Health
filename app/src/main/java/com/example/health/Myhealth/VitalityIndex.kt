@@ -1,5 +1,6 @@
 package com.example.health.Myhealth
 
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,8 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -28,24 +29,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.health.R
 import java.util.Date
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.CloseSegment
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.text.style.TextAlign
-import java.time.LocalDate
 
 
 @Composable
@@ -105,15 +110,27 @@ fun weekGraph(){
 }
 
 @Composable
-fun vitalityPart1(){
-    Card {
-        graph()
-        Spacer(modifier = Modifier.height(28.dp))
-        dataPart()
+fun vitalityPart1() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth() // 让 Card 填满父容器的宽度
+            .wrapContentHeight() // 让 Card 高度根据内容自适应
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth() // 让 Column 填满 Card 的宽度
+                .padding(16.dp), // 添加内边距
+            verticalArrangement = Arrangement.Center, // 垂直居中
+            horizontalAlignment = Alignment.CenterHorizontally // 水平居中
+        ) {
+            graph() // 图表部分
+            Spacer(modifier = Modifier.height(28.dp)) // 间距
+            dataPart() // 数据部分
+        }
     }
 }
 
-data class onePartData(val pic : Int,val name : String,)
+data class onePartData(val pic: Int, val name: String)
 @Composable
 fun vitalityPart2() {
     Column {
@@ -189,7 +206,9 @@ fun vitalityPartTest2() {
                 modifier = Modifier.padding(10.dp),
                 colors = CardColors(Color.LightGray,Color.Black,Color.White,Color.Black)
             ){
-                Text("目标进度已过半，继续加油", modifier = Modifier.padding(5.dp).fillMaxWidth())
+                Text("目标进度已过半，继续加油", modifier = Modifier
+                    .padding(5.dp)
+                    .fillMaxWidth())
             }
         }
     }
@@ -205,13 +224,124 @@ fun vitalityPart3() {
 
 
 //TODO: 当日图表
+
 @Composable
-fun graph(){
-    Image(
-        painter = painterResource(id = R.drawable.background),
-        contentDescription = "",
-        modifier = Modifier.fillMaxWidth()
-    )
+fun graph() {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .height(150.dp) // 设置 Column 的大小为 300dp
+            .width(300.dp)
+    ) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize() // Canvas 填满 Column 的空间
+        ) {
+            val canvasSize = size // Canvas 的尺寸
+            val canvasWidth = canvasSize.width
+            val canvasHeight = canvasSize.height
+
+            val ringWidth = 30.dp.toPx() // 半环宽度（转换为像素）
+            val maxRadius = (canvasWidth / 2) - ringWidth / 2 // 最大半径，确保圆环不超出 Canvas
+
+            // 定义颜色和画笔
+            val paints = listOf(
+                Paint().apply {
+                    color = Color(0xFFA52A2A) // 棕色
+                    strokeWidth = ringWidth
+                    isAntiAlias = true
+                    style = PaintingStyle.Stroke
+                },
+                Paint().apply {
+                    color = Color(0xFF8B4513) // 另一种棕色
+                    strokeWidth = ringWidth
+                    isAntiAlias = true
+                    style = PaintingStyle.Stroke
+                },
+                Paint().apply {
+                    color = Color(0xFF00008B) // 深蓝色
+                    strokeWidth = ringWidth
+                    isAntiAlias = true
+                    style = PaintingStyle.Stroke
+                }
+            )
+
+            // 绘制三个半圆环
+            paints.forEachIndexed { index, paint ->
+                val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
+
+                drawIntoCanvas { canvas ->
+                    withTransform({
+                        translate(canvasWidth / 2, canvasHeight ) // 将坐标系移动到 Canvas 的中心
+                    }) {
+                        canvas.nativeCanvas.drawArc(
+                            -radius, // 左边界
+                            -radius, // 上边界
+                            radius,  // 右边界
+                            radius,  // 下边界
+                            180f,   // 起始角度
+                            180f,   // 扫过的角度
+                            false,  // 不使用中心点连接
+                            paint.asFrameworkPaint() // 使用 Paint
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+//Canvas绘制当日数据图像
+@Composable
+fun SemiCircularRing(modifier: Modifier = Modifier.height(200.dp)) {
+    // 定义半环形的宽度和颜色
+    val ringWidth = 20.dp
+    val ringColor = Color.Blue
+
+    Canvas(
+        modifier = Modifier
+            .size(200.dp) // 设置 Canvas 的大小\
+            .height(100.dp)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        // 计算半环形的半径
+        val radius = (canvasWidth / 2) - ringWidth.toPx() / 2
+
+        // 定义画笔
+        val paint = Paint().apply {
+            color = Color.Red
+//                        style = android.graphics.Paint.Style.STROKE
+            strokeWidth = ringWidth.toPx()
+            isAntiAlias = true
+        }
+
+        // 绘制半环形
+        drawIntoCanvas { canvas ->
+            withTransform({
+                // 将坐标系移动到 Canvas 的中心
+                translate(canvasWidth / 2, canvasHeight / 2)
+            }) {
+                // 绘制圆弧
+                canvas.drawArc(
+                    rect = Rect(
+                        -radius,
+                        -radius,
+                        radius,
+                        radius
+                    ),
+                    startAngle = 180f, // 起始角度（从左侧开始）
+                    sweepAngle = 180f, // 扫过的角度（180 度表示半圆）
+                    useCenter = false, // 不使用中心点连接
+                    paint = Paint()
+                )
+            }
+        }
+    }
 }
 //TODO: 当日数据
 
@@ -236,7 +366,8 @@ fun dataPart(){
     ) {
         for( data in datas){
             vitalityCard2(data,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
                     .padding(5.dp)
             )
         }
@@ -326,7 +457,8 @@ fun vitalityCard3(
     ) {
 
         Column(
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier
+                .padding(10.dp)
                 .height(400.dp)
                 .width(500.dp)
 
@@ -881,5 +1013,5 @@ fun HealthBarChartWithInteractionsAndImage(
 @Preview
 @Composable
 fun previewVitalityPartTest2() {
-    vitalityCard3()
+    graph()
 }
