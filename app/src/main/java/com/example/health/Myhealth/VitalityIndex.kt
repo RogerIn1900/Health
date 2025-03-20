@@ -301,7 +301,12 @@ fun graph() {
 
                 // 如果 sweepAngle 大于 180f，绘制上层部分
                 if (sweepAngle > 180f) {
-
+                    val lightPaint = Paint().apply {
+                        color =lightenColor(paint.color)// 使用原始颜色的浅色
+                        strokeWidth = ringWidth
+                        isAntiAlias = true
+                        style = PaintingStyle.Stroke
+                    }
 
                     drawIntoCanvas { canvas ->
                         withTransform({
@@ -316,7 +321,7 @@ fun graph() {
                                 180f,   // 起始角度
                                 sweepAngle - 180f, // 扫过的角度（超过 180f 的部分）
                                 false,  // 不使用中心点连接
-                                paint.asFrameworkPaint() // 使用浅色 Paint
+                                lightPaint.asFrameworkPaint() // 使用浅色 Paint
                             )
                         }
                     }
@@ -328,7 +333,19 @@ fun graph() {
 
     }
 }
-
+fun lightenColor(color: Color): Color {
+    val red = (color.red * 1.2f).coerceAtMost(1f) // 增加红色分量
+    val green = (color.green * 1.2f).coerceAtMost(1f) // 增加绿色分量
+    val blue = (color.blue * 1.2f).coerceAtMost(1f) // 增加蓝色分量
+    return Color(red, green, blue, color.alpha) // 保持透明度不变
+}
+fun darkenColor(color: Color, factor: Float = 0.5f): Color {
+    // 混合黑色，factor 是黑色的混合比例（0.0f 为原始颜色，1.0f 为纯黑色）
+    val red = color.red * (1 - factor)
+    val green = color.green * (1 - factor)
+    val blue = color.blue * (1 - factor)
+    return Color(red, green, blue, color.alpha) // 保持透明度不变
+}
 
 //Canvas绘制当日数据图像
 @Composable
