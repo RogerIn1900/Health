@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
@@ -39,6 +40,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -248,50 +250,84 @@ fun graph() {
             // 定义颜色和画笔
             val paints = listOf(
                 Paint().apply {
-                    color = Color(0xFFA52A2A) // 棕色
+                    color = Color(0xFFFF5722) // 棕色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
                 },
                 Paint().apply {
-                    color = Color(0xFF8B4513) // 另一种棕色
+                    color = Color(0xFFFFC107) // 另一种棕色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
                 },
                 Paint().apply {
-                    color = Color(0xFF00008B) // 深蓝色
+                    color = Color(0xFF2196F3) // 深蓝色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
                 }
             )
+            val datas = listOf(
+                191.0 / 400,
+                4135.0 / 6000,
+                35.0 / 30
+            )
 
             // 绘制三个半圆环
             paints.forEachIndexed { index, paint ->
                 val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
+                val sweepAngle = (datas[index] * 180).toFloat()
 
+                // 绘制底层部分
                 drawIntoCanvas { canvas ->
                     withTransform({
-                        translate(canvasWidth / 2, canvasHeight ) // 将坐标系移动到 Canvas 的中心
+                        translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
                     }) {
+                        // 如果 sweepAngle 大于 180f，只绘制 180f 的部分
+                        val drawAngle = if (sweepAngle > 180f) 180f else sweepAngle
                         canvas.nativeCanvas.drawArc(
                             -radius, // 左边界
                             -radius, // 上边界
                             radius,  // 右边界
                             radius,  // 下边界
                             180f,   // 起始角度
-                            180f,   // 扫过的角度
+                            drawAngle,   // 扫过的角度
                             false,  // 不使用中心点连接
                             paint.asFrameworkPaint() // 使用 Paint
                         )
                     }
                 }
+
+                // 如果 sweepAngle 大于 180f，绘制上层部分
+                if (sweepAngle > 180f) {
+
+
+                    drawIntoCanvas { canvas ->
+                        withTransform({
+                            translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
+                        }) {
+                            // 绘制超过 180f 的部分
+                            canvas.nativeCanvas.drawArc(
+                                -radius, // 左边界
+                                -radius, // 上边界
+                                radius,  // 右边界
+                                radius,  // 下边界
+                                180f,   // 起始角度
+                                sweepAngle - 180f, // 扫过的角度（超过 180f 的部分）
+                                false,  // 不使用中心点连接
+                                paint.asFrameworkPaint() // 使用浅色 Paint
+                            )
+                        }
+                    }
+                }
             }
         }
+
+        // 将颜色变浅的函数
+
     }
 }
-
 
 
 //Canvas绘制当日数据图像
