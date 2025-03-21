@@ -36,6 +36,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
+import androidx.compose.ui.graphics.StrokeCap.Companion.Round
+import androidx.compose.ui.graphics.StrokeCap.Companion.Square
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.withTransform
@@ -53,6 +56,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.health.R
 import java.util.Date
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.asAndroidPath
+import androidx.compose.ui.graphics.drawscope.DrawStyle
 
 
 @Composable
@@ -244,7 +250,7 @@ fun graph() {
             val canvasWidth = canvasSize.width
             val canvasHeight = canvasSize.height
 
-            val ringWidth = 30.dp.toPx() // 半环宽度（转换为像素）
+            val ringWidth = 40.dp.toPx() // 半环宽度（转换为像素）
             val maxRadius = (canvasWidth / 2) - ringWidth / 2 // 最大半径，确保圆环不超出 Canvas
 
             // 定义颜色和画笔
@@ -254,18 +260,24 @@ fun graph() {
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
+//                    strokeCap = Round
+
                 },
                 Paint().apply {
                     color = Color(0xFFFFC107) // 另一种棕色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
+//                    strokeCap = Round
+
                 },
                 Paint().apply {
                     color = Color(0xFF2196F3) // 深蓝色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
+//                    strokeCap = Round
+
                 }
             )
             val datas = listOf(
@@ -294,7 +306,7 @@ fun graph() {
                             180f,   // 起始角度
                             drawAngle,   // 扫过的角度
                             false,  // 不使用中心点连接
-                            paint.asFrameworkPaint() // 使用 Paint
+                            paint.asFrameworkPaint(), // 使用 Paint
                         )
                     }
                 }
@@ -302,10 +314,11 @@ fun graph() {
                 // 如果 sweepAngle 大于 180f，绘制上层部分
                 if (sweepAngle > 180f) {
                     val lightPaint = Paint().apply {
-                        color =lightenColor(paint.color)// 使用原始颜色的浅色
+                        color =lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
                         strokeWidth = ringWidth
                         isAntiAlias = true
                         style = PaintingStyle.Stroke
+                        strokeCap = Butt
                     }
 
                     drawIntoCanvas { canvas ->
@@ -1063,8 +1076,59 @@ fun HealthBarChartWithInteractionsAndImage(
     }
 }
 
+
+
+
+
+@Composable
+fun RoundedCornerArc() {
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize() // Canvas 填满父布局
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        // 定义圆环宽度和半径
+        val ringWidth = 30.dp.toPx()
+        val radius = (canvasWidth / 2) - ringWidth / 2
+
+        // 定义画笔
+        val paint = Paint().apply {
+            color = Color.Blue // 设置颜色
+            strokeWidth = ringWidth // 设置线宽
+            style = PaintingStyle.Stroke // 设置绘制样式为描边
+            isAntiAlias = true // 开启抗锯齿
+        }
+
+        // 绘制圆弧
+        drawArc(
+            color = Color.Blue,
+            startAngle = 180f, // 起始角度
+            sweepAngle = 180f, // 扫过的角度
+            useCenter = false,
+            topLeft = androidx.compose.ui.geometry.Offset(-radius, -radius),
+            size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
+//            style = DrawStyle.cap
+        )
+
+        // 在端点处添加圆角
+        val path = Path().apply {
+            moveTo(radius, 0f)
+            quadraticBezierTo(
+                x1 = radius + ringWidth,
+                y1 = 0f,
+                x2 = radius,
+                y2 = ringWidth
+            )
+        }
+
+        // 绘制圆角
+        drawPath(path, Color.White)
+    }
+}
 @Preview
 @Composable
 fun previewVitalityPartTest2() {
-    graph()
+    RoundedCornerArc()
 }
