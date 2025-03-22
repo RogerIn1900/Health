@@ -57,8 +57,14 @@ import androidx.navigation.NavController
 import com.example.health.R
 import java.util.Date
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.asAndroidPath
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.DrawStyle
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.translate
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 @Composable
@@ -131,7 +137,7 @@ fun vitalityPart1() {
             verticalArrangement = Arrangement.Center, // 垂直居中
             horizontalAlignment = Alignment.CenterHorizontally // 水平居中
         ) {
-            graph() // 图表部分
+            myGraph() // 图表部分
             Spacer(modifier = Modifier.height(28.dp)) // 间距
             dataPart() // 数据部分
         }
@@ -260,7 +266,7 @@ fun graph() {
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
-//                    strokeCap = Round
+                    strokeCap = Round
 
                 },
                 Paint().apply {
@@ -268,7 +274,7 @@ fun graph() {
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
-//                    strokeCap = Round
+                    strokeCap = Round
 
                 },
                 Paint().apply {
@@ -276,7 +282,7 @@ fun graph() {
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
-//                    strokeCap = Round
+                    strokeCap = Round
 
                 }
             )
@@ -318,7 +324,7 @@ fun graph() {
                         strokeWidth = ringWidth
                         isAntiAlias = true
                         style = PaintingStyle.Stroke
-                        strokeCap = Butt
+                        strokeCap = Round
                     }
 
                     drawIntoCanvas { canvas ->
@@ -346,6 +352,199 @@ fun graph() {
 
     }
 }
+
+//状态提升
+@Composable
+fun myGraph(calories:Int = 191,steps:Int = 4135,duration:Int = 35) {
+    val datas = listOf(
+        calories / 400.0,
+        steps / 6000.0,
+        duration / 30.0
+    )
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .height(150.dp) // 设置 Column 的大小为 300dp
+            .width(300.dp)
+    ) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize() // Canvas 填满 Column 的空间
+        ) {
+            val canvasSize = size // Canvas 的尺寸
+            val canvasWidth = canvasSize.width
+            val canvasHeight = canvasSize.height
+
+            val ringWidth = 40.dp.toPx() // 半环宽度（转换为像素）
+            val maxRadius = (canvasWidth / 2) - ringWidth / 2 // 最大半径，确保圆环不超出 Canvas
+
+            // 定义颜色和画笔
+            val transparentPaints = listOf(
+                Paint().apply {
+                    color = Color(0x4DFF5722) // 棕色
+                    strokeWidth = ringWidth
+                    isAntiAlias = true
+                    style = PaintingStyle.Stroke
+//                    strokeCap = Round
+
+                },
+                Paint().apply {
+                    color = Color(0x4DFFC107) // 另一种棕色
+                    strokeWidth = ringWidth
+                    isAntiAlias = true
+                    style = PaintingStyle.Stroke
+//                    strokeCap = Round
+
+                },
+                Paint().apply {
+                    color = Color(0x4D2196F3) // 深蓝色
+                    strokeWidth = ringWidth
+                    isAntiAlias = true
+                    style = PaintingStyle.Stroke
+//                    strokeCap = Round
+
+                }
+            )
+
+
+            val paints = listOf(
+                Paint().apply {
+                    color = Color(0xFFFF5722) // 棕色
+                    strokeWidth = ringWidth
+                    isAntiAlias = true
+                    style = PaintingStyle.Stroke
+//                    strokeCap = Round
+
+                },
+                Paint().apply {
+                    color = Color(0xFFFFC107) // 另一种棕色
+                    strokeWidth = ringWidth
+                    isAntiAlias = true
+                    style = PaintingStyle.Stroke
+//                    strokeCap = Round
+
+                },
+                Paint().apply {
+                    color = Color(0xFF2196F3) // 深蓝色
+                    strokeWidth = ringWidth
+                    isAntiAlias = true
+                    style = PaintingStyle.Stroke
+//                    strokeCap = Round
+
+                }
+            )
+
+            //绘制三个半圆环的背景
+            transparentPaints.forEachIndexed { index, paint ->
+                val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
+                val sweepAngle = (datas[index] * 180).toFloat()
+
+                // 绘制底层部分
+                drawIntoCanvas { canvas ->
+                    withTransform({
+                        translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
+                    }) {
+                        // 如果 sweepAngle 大于 180f，只绘制 180f 的部分
+//                        val drawAngle = if (sweepAngle > 180f) 180f else sweepAngle
+                        canvas.nativeCanvas.drawArc(
+                            -radius, // 左边界
+                            -radius, // 上边界
+                            radius,  // 右边界
+                            radius,  // 下边界
+                            180f,   // 起始角度
+                            180f,   // 扫过的角度
+                            false,  // 不使用中心点连接
+                            paint.asFrameworkPaint(), // 使用 Paint
+                        )
+                    }
+                }
+            }
+
+            // 绘制三个半圆环的真实数值
+            paints.forEachIndexed { index, paint ->
+                val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
+                val sweepAngle = (datas[index] * 180).toFloat()
+
+                // 绘制底层部分
+                drawIntoCanvas { canvas ->
+                    withTransform({
+                        translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
+                    }) {
+                        // 如果 sweepAngle 大于 180f，只绘制 180f 的部分
+                        val drawAngle = if (sweepAngle > 180f) 180f else sweepAngle
+                        canvas.nativeCanvas.drawArc(
+                            -radius, // 左边界
+                            -radius, // 上边界
+                            radius,  // 右边界
+                            radius,  // 下边界
+                            180f,   // 起始角度
+                            drawAngle,   // 扫过的角度
+                            false,  // 不使用中心点连接
+                            paint.asFrameworkPaint(), // 使用 Paint
+                        )
+                    }
+                }
+
+                // 如果 sweepAngle 大于 180f，绘制上层部分
+                if (sweepAngle > 180f) {
+                    val lightPaint = Paint().apply {
+                        color =lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
+                        strokeWidth = ringWidth
+                        isAntiAlias = true
+                        style = PaintingStyle.Stroke
+//                        strokeCap = Round
+                    }
+
+                    drawIntoCanvas { canvas ->
+                        withTransform({
+                            translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
+                        }) {
+                            // 绘制超过 180f 的部分
+                            canvas.nativeCanvas.drawArc(
+                                -radius, // 左边界
+                                -radius, // 上边界
+                                radius,  // 右边界
+                                radius,  // 下边界
+                                180f,   // 起始角度
+                                sweepAngle - 180f, // 扫过的角度（超过 180f 的部分）
+                                false,  // 不使用中心点连接
+                                lightPaint.asFrameworkPaint() // 使用浅色 Paint
+                            )
+                        }
+                    }
+
+//                    //绘制小箭头
+//                    drawIntoCanvas { canvas ->
+//                        withTransform(
+//                            transformBlock = {
+//                                // 平移坐标系到中心点
+//                                translate(left = size.width/2,top = size.height/2)
+//
+//                                // 旋转坐标系 45 度
+//                                rotate(degrees =0f)
+//                            }
+//                        ) {
+//                            drawRect(
+//                                color = Color.Red,
+//                                topLeft = Offset(-50f, -50f), // 以中心为原点 设置的是偏移图形的偏移中心
+//                                size = Size(100f, 100f)
+//                            )
+//                        }
+//                    }
+
+                }
+            }
+        }
+
+        // 将颜色变浅的函数
+
+    }
+}
+
+
+
 fun lightenColor(color: Color): Color {
     val red = (color.red * 1.2f).coerceAtMost(1f) // 增加红色分量
     val green = (color.green * 1.2f).coerceAtMost(1f) // 增加绿色分量
@@ -1076,59 +1275,182 @@ fun HealthBarChartWithInteractionsAndImage(
     }
 }
 
-
-
-
-
 @Composable
-fun RoundedCornerArc() {
+fun MyGraphWithCircleAtEnd() {
     Canvas(
         modifier = Modifier
-            .fillMaxSize() // Canvas 填满父布局
+            .size(300.dp)
+            .background(Color.LightGray)
     ) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-
-        // 定义圆环宽度和半径
-        val ringWidth = 30.dp.toPx()
-        val radius = (canvasWidth / 2) - ringWidth / 2
-
-        // 定义画笔
-        val paint = Paint().apply {
-            color = Color.Blue // 设置颜色
-            strokeWidth = ringWidth // 设置线宽
-            style = PaintingStyle.Stroke // 设置绘制样式为描边
-            isAntiAlias = true // 开启抗锯齿
-        }
+        val canvasSize = size
+        val centerX = canvasSize.width / 2
+        val centerY = canvasSize.height / 2
+        val radius = 100f
+        val startAngle = 180f // 起始角度（以度为单位）
+        val sweepAngle = 90f  // 扫过的角度（以度为单位）
 
         // 绘制圆弧
         drawArc(
-            color = Color.Blue,
-            startAngle = 180f, // 起始角度
-            sweepAngle = 180f, // 扫过的角度
+            color = Color.Red,
+            startAngle = startAngle,
+            sweepAngle = sweepAngle,
             useCenter = false,
-            topLeft = androidx.compose.ui.geometry.Offset(-radius, -radius),
-            size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
-//            style = DrawStyle.cap
+            topLeft = Offset(centerX - radius, centerY - radius),
+            size = Size(radius * 2, radius * 2),
+            style = Stroke(width = 10f)
         )
 
-        // 在端点处添加圆角
-        val path = Path().apply {
-            moveTo(radius, 0f)
-            quadraticBezierTo(
-                x1 = radius + ringWidth,
-                y1 = 0f,
-                x2 = radius,
-                y2 = ringWidth
-            )
-        }
+        // 计算圆弧的终点坐标
+        val endAngle = startAngle + sweepAngle
+        val endAngleRadians = Math.toRadians(endAngle.toDouble())
+        val endX = centerX + radius * cos(endAngleRadians).toFloat()
+        val endY = centerY + radius * sin(endAngleRadians).toFloat()
 
-        // 绘制圆角
-        drawPath(path, Color.White)
+
+        // 在终点坐标处绘制圆形
+        drawCircle(
+            color = Color.Blue,
+            radius = 10f, // 圆形的半径
+            center = Offset(endX, endY)
+        )
+
     }
 }
+@Composable
+fun DrawArrow() {
+    Canvas(
+        modifier = Modifier
+            .size(200.dp)
+            .background(Color.LightGray)
+    ) {
+        val startX = 50f
+        val startY = 150f
+        val endX = 150f
+        val endY = 150f
+        val arrowHeadLength = 20f // 箭头头部的长度
+        val arrowHeadAngle = 30f // 箭头头部的角度（以度为单位）
+
+//        // 绘制箭头的直线部分
+//        drawLine(
+//            color = Color.Black,
+//            start = Offset(startX, startY),
+//            end = Offset(endX, endY),
+//            strokeWidth = 5f
+//        )
+
+        // 计算箭头头部的两个端点
+        val angle = Math.toRadians(arrowHeadAngle.toDouble())
+        val dx = arrowHeadLength * cos(angle).toFloat()
+        val dy = arrowHeadLength * sin(angle).toFloat()
+
+        // 绘制箭头头部的第一条斜线
+        drawLine(
+            color = Color.Black,
+            start = Offset(endX, endY),
+            end = Offset(endX - dx, endY - dy),
+            strokeWidth = 5f
+        )
+
+        // 绘制箭头头部的第二条斜线
+        drawLine(
+            color = Color.Black,
+            start = Offset(endX, endY),
+            end = Offset(endX - dx, endY + dy),
+            strokeWidth = 5f
+        )
+    }
+}
+
+@Composable
+fun MyGraphWithArrowAtEnd() {
+    Canvas(
+        modifier = Modifier
+            .size(300.dp)
+            .background(Color.LightGray)
+    ) {
+        val canvasSize = size
+        val centerX = canvasSize.width / 2
+        val centerY = canvasSize.height / 2
+        val radius = 100f
+        val startAngle = 180f // 起始角度（以度为单位）
+        val sweepAngle = 90f  // 扫过的角度（以度为单位）
+
+        // 计算圆弧的终点坐标
+        val endAngle = startAngle + sweepAngle
+        val endAngleRadians = Math.toRadians(endAngle.toDouble())
+        val endX = centerX + radius * cos(endAngleRadians).toFloat()
+        val endY = centerY + radius * sin(endAngleRadians).toFloat()
+
+        // 绘制箭头
+        drawArrow(
+            drawScope = this, // 将 DrawScope 作为参数传递
+            startX = endX,
+            startY = endY,
+            angle = endAngle + 90f, // 箭头的旋转角度增加 90 度
+            arrowHeadLength = 20f, // 箭头头部的长度
+            arrowHeadAngle = 30f // 箭头头部的角度
+        )
+    }
+}
+
+/**
+ * 在指定位置绘制箭头
+ *
+ * @param drawScope DrawScope 对象，用于调用绘图方法
+ * @param startX 箭头的起点 X 坐标
+ * @param startY 箭头的起点 Y 坐标
+ * @param angle 箭头的旋转角度（以度为单位）
+ * @param arrowHeadLength 箭头头部的长度
+ * @param arrowHeadAngle 箭头头部的角度（以度为单位）
+ */
+fun drawArrow(
+    drawScope: DrawScope,
+    startX: Float,
+    startY: Float,
+    angle: Float,
+    arrowHeadLength: Float,
+    arrowHeadAngle: Float
+) {
+    // 计算箭头的终点坐标
+    val angleRadians = Math.toRadians(angle.toDouble())
+    val endX = startX + arrowHeadLength * cos(angleRadians).toFloat()
+    val endY = startY + arrowHeadLength * sin(angleRadians).toFloat()
+
+//    // 绘制箭头的直线部分
+//    drawScope.drawLine(
+//        color = Color.Black,
+//        start = Offset(startX, startY),
+//        end = Offset(endX, endY),
+//        strokeWidth = 5f
+//    )
+
+    // 计算箭头头部的两个端点
+    val headAngleRadians = Math.toRadians(arrowHeadAngle.toDouble())
+    val dx1 = arrowHeadLength * cos(angleRadians + headAngleRadians).toFloat()
+    val dy1 = arrowHeadLength * sin(angleRadians + headAngleRadians).toFloat()
+    val dx2 = arrowHeadLength * cos(angleRadians - headAngleRadians).toFloat()
+    val dy2 = arrowHeadLength * sin(angleRadians - headAngleRadians).toFloat()
+
+    // 绘制箭头头部的第一条斜线
+    drawScope.drawLine(
+        color = Color.Black,
+        start = Offset(endX, endY),
+        end = Offset(endX - dx1, endY - dy1),
+        strokeWidth = 5f
+    )
+
+    // 绘制箭头头部的第二条斜线
+    drawScope.drawLine(
+        color = Color.Black,
+        start = Offset(endX, endY),
+        end = Offset(endX - dx2, endY - dy2),
+        strokeWidth = 5f
+    )
+}
+
 @Preview
 @Composable
 fun previewVitalityPartTest2() {
-    RoundedCornerArc()
+//    myGraph()
+    MyGraphWithArrowAtEnd()
 }
