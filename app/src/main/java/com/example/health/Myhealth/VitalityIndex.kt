@@ -1371,9 +1371,10 @@ fun MyGraphWithArrowAtEnd() {
         val canvasSize = size
         val centerX = canvasSize.width / 2
         val centerY = canvasSize.height / 2
-        val radius = 100f
+        val radius = 200f // 旋转半径
         val startAngle = 180f // 起始角度（以度为单位）
         val sweepAngle = 90f  // 扫过的角度（以度为单位）
+        val rotationRadius = 150f
 
         // 计算圆弧的终点坐标
         val endAngle = startAngle + sweepAngle
@@ -1386,9 +1387,10 @@ fun MyGraphWithArrowAtEnd() {
             drawScope = this, // 将 DrawScope 作为参数传递
             startX = endX,
             startY = endY,
-            angle = endAngle + 90f, // 箭头的旋转角度增加 90 度
-            arrowHeadLength = 20f, // 箭头头部的长度
-            arrowHeadAngle = 30f // 箭头头部的角度
+            angle = endAngle + 90f, // 箭头的旋转角度增加 90 度  箭头自身旋转
+            arrowHeadLength = 30f, // 箭头头部的长度
+            arrowHeadAngle = 30f, // 箭头头部的角度
+            color = Color.Red
         )
     }
 }
@@ -1402,6 +1404,7 @@ fun MyGraphWithArrowAtEnd() {
  * @param angle 箭头的旋转角度（以度为单位）
  * @param arrowHeadLength 箭头头部的长度
  * @param arrowHeadAngle 箭头头部的角度（以度为单位）
+ * @param color 箭头颜色
  */
 fun drawArrow(
     drawScope: DrawScope,
@@ -1409,20 +1412,13 @@ fun drawArrow(
     startY: Float,
     angle: Float,
     arrowHeadLength: Float,
-    arrowHeadAngle: Float
+    arrowHeadAngle: Float,
+    color: Color = Color.Blue
 ) {
     // 计算箭头的终点坐标
     val angleRadians = Math.toRadians(angle.toDouble())
     val endX = startX + arrowHeadLength * cos(angleRadians).toFloat()
     val endY = startY + arrowHeadLength * sin(angleRadians).toFloat()
-
-//    // 绘制箭头的直线部分
-//    drawScope.drawLine(
-//        color = Color.Black,
-//        start = Offset(startX, startY),
-//        end = Offset(endX, endY),
-//        strokeWidth = 5f
-//    )
 
     // 计算箭头头部的两个端点
     val headAngleRadians = Math.toRadians(arrowHeadAngle.toDouble())
@@ -1433,18 +1429,18 @@ fun drawArrow(
 
     // 绘制箭头头部的第一条斜线
     drawScope.drawLine(
-        color = Color.Black,
+        color = color,
         start = Offset(endX, endY),
         end = Offset(endX - dx1, endY - dy1),
-        strokeWidth = 5f
+        strokeWidth = 10f
     )
 
     // 绘制箭头头部的第二条斜线
     drawScope.drawLine(
-        color = Color.Black,
+        color = color,
         start = Offset(endX, endY),
         end = Offset(endX - dx2, endY - dy2),
-        strokeWidth = 5f
+        strokeWidth = 10f
     )
 }
 
