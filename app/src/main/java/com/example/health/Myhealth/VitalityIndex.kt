@@ -355,7 +355,7 @@ fun graph() {
 
 //状态提升
 @Composable
-fun myGraph(calories:Int = 191,steps:Int = 4135,duration:Int = 35) {
+fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 55) {
     val datas = listOf(
         calories / 400.0,
         steps / 6000.0,
@@ -465,7 +465,7 @@ fun myGraph(calories:Int = 191,steps:Int = 4135,duration:Int = 35) {
             // 绘制三个半圆环的真实数值
             paints.forEachIndexed { index, paint ->
                 val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
-                val sweepAngle = (datas[index] * 180).toFloat()
+                val sweepAngle = ((datas[index] % 180)* 180).toFloat()
 
                 // 绘制底层部分
                 drawIntoCanvas { canvas ->
@@ -519,12 +519,14 @@ fun myGraph(calories:Int = 191,steps:Int = 4135,duration:Int = 35) {
                     val canvasSize = size
                     val centerX = canvasSize.width / 2
                     val centerY = canvasSize.height
-                    val radius = maxRadius - index * ringWidth * 2.05f // 旋转半径
+                    val radius = maxRadius - index * ringWidth * 1.2f // 旋转半径
+//                    val radius = maxRadius - index * ringWidth * 2.05f // 旋转半径
                     val startAngle = 0f // 起始角度（以度为单位）
-                    val sweepAngle = sweepAngle - 180f - 25f  // 扫过的角度（以度为单位）
+                    val sweepAngle2 = 180f+80f// 扫过的角度（以度为单位）
+//                    val sweepAngle = sweepAngle - 180f - 25f  // 扫过的角度（以度为单位）
 
                     // 计算圆弧的终点坐标
-                    val endAngle = startAngle + sweepAngle
+                    val endAngle = startAngle + sweepAngle - (index +0.8f)*10f
                     val endAngleRadians = Math.toRadians(endAngle.toDouble())
                     val endX = centerX + radius * cos(endAngleRadians).toFloat()
                     val endY = centerY + radius * sin(endAngleRadians).toFloat()
@@ -533,10 +535,10 @@ fun myGraph(calories:Int = 191,steps:Int = 4135,duration:Int = 35) {
                         drawScope = this, // 将 DrawScope 作为参数传递
                         startX = endX,
                         startY = endY,
-                        angle = endAngle - 80f, // 箭头的旋转角度增加 90 度  箭头自身旋转
+                        angle = endAngle + 100f, // 箭头的旋转角度增加 90 度  箭头自身旋转
                         arrowHeadLength = 30f, // 箭头头部的长度
                         arrowHeadAngle = 30f, // 箭头头部的角度
-                        color = lightenColor(lightenColor(paint.color))
+//                        color = lightenColor(lightenColor(paint.color))
                     )
 
                 }
@@ -551,9 +553,9 @@ fun myGraph(calories:Int = 191,steps:Int = 4135,duration:Int = 35) {
 
 
 fun lightenColor(color: Color): Color {
-    val red = (color.red * 1.2f).coerceAtMost(1f) // 增加红色分量
-    val green = (color.green * 1.2f).coerceAtMost(1f) // 增加绿色分量
-    val blue = (color.blue * 1.2f).coerceAtMost(1f) // 增加蓝色分量
+    val red = (color.red * 1.3f).coerceAtMost(1f) // 增加红色分量
+    val green = (color.green * 1.3f).coerceAtMost(1f) // 增加绿色分量
+    val blue = (color.blue * 1.3f).coerceAtMost(1f) // 增加蓝色分量
     return Color(red, green, blue, color.alpha) // 保持透明度不变
 }
 fun darkenColor(color: Color, factor: Float = 0.5f): Color {
