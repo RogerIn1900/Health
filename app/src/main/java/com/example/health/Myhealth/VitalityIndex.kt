@@ -63,6 +63,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
+import okhttp3.internal.wait
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -355,7 +356,7 @@ fun graph() {
 
 //状态提升
 @Composable
-fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 55) {
+fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 65) {
     val datas = listOf(
         calories / 400.0,
         steps / 6000.0,
@@ -465,7 +466,8 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 55) {
             // 绘制三个半圆环的真实数值
             paints.forEachIndexed { index, paint ->
                 val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
-                val sweepAngle = ((datas[index] % 180)* 180).toFloat()
+                val divData = datas[index]
+                val sweepAngle = ((datas[index] )* 180 ).toFloat()
 
                 // 绘制底层部分
                 drawIntoCanvas { canvas ->
@@ -473,7 +475,7 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 55) {
                         translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
                     }) {
                         // 如果 sweepAngle 大于 180f，只绘制 180f 的部分
-                        val drawAngle = if (sweepAngle > 180f) 180f else sweepAngle
+                        val drawAngle = if (divData > 1) 180f else divData.toFloat()
                         canvas.nativeCanvas.drawArc(
                             -radius, // 左边界
                             -radius, // 上边界
@@ -488,7 +490,8 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 55) {
                 }
 
                 // 如果 sweepAngle 大于 180f，绘制上层部分
-                if (sweepAngle > 180f) {
+                if (divData > 1) {
+                    val extraAngle = ((datas[index] )* 180 % 180f).toFloat()
                     val lightPaint = Paint().apply {
                         color =lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
                         strokeWidth = ringWidth
@@ -508,25 +511,29 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 55) {
                                 radius,  // 右边界
                                 radius,  // 下边界
                                 180f,   // 起始角度
-                                sweepAngle - 180f, // 扫过的角度（超过 180f 的部分）
+                                extraAngle, // 扫过的角度（超过 180f 的部分）
                                 false,  // 不使用中心点连接
                                 lightPaint.asFrameworkPaint() // 使用浅色 Paint
                             )
                         }
                     }
 
+
                     //绘制小箭头
+
+                    //绘制个数
+                    val num = datas[index]
                     val canvasSize = size
                     val centerX = canvasSize.width / 2
                     val centerY = canvasSize.height
                     val radius = maxRadius - index * ringWidth * 1.2f // 旋转半径
 //                    val radius = maxRadius - index * ringWidth * 2.05f // 旋转半径
-                    val startAngle = 0f // 起始角度（以度为单位）
-                    val sweepAngle2 = 180f+80f// 扫过的角度（以度为单位）
+                    val startAngle = 180f // 起始角度（以度为单位）
+                    val sweepAngle2 = (sweepAngle) .toFloat() +80f// 扫过的角度（以度为单位）
 //                    val sweepAngle = sweepAngle - 180f - 25f  // 扫过的角度（以度为单位）
 
                     // 计算圆弧的终点坐标
-                    val endAngle = startAngle + sweepAngle - (index +0.8f)*10f
+                    val endAngle = startAngle + sweepAngle2 - (index +0.8f)*10f
                     val endAngleRadians = Math.toRadians(endAngle.toDouble())
                     val endX = centerX + radius * cos(endAngleRadians).toFloat()
                     val endY = centerY + radius * sin(endAngleRadians).toFloat()
@@ -538,7 +545,63 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 55) {
                         angle = endAngle + 100f, // 箭头的旋转角度增加 90 度  箭头自身旋转
                         arrowHeadLength = 30f, // 箭头头部的长度
                         arrowHeadAngle = 30f, // 箭头头部的角度
-//                        color = lightenColor(lightenColor(paint.color))
+//                        color = arrowColor(paint.color)
+                    )
+
+                }
+
+                // 如果 sweepAngle 大于 360f，绘制上层部分
+                else if (divData > 2) {
+                    val lightPaint = Paint().apply {
+                        color =lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
+                        strokeWidth = ringWidth
+                        isAntiAlias = true
+                        style = PaintingStyle.Stroke
+//                        strokeCap = Round
+                    }
+
+//                    drawIntoCanvas { canvas ->
+//                        withTransform({
+//                            translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
+//                        }) {
+//                            // 绘制超过 180f 的部分
+//                            canvas.nativeCanvas.drawArc(
+//                                -radius, // 左边界
+//                                -radius, // 上边界
+//                                radius,  // 右边界
+//                                radius,  // 下边界
+//                                180f,   // 起始角度
+//                                sweepAngle  % 180f, // 扫过的角度（超过 180f 的部分）
+//                                false,  // 不使用中心点连接
+//                                lightPaint.asFrameworkPaint() // 使用浅色 Paint
+//                            )
+//                        }
+//                    }
+
+                    //绘制小箭头
+                    val canvasSize = size
+                    val centerX = canvasSize.width / 2
+                    val centerY = canvasSize.height
+                    val radius = maxRadius - index * ringWidth * 1.2f // 旋转半径
+//                    val radius = maxRadius - index * ringWidth * 2.05f // 旋转半径
+                    val startAngle = 0f // 起始角度（以度为单位）
+                    val sweepAngle2 = sweepAngle % 180f  - 5f// 扫过的角度（以度为单位）
+//                    val sweepAngle = sweepAngle - 180f - 25f  // 扫过的角度（以度为单位）
+
+                    // 计算圆弧的终点坐标
+                    val endAngle = startAngle + sweepAngle2 - (index +0.8f)*20f
+                    val endAngleRadians = Math.toRadians(endAngle.toDouble())
+                    val endX = centerX + radius * cos(endAngleRadians).toFloat()
+                    val endY = centerY + radius * sin(endAngleRadians).toFloat()
+                    // 绘制箭头
+                    drawArrow(
+                        drawScope = this, // 将 DrawScope 作为参数传递
+                        startX = endX,
+                        startY = endY,
+                        angle = endAngle + 100f, // 箭头的旋转角度增加 90 度  箭头自身旋转
+                        arrowHeadLength = 30f, // 箭头头部的长度
+                        arrowHeadAngle = 30f, // 箭头头部的角度
+                        color = paint.color
                     )
 
                 }
@@ -558,13 +621,15 @@ fun lightenColor(color: Color): Color {
     val blue = (color.blue * 1.3f).coerceAtMost(1f) // 增加蓝色分量
     return Color(red, green, blue, color.alpha) // 保持透明度不变
 }
-fun darkenColor(color: Color, factor: Float = 0.5f): Color {
-    // 混合黑色，factor 是黑色的混合比例（0.0f 为原始颜色，1.0f 为纯黑色）
-    val red = color.red * (1 - factor)
-    val green = color.green * (1 - factor)
-    val blue = color.blue * (1 - factor)
-    return Color(red, green, blue, color.alpha) // 保持透明度不变
+
+fun arrowColor(color: Color): Color {
+    val red = (color.red * 0.9f).coerceAtMost(1f) // 增加红色分量
+    val green = (color.green * 0.9f).coerceAtMost(1f) // 增加绿色分量
+    val blue = (color.blue * 0.9f).coerceAtMost(1f) // 增加蓝色分量
+    return Color(red, green, blue, 1f) // 保持透明度不变
 }
+
+
 
 //Canvas绘制当日数据图像
 @Composable
