@@ -405,9 +405,8 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 65) {
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
-
                 }
-            )
+                         )
 
 
             val paints = listOf(
@@ -417,7 +416,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 65) {
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
-
                 },
                 Paint().apply {
                     color = Color(0xFFFFC107) // 另一种棕色
@@ -425,7 +423,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 65) {
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
-
                 },
                 Paint().apply {
                     color = Color(0xFF2196F3) // 深蓝色
