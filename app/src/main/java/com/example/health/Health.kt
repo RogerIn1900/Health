@@ -250,7 +250,6 @@ sealed class Screen(val route: String, val resourceId: Int, val icon: ImageVecto
     object Service : Screen("service", R.string.service_c, Icons.Default.Person,R.mipmap.device_orange,R.mipmap.device_gray)
     object Mine : Screen("mine", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
     //object Vitality : Screen("mine", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
-
 }
 
 
