@@ -5,11 +5,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.TabRowDefaults.Divider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalDrawerSheet
@@ -20,10 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -42,21 +51,69 @@ fun CaloriesPage() {
         }
 
         //TODO:对应视图的图表
-        Row {
-
+        Column {
+            Row {
+                Text("2273", fontSize = 40.sp)
+                Text("千卡")
+            }
+            Row {
+                Text("2025年3月31日至4月6日", color = Color.Gray)
+            }
+            Row {
+                Image(
+                    painter = painterResource(id = R.mipmap.calorie),
+                    contentDescription = "",
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
 
         //TODO:对应视图的概览
         Card {
             Column {
                 Row {
-                    //TODO:图标
-                    //TODO:今日概览
+                    //TODo:图标
+                    Image(
+                        painter = painterResource(id = R.mipmap.calorie),
+                        contentDescription = "",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    //TOD:今日概览
+                    Text("本周概览")
                 }
                 //TODO:分界线
-                Column {
-                    //TODO:消耗
-                    //TODO：今日消耗
+                Divider(
+                    color = Color.LightGray.copy(alpha = 0.5f),
+                    thickness = 0.5.dp,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(10.dp)
+                )
+
+                Row {
+                    Row {
+                        Column {
+                            //TODO:消耗
+                            Row {
+                                Text("2513",fontSize = 40.sp)
+                                Text("千卡")
+                            }
+                            Text("总消耗")
+                            //TODO：今日消耗
+                        }
+                        Spacer(modifier = Modifier.fillMaxWidth())
+                    }
+                    Row {
+                        Column {
+                            //TODO:消耗
+                            Row {
+                                Text("2513",fontSize = 40.sp)
+                                Text("千卡")
+                            }
+                            Text("总消耗")
+                            //TODO：今日消耗
+                        }
+                        Spacer(modifier = Modifier.fillMaxWidth())
+                    }
                 }
             }
         }
@@ -74,6 +131,7 @@ fun CaloriesPage() {
         }
     }
 }
+
 
 @Composable
 fun navBar() {
