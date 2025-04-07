@@ -145,20 +145,7 @@ fun navBar() {
         Screen.Mine.route  ->  stringResource(id = R.string.mine)
         else -> "Unknown"
     }
-    val isBottomBarVisible = when (currentRoute){
-        Screen.Health.route -> true
-        Screen.Move.route  -> true
-        Screen.Service.route  ->  true
-        Screen.Mine.route  ->  true
-        else -> false
-    }
-    val isTopBarVisible = when (currentRoute){
-        Screen.Health.route -> true
-        Screen.Move.route  -> true
-        Screen.Service.route  ->  true
-        Screen.Mine.route  ->  true
-        else -> false
-    }
+
 }
 
 @Preview
