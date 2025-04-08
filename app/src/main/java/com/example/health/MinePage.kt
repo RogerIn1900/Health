@@ -93,7 +93,7 @@ fun MinePage(){
                 Spacer(modifier = Modifier.height(10.dp))
                 MinePart9()
                 Spacer(modifier = Modifier.height(10.dp))
-//                AppNavigation2()
+                AppNavigation2()
                 Spacer(modifier = Modifier.height(10.dp))
 //                AppNavigation()
             }
@@ -483,6 +483,99 @@ fun MinePart9() {
 
 
 
+//TODO:方法二，隐藏消息栏等
+
+// 主导航结构
+@Composable
+fun AppNavigation2() {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = "home"
+    ) {
+        // 普通主页
+        composable("home") {
+            HomeScreen3(
+                onNavigateToFullScreen = {
+                    navController.navigate("fullscreen")
+                }
+            )
+        }
+
+        // 全屏页面
+        composable("fullscreen") {
+            FullScreenDestination2(
+                onBack = { navController.popBackStack() }
+            )
+        }
+    }
+}
+
+// 主页内容
+@Composable
+fun HomeScreen3(onNavigateToFullScreen: () -> Unit) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("普通主页", style = MaterialTheme.typography.headlineMedium)
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(onClick = onNavigateToFullScreen) {
+                Text("进入全屏页面")
+            }
+        }
+    }
+}
+
+// 全屏页面（核心实现）
+@Composable
+fun FullScreenDestination2(onBack: () -> Unit) {
+    val context = LocalContext.current
+    val activity = context as Activity
+
+    // 关键：控制系统栏显示/隐藏
+    DisposableEffect(Unit) {
+        val window = activity.window
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+
+        // 进入时隐藏系统栏
+        insetsController.hide(WindowInsetsCompat.Type.systemBars())
+        insetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+        onDispose {
+            // 退出时恢复系统栏
+            insetsController.show(WindowInsetsCompat.Type.systemBars())
+        }
+    }
+
+    // 全屏内容
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.surface
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "全屏覆盖页面",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                Button(onClick = onBack) {
+                    Text("返回普通页面")
+                }
+            }
+        }
+    }
+}
 //TODO:方法一，使用dialog
 
 @Composable
