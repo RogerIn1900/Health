@@ -95,7 +95,7 @@ fun MinePage(){
                 Spacer(modifier = Modifier.height(10.dp))
                 AppNavigation2()
                 Spacer(modifier = Modifier.height(10.dp))
-//                AppNavigation()
+                AppNavigation()
             }
         }
     }
@@ -481,7 +481,109 @@ fun MinePart9() {
     }
 }
 
+//TODO:方法三，动画跳转
 
+
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = "home"
+    ) {
+        // 主页
+        composable("home") {
+            HomeScreen(
+                onNavigate = { navController.navigate("fullscreen") }
+            )
+        }
+
+        // 全屏页面（带自定义动画）
+        composable(
+            route = "fullscreen",
+            enterTransition = {
+                slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
+                    fullWidth  // 从右侧滑入
+                } + fadeIn(animationSpec = tween(300))
+            },
+            exitTransition = {
+                slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                    -fullWidth / 2  // 向左滑出
+                } + fadeOut(animationSpec = tween(300))
+            },
+            popEnterTransition = {
+                fadeIn(animationSpec = tween(300))  // 返回时淡入
+            },
+            popExitTransition = {
+                slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                    fullWidth  // 向右滑出
+                } + fadeOut(animationSpec = tween(300))
+            }
+        ) {
+            FullScreenDestination(
+                onBack = { navController.popBackStack() }
+            )
+        }
+    }
+}
+@Composable
+fun HomeScreen(onNavigate: () -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("普通页面", style = MaterialTheme.typography.headlineMedium)
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = onNavigate,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Text("进入全屏模式", color = MaterialTheme.colorScheme.onPrimary)
+            }
+        }
+    }
+}
+@Composable
+fun FullScreenDestination(onBack: () -> Unit) {
+    // 关键：覆盖整个屏幕的布局
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "全屏覆盖内容",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // 返回按钮
+                FilledTonalButton(
+                    onClick = onBack,
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    )
+                ) {
+                    Text("返回", style = MaterialTheme.typography.titleMedium)
+                }
+            }
+        }
+    }
+}
 
 //TODO:方法二，隐藏消息栏等
 
