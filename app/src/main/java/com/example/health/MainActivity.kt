@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import com.example.compose.example.MainApp
 import com.example.health.ui.theme.HealthTheme
 
@@ -16,6 +17,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // 关键设置：让内容延伸到系统栏后面
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+
         setContent {
             HealthTheme {
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
