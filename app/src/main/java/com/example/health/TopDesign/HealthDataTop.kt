@@ -16,10 +16,12 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -58,6 +60,67 @@ fun vitalityTop(navController: NavController,title: String = "活力指标") {
                         )
                     IconButton (onClick = {}) {
                         Icon(Icons.Default.ArrowDropDown, contentDescription = "日期展开")
+                    }
+                }
+            } },
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack()}) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+            }
+        },
+        actions = {
+            Row {
+                IconButton(onClick = { /* 处理点击事件 */ }) {
+                    Icon(Icons.Default.Send, contentDescription = "更多")
+                }
+                IconButton(onClick = { /* 处理点击事件 */ }) {
+                    Icon(Icons.Default.MoreVert, contentDescription = "搜索")
+                }
+            }
+
+        },
+
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.White,
+            titleContentColor = Color.Black,
+            actionIconContentColor = Color.Black
+        ),
+        scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    )
+}
+
+
+@Composable
+fun CaloriesPageTop(navController: NavController,title: String = "卡路里") {
+    CenterAlignedTopAppBar(
+        title = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(title,
+                    textAlign = TextAlign.Center,
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("2025年3月5日",
+                        fontSize = 12.sp
+                    )
+                    IconButton (onClick = {}) {
+                        Icon(Icons.Default.ArrowDropDown, contentDescription = "日期展开")
+                    }
+                }
+                Card {
+                    Row {
+                        TextButton(onClick = {}) {
+                            Text("日")
+                        }
+                        TextButton(onClick = {}) {
+                            Text("周")
+                        }
+                        TextButton(onClick = {}) {
+                            Text("月")
+                        }
                     }
                 }
             } },

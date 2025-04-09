@@ -40,7 +40,9 @@ import com.example.health.LinearDeterminateIndicator
 import com.example.health.MainViewModel.MainViewModel
 import com.example.health.MinePage
 import com.example.health.Myhealth.CaloriesPage
+import com.example.health.Myhealth.MidActivity
 import com.example.health.Myhealth.MyHealth
+import com.example.health.Myhealth.StepNumber
 import com.example.health.Myhealth.VitalityIndex
 import com.example.health.PostPic.ImageUploaderScreen
 import com.example.health.R
@@ -174,10 +176,10 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
                 VitalityIndex(navController)
             }
 
-
+            //health页面内的子页面
             //卡路里单独页面
             composable(
-                route = "Calories",
+                route = "CaloriesPage",
                 enterTransition = {
                     slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
                         fullWidth  // 从右侧滑入
@@ -198,6 +200,54 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
                 }
             ) {
                 CaloriesPage()
+            }
+            //步数页面
+            composable(
+                route = "StepNumber",
+                enterTransition = {
+                    slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 从右侧滑入
+                    } + fadeIn(animationSpec = tween(300))
+                },
+                exitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        -fullWidth / 2  // 向左滑出
+                    } + fadeOut(animationSpec = tween(300))
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(300))  // 返回时淡入
+                },
+                popExitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 向右滑出
+                    } + fadeOut(animationSpec = tween(300))
+                }
+            ) {
+                StepNumber()
+            }
+            //中高强度运动页面
+            composable(
+                route = "MidActivity",
+                enterTransition = {
+                    slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 从右侧滑入
+                    } + fadeIn(animationSpec = tween(300))
+                },
+                exitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        -fullWidth / 2  // 向左滑出
+                    } + fadeOut(animationSpec = tween(300))
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(300))  // 返回时淡入
+                },
+                popExitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 向右滑出
+                    } + fadeOut(animationSpec = tween(300))
+                }
+            ) {
+                MidActivity()
             }
 
 // 2. 跳转时传递参数

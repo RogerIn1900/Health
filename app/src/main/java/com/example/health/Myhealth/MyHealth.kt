@@ -163,12 +163,26 @@ fun Cart(
     dataLimit: String = "/400步",
     navController: NavController
 ) {
+    val page = when(name){
+        "卡路里" ->{
+            "CaloriesPage"
+        }
+        "步数" ->{
+            "StepNumber"
+        }
+        "中强度" ->{
+            "MidActivity"
+        }
+        else ->{
+            "CaloriesPage"
+        }
+    }
     Column(
         modifier = Modifier
             .width(112.dp)
             .padding(8.dp)
             .clickable {
-                navController.navigate("Calories")
+                navController.navigate( page)
             },
 
     ) {
