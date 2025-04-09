@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,14 +38,16 @@ import com.example.health.IndeterminateCircularIndicator
 import com.example.health.LinearDeterminateIndicator
 import com.example.health.MainViewModel.MainViewModel
 import com.example.health.MinePage
-import com.example.health.Myhealth.CaloriesPage
-import com.example.health.Myhealth.MidActivity
+import com.example.health.Myhealth.CaloriesPage.CaloriesPage
+import com.example.health.Myhealth.CaloriesPage.CaloriesPageDateView
+import com.example.health.Myhealth.MidActivity.MidActivity
 import com.example.health.Myhealth.MyHealth
-import com.example.health.Myhealth.StepNumber
+import com.example.health.Myhealth.StepNumber.StepNumber
 import com.example.health.Myhealth.VitalityIndex
 import com.example.health.PostPic.ImageUploaderScreen
 import com.example.health.R
-import com.example.health.TopDesign.DropdownMenuButton
+import com.example.health.TopDesign.CaloriesPageDateViewTop
+import com.example.health.TopDesign.CaloriesPageTop
 import com.example.health.TopDesign.HomeTop
 import com.example.health.TopDesign.vitalityTop
 
@@ -58,8 +59,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-//val viewModel = MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,6 +79,7 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
         Screen.Move.route  -> true
         Screen.Service.route  ->  true
         Screen.Mine.route  ->  true
+        Screen.CaloriesPage.route  ->  "CaloriesPage"
         else -> false
     }
     val isTopBarVisible = when (currentRoute){
@@ -87,6 +87,8 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
         Screen.Move.route  -> true
         Screen.Service.route  ->  true
         Screen.Mine.route  ->  true
+        Screen.CaloriesPage.route  ->  "CaloriesPage"
+        Screen.CaloriesPageDateView.route  ->  "CaloriesPageDateView"
         else -> false
     }
 
@@ -94,7 +96,7 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
         topBar = {
 //            TopAppBar(title = { Text(title.toString()) })
 //            HomeTop(title)
-            if(isTopBarVisible){
+            if(isTopBarVisible == true){
 
             }
             when(isTopBarVisible){
@@ -105,12 +107,18 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
                     //活力Top测试
                     vitalityTop(navController)
                 }
+                "CaloriesPage" ->{
+                    CaloriesPageTop(navController)
+                }
+                "CaloriesPageDateView" ->{
+                    CaloriesPageDateViewTop(navController)
+                }
             }
 
 
                  },
         bottomBar = {
-            if (isBottomBarVisible)BottomNavigationBar(navController)
+            if (isBottomBarVisible == true)BottomNavigationBar(navController)
         }
     ) { innerPadding ->
         NavHost(
@@ -250,6 +258,32 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
                 MidActivity()
             }
 
+            //子子视图
+            //卡路里日视图
+            composable(
+                route = "CaloriesPageDateView",
+                enterTransition = {
+                    slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 从右侧滑入
+                    } + fadeIn(animationSpec = tween(300))
+                },
+                exitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        -fullWidth / 2  // 向左滑出
+                    } + fadeOut(animationSpec = tween(300))
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(300))  // 返回时淡入
+                },
+                popExitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 向右滑出
+                    } + fadeOut(animationSpec = tween(300))
+                }
+            ) {
+                CaloriesPageDateView(navController)
+            }
+
 // 2. 跳转时传递参数
 //            navController.navigate("detail_screen/123")
         }
@@ -372,6 +406,10 @@ sealed class Screen(val route: String, val resourceId: Int, val icon: ImageVecto
     object Move : Screen("move", R.string.move_c, Icons.Default.Search,R.mipmap.move_orange,R.mipmap.move_gray)
     object Service : Screen("service", R.string.service_c, Icons.Default.Person,R.mipmap.device_orange,R.mipmap.device_gray)
     object Mine : Screen("mine", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
+
+    //health的子页面
+    object CaloriesPage : Screen("CaloriesPage", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
+    object CaloriesPageDateView : Screen("CaloriesPageDateView", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
     //object Vitality : Screen("mine", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
 }
 

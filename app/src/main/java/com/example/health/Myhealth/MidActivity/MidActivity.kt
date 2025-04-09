@@ -1,4 +1,4 @@
-package com.example.health.Myhealth
+package com.example.health.Myhealth.MidActivity
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
