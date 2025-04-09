@@ -61,7 +61,7 @@ fun MyHealth(navController:NavController) {
                             }
                     )
                 }
-                Part2()
+                Part2(navController)
                 GridLayoutExample()
             }
         }
@@ -70,7 +70,7 @@ fun MyHealth(navController:NavController) {
 
 //part1
 @Composable
-fun Part2() {
+fun Part2(navController:NavController) {
     Card(
         modifier = Modifier
 //            .weight(1f) // 使用 Modifier.weight()
@@ -90,9 +90,9 @@ fun Part2() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 // TODO: 自定义小卡片a 放入响应的数据
-                Cart(R.mipmap.calorie, "卡路里", 85, "/400千卡")
-                Cart(R.mipmap.shoe, "步数", 2317, "/6000步")
-                Cart(R.mipmap.clock, "中强度", 24, "/30分钟")
+                Cart(R.mipmap.calorie, "卡路里", 85, "/400千卡",navController)
+                Cart(R.mipmap.shoe, "步数", 2317, "/6000步",navController)
+                Cart(R.mipmap.clock, "中强度", 24, "/30分钟",navController)
 
             }
             // TODO: 分割线
@@ -160,12 +160,17 @@ fun Cart(
 //    contentDescription:String = "nothing",
     name: String = "卡路里",
     data: Int = 0,
-    dataLimit: String = "/400步"
+    dataLimit: String = "/400步",
+    navController: NavController
 ) {
     Column(
         modifier = Modifier
             .width(112.dp)
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {
+                navController.navigate("Calories")
+            },
+
     ) {
         // TODO: 图标、文字、跳转图标
         Row {
@@ -367,7 +372,7 @@ fun PreviewPart1() {
     HealthTheme {
         Column {
             Part1()
-            Part2()
+//            Part2(navController = NavController(context))
             GridLayoutExample()
         }
     }

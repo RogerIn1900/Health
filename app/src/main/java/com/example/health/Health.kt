@@ -3,6 +3,11 @@ package com.example.compose.example
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -34,6 +39,7 @@ import com.example.health.IndeterminateCircularIndicator
 import com.example.health.LinearDeterminateIndicator
 import com.example.health.MainViewModel.MainViewModel
 import com.example.health.MinePage
+import com.example.health.Myhealth.CaloriesPage
 import com.example.health.Myhealth.MyHealth
 import com.example.health.Myhealth.VitalityIndex
 import com.example.health.PostPic.ImageUploaderScreen
@@ -110,13 +116,54 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
             startDestination = Screen.Health.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Health.route) { MyHealth(navController) }
+            composable(Screen.Health.route,
+//                enterTransition = {
+//                    slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
+//                        fullWidth  // 从右侧滑入
+//                    } + fadeIn(animationSpec = tween(300))
+//                },
+//                exitTransition = {
+//                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+//                        -fullWidth / 2  // 向左滑出
+//                    } + fadeOut(animationSpec = tween(300))
+//                },
+//                popEnterTransition = {
+//                    fadeIn(animationSpec = tween(300))  // 返回时淡入
+//                },
+//                popExitTransition = {
+//                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+//                        fullWidth  // 向右滑出
+//                    } + fadeOut(animationSpec = tween(300))
+//                }
+
+            )
+            { MyHealth(navController) }
             composable(Screen.Move.route) { SearchScreen() }
             composable(Screen.Service.route) { ImageUploaderScreen() }
             composable(Screen.Mine.route) { MinePage() }
 
             //Health页面的导航页
-            composable("Vitality") { VitalityIndex(navController) }
+            composable(
+                route = "Vitality",
+                enterTransition = {
+                    slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 从右侧滑入
+                    } + fadeIn(animationSpec = tween(300))
+                },
+                exitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        -fullWidth / 2  // 向左滑出
+                    } + fadeOut(animationSpec = tween(300))
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(300))  // 返回时淡入
+                },
+                popExitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 向右滑出
+                    } + fadeOut(animationSpec = tween(300))
+                }
+                ) { VitalityIndex(navController) }
              // 1. 定义参数化路由
             // 1. 定义参数化路由
             composable(
@@ -125,6 +172,32 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getInt("itemId")
                 VitalityIndex(navController)
+            }
+
+
+            //卡路里单独页面
+            composable(
+                route = "Calories",
+                enterTransition = {
+                    slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 从右侧滑入
+                    } + fadeIn(animationSpec = tween(300))
+                },
+                exitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        -fullWidth / 2  // 向左滑出
+                    } + fadeOut(animationSpec = tween(300))
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(300))  // 返回时淡入
+                },
+                popExitTransition = {
+                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                        fullWidth  // 向右滑出
+                    } + fadeOut(animationSpec = tween(300))
+                }
+            ) {
+                CaloriesPage()
             }
 
 // 2. 跳转时传递参数
