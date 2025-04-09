@@ -2,6 +2,7 @@ package com.example.health.TopDesign
 
 import android.media.Image
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
@@ -96,6 +98,9 @@ fun CaloriesPageTop(navController: NavController,title: String = "卡路里") {
         title = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clickable {
+                    navController.navigate("CaloriesPageDateView")
+                }
             ) {
                 Text(title,
                     textAlign = TextAlign.Center,
@@ -110,32 +115,96 @@ fun CaloriesPageTop(navController: NavController,title: String = "卡路里") {
                         Icon(Icons.Default.ArrowDropDown, contentDescription = "日期展开")
                     }
                 }
-                Card {
-                    Row {
-                        TextButton(onClick = {}) {
-                            Text("日")
-                        }
-                        TextButton(onClick = {}) {
-                            Text("周")
-                        }
-                        TextButton(onClick = {}) {
-                            Text("月")
-                        }
-                    }
-                }
+//                Card {
+//                    Row {
+//                        TextButton(onClick = {}) {
+//                            Text("日")
+//                        }
+//                        TextButton(onClick = {}) {
+//                            Text("周")
+//                        }
+//                        TextButton(onClick = {}) {
+//                            Text("月")
+//                        }
+//                    }
+//                }
             } },
         navigationIcon = {
             IconButton(onClick = { navController.popBackStack()}) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "返回")
             }
         },
+        //actions右侧的图表在卡路里页面里不需要
+//        actions = {
+//            Row {
+//                IconButton(onClick = { /* 处理点击事件 */ }) {
+//                    Icon(Icons.Default.Send, contentDescription = "更多")
+//                }
+//                IconButton(onClick = { /* 处理点击事件 */ }) {
+//                    Icon(Icons.Default.MoreVert, contentDescription = "搜索")
+//                }
+//            }
+//
+//        },
+
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.White,
+            titleContentColor = Color.Black,
+            actionIconContentColor = Color.Black
+        ),
+        scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    )
+}
+
+
+
+@Composable
+fun CaloriesPageDateViewTop(navController: NavController) {
+    CenterAlignedTopAppBar(
+        title = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clickable {
+                    navController.navigate("CaloriesPageDateView")
+                }
+            ) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Text("2025年3月5日",
+//                        fontSize = 12.sp
+//                    )
+//                    IconButton (onClick = {}) {
+//                        Icon(Icons.Default.ArrowDropDown, contentDescription = "日期展开")
+//                    }
+//                }
+//                Card {
+//                    Row {
+//                        TextButton(onClick = {}) {
+//                            Text("日")
+//                        }
+//                        TextButton(onClick = {}) {
+//                            Text("周")
+//                        }
+//                        TextButton(onClick = {}) {
+//                            Text("月")
+//                        }
+//                    }
+//                }
+            } },
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack()}) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+            }
+        },
+//        actions右侧的图表在卡路里页面里不需要
         actions = {
             Row {
+//                IconButton(onClick = { /* 处理点击事件 */ }) {
+//                    Icon(Icons.Default.Send, contentDescription = "更多")
+//                }
                 IconButton(onClick = { /* 处理点击事件 */ }) {
-                    Icon(Icons.Default.Send, contentDescription = "更多")
-                }
-                IconButton(onClick = { /* 处理点击事件 */ }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "搜索")
+                    Icon(Icons.Default.DateRange, contentDescription = "卡路里页面顶部视图切换")
                 }
             }
 
@@ -149,6 +218,7 @@ fun CaloriesPageTop(navController: NavController,title: String = "卡路里") {
         scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     )
 }
+
 
 @Preview
 @Composable
