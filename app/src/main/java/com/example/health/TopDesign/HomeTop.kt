@@ -61,6 +61,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -68,6 +69,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -197,6 +199,7 @@ fun DropdownMenuButton() {
     }
 
     var onBackPressed:() -> Unit = {isScanning = false}
+    var onBackPressed2:() -> Unit = {isBluetooth = false}
     if (isScanning) {
         Dialog(onDismissRequest = { }) {
             Box(
@@ -266,13 +269,151 @@ fun DropdownMenuButton() {
         }
     }
 
-    if (isBluetooth) {
-        Dialog(onDismissRequest = {}) {
-            BluetoothScreen()
 
+    //蓝牙
+    if (isBluetooth) {
+        Dialog(onDismissRequest = { }) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ){
+                BluetoothScreen(modifier = Modifier
+                    .align(Center)
+                )
+                // 返回按钮
+                IconButton(
+                    onClick = onBackPressed2,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White
+                    )
+                }
+
+
+            }
+        }
+    }
+
+}
+
+//蓝牙功能：
+@Composable
+fun BluetoothScreen(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val bluetoothAdapter = remember { BluetoothAdapter.getDefaultAdapter() }
+    val devices = remember { mutableStateListOf<BluetoothDevice>() }
+    val isScanning = remember { mutableStateOf(false) }
+    val connectedDevice = remember { mutableStateOf<BluetoothDevice?>(null) }
+    val isConnected = remember { mutableStateOf(false) }
+
+    // 扫描设备
+    val scanCallback = remember {
+        object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult) {
+                super.onScanResult(callbackType, result)
+                val device = result.device
+                if (!devices.contains(device)) {
+                    devices.add(device)
+                }
+                devices.add(device)
+
+            }
+        }
+    }
+
+    fun startScan() {
+        isScanning.value = true
+        devices.clear()
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        bluetoothAdapter?.bluetoothLeScanner?.startScan(scanCallback)
+    }
+
+    // 权限请求
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            startScan()
+        }
+    }
+
+    // 开启蓝牙
+    val enableBluetoothLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            startScan()
+        }
+    }
+
+
+
+
+
+    fun stopScan() {
+        isScanning.value = false
+        bluetoothAdapter?.bluetoothLeScanner?.stopScan(scanCallback)
+    }
+
+
+    // 连接设备
+    fun connectToDevice(device: BluetoothDevice) {
+        val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+        val socket = device.createRfcommSocketToServiceRecord(uuid)
+        try {
+            socket.connect()
+            connectedDevice.value = device
+            isConnected.value = true
+        } catch (e: IOException) {
+            Log.e("Bluetooth", "连接失败: ${e.message}")
+        }
+    }
+
+    // UI
+    Column(modifier = modifier) {
+        Button(onClick = {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (bluetoothAdapter?.isEnabled == true) {
+                    startScan()
+                } else {
+                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                    enableBluetoothLauncher.launch(enableBtIntent)
+                }
+            } else {
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }) {
+            Text(if (isScanning.value) "停止扫描" else "开始扫描")
+        }
+
+        Text("扫描到的内容")
+        DeviceList(devices) { device ->
+            connectToDevice(device)
+        }
+
+        if (isConnected.value) {
+            Text("已连接到: ${connectedDevice.value?.name}")
         }
     }
 }
+
 
 
 //：扫一扫功能
@@ -469,142 +610,7 @@ fun DeviceList(
     }
 }
 
-@Composable
-fun BluetoothScreen() {
-    val context = LocalContext.current
-    val bluetoothAdapter = remember { BluetoothAdapter.getDefaultAdapter() }
-    val devices = remember { mutableStateListOf<BluetoothDevice>() }
-    val isScanning = remember { mutableStateOf(false) }
-    val connectedDevice = remember { mutableStateOf<BluetoothDevice?>(null) }
-    val isConnected = remember { mutableStateOf(false) }
-
-    // 扫描设备
-    val scanCallback = remember {
-        object : ScanCallback() {
-            override fun onScanResult(callbackType: Int, result: ScanResult) {
-                super.onScanResult(callbackType, result)
-                val device = result.device
-                if (!devices.contains(device)) {
-                    devices.add(device)
-                }
-                devices.add(device)
-
-            }
-        }
-    }
-
-    fun startScan() {
-        isScanning.value = true
-        devices.clear()
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-        bluetoothAdapter?.bluetoothLeScanner?.startScan(scanCallback)
-    }
-
-    // 权限请求
-    val locationPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            startScan()
-        }
-    }
-
-    // 开启蓝牙
-    val enableBluetoothLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            startScan()
-        }
-    }
-
-
-
-
-
-    fun stopScan() {
-        isScanning.value = false
-        bluetoothAdapter?.bluetoothLeScanner?.stopScan(scanCallback)
-    }
-
-
-    // 连接设备
-    fun connectToDevice(device: BluetoothDevice) {
-        val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-        val socket = device.createRfcommSocketToServiceRecord(uuid)
-        try {
-            socket.connect()
-            connectedDevice.value = device
-            isConnected.value = true
-        } catch (e: IOException) {
-            Log.e("Bluetooth", "连接失败: ${e.message}")
-        }
-    }
-
-    // UI
-    Column {
-        var onBackPressed:() -> Unit = {isConnected = false}
-
-        Dialog(onDismissRequest = { }) {
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ){
-                // 返回按钮
-                IconButton(
-                    onClick = onBackPressed,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(48.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White
-                    )
-                }
-
-            }
-        }
-
-
-        Button(onClick = {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                if (bluetoothAdapter?.isEnabled == true) {
-                    startScan()
-                } else {
-                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                    enableBluetoothLauncher.launch(enableBtIntent)
-                }
-            } else {
-                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
-        }) {
-            Text(if (isScanning.value) "停止扫描" else "开始扫描")
-        }
-
-        Text("扫描到的内容")
-        DeviceList(devices) { device ->
-            connectToDevice(device)
-        }
-
-        if (isConnected.value) {
-            Text("已连接到: ${connectedDevice.value?.name}")
-        }
-    }
-}
+//@Composable
 
 @androidx.compose.ui.tooling.preview.Preview
 @Composable
