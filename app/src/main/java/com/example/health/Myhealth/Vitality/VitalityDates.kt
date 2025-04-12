@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -45,50 +44,42 @@ fun VitalityDates(navController: NavController){
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarScreen() {
-    // 使用 Box 实现层叠布局
-    Box(modifier = Modifier.fillMaxSize()) {
-        // 滚动内容
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 160.dp) // 为顶部固定区域预留空间
-        ) {
+    // 示例数据 - 可以替换为实际数据源
+    val months = listOf(
+        YearMonth.of(2025, 3),  // 2025年3月
+        YearMonth.of(2025, 4),  // 2025年4月
+        YearMonth.of(2025, 5)   // 2025年5月
+    )
+
+    Column {
+        Text(
+            text = "历史数据",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(16.dp)
+        )
+
+        Text(
+            text = "2025年4月7日",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+        )
+
+        WeekDaysHeader()
+
+        LazyColumn {
             items(months) { month ->
                 MonthCalendar(month = month)
             }
         }
-
-        // 固定顶部区域
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 16.dp)
-        ) {
-            // 历史数据标题
-            Text(
-                text = "历史数据",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-
-            // 当前日期
-            Text(
-                text = "2025年4月7日",
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            // 固定周标题
-            WeekDaysHeader()
-        }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MonthCalendar(month: YearMonth) {
     Column(modifier = Modifier.padding(bottom = 24.dp)) {
-        // 月份标题（保留月份分隔）
+        // 月份标题
         Text(
             text = "${month.monthValue}月",
             style = MaterialTheme.typography.titleLarge,
@@ -96,7 +87,10 @@ fun MonthCalendar(month: YearMonth) {
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
 
-        // 日期网格（已移除周标题）
+        // 星期标题行
+//        WeekDaysHeader()
+
+        // 日期网格
         val dates = getDatesForMonth(month)
         val weeks = dates.chunked(7)
 
@@ -110,6 +104,7 @@ fun MonthCalendar(month: YearMonth) {
                         DayCell(date = date, month = month)
                     }
 
+                    // 如果一周不足7天，补充空单元格
                     if (week.size < 7) {
                         repeat(7 - week.size) {
                             Box(modifier = Modifier.size(40.dp))
@@ -121,7 +116,6 @@ fun MonthCalendar(month: YearMonth) {
     }
 }
 
-// 其他组件保持不变...
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeekDaysHeader() {
