@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.health"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -52,6 +52,11 @@ android {
 
 
 dependencies {
+
+    //日期，日历，相关依赖
+    implementation ("com.jakewharton.threetenabp:threetenabp:1.4.0")
+
+
     //图表依赖
 
     //扫一扫

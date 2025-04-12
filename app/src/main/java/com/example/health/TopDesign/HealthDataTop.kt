@@ -3,6 +3,7 @@ package com.example.health.TopDesign
 import android.media.Image
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -45,17 +46,24 @@ import androidx.compose.ui.unit.Dp
 
 @Composable
 fun vitalityTop(navController: NavController,title: String = "活力指标") {
-
     CenterAlignedTopAppBar(
         title = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy((-4).dp), // 关键点1：负间距压缩
+                modifier = Modifier.clickable {
+                    navController.navigate("VitalityDates")
+                }
             ) {
-                Text(title,
+                Text(
+                    title,
                     textAlign = TextAlign.Center,
+                    lineHeight = 24.sp // 关键点2：减少行高
                     )
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    //这里不能这么写padding，会出现这个报错Padding must be non-negative
+//                    modifier = Modifier.padding(top = (-1).dp) // 关键点3：进一步压缩间距
                 ) {
                     Text("2025年3月5日",
                         fontSize = 12.sp

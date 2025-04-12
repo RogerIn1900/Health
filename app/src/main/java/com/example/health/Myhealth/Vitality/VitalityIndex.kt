@@ -1,10 +1,9 @@
-package com.example.health.Myhealth
+package com.example.health.Myhealth.Vitality
 
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,19 +31,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
 import androidx.compose.ui.graphics.StrokeCap.Companion.Round
-import androidx.compose.ui.graphics.StrokeCap.Companion.Square
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -57,14 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.health.R
 import java.util.Date
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.DrawStyle
-import androidx.compose.ui.graphics.drawscope.rotate
-import androidx.compose.ui.graphics.drawscope.translate
-import okhttp3.internal.wait
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -322,7 +310,7 @@ fun graph() {
                 // 如果 sweepAngle 大于 180f，绘制上层部分
                 if (sweepAngle > 180f) {
                     val lightPaint = Paint().apply {
-                        color =lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
+                        color = lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
                         strokeWidth = ringWidth
                         isAntiAlias = true
                         style = PaintingStyle.Stroke
@@ -503,7 +491,7 @@ fun myGraph2(
                 if (divData > 1) {
                     val extraAngle = ((datas[index] )* 180 % 180f).toFloat()
                     val lightPaint = Paint().apply {
-                        color =lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
+                        color = lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
                         strokeWidth = ringWidth
                         isAntiAlias = true
                         style = PaintingStyle.Stroke
@@ -568,7 +556,7 @@ fun myGraph2(
                 // 如果 sweepAngle 大于 360f，绘制上层部分
                 else if (divData > 2) {
                     val lightPaint = Paint().apply {
-                        color =lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
+                        color = lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
                         strokeWidth = ringWidth
                         isAntiAlias = true
                         style = PaintingStyle.Stroke
@@ -759,7 +747,7 @@ fun VitalityCard(day: Int,modifier: Modifier) {
 }
 
 @Composable
-fun vitalityCard2(data: VitalityDataOfDay,modifier: Modifier = Modifier) {
+fun vitalityCard2(data: VitalityDataOfDay, modifier: Modifier = Modifier) {
     Column(
     ) {
         Row {
@@ -1343,7 +1331,7 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 55,modifier: Mod
                 // 如果 sweepAngle 大于 180f，绘制上层部分
                 if (sweepAngle > 180f) {
                     val lightPaint = Paint().apply {
-                        color =lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
+                        color = lightenColor(paint.color)// 使用原始颜色的浅色,传入的参数不能直接使用color，会变黑
                         strokeWidth = ringWidth
                         isAntiAlias = true
                         style = PaintingStyle.Stroke
