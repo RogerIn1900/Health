@@ -67,6 +67,8 @@ fun MyHealth(navController:NavController) {
                             navController.navigate("Vitality")
                         }
                         .align(Alignment.Center)
+                        .size(300.dp,150.dp)
+
 
                     )
 
