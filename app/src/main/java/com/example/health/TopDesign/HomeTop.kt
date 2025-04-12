@@ -556,6 +556,30 @@ fun BluetoothScreen() {
 
     // UI
     Column {
+        var onBackPressed:() -> Unit = {isConnected = false}
+
+        Dialog(onDismissRequest = { }) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ){
+                // 返回按钮
+                IconButton(
+                    onClick = onBackPressed,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White
+                    )
+                }
+
+            }
+        }
+
+
         Button(onClick = {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (bluetoothAdapter?.isEnabled == true) {
