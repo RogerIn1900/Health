@@ -44,6 +44,10 @@ fun VitalityDates(navController: NavController){
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarScreen() {
+
+    val year = LocalDate.now().year
+    val month = LocalDate.now().month.value
+    val date = LocalDate.now().dayOfMonth
     // 示例数据 - 可以替换为实际数据源
     val months = listOf(
         YearMonth.of(2025, 3),  // 2025年3月
@@ -60,7 +64,7 @@ fun CalendarScreen() {
         )
 
         Text(
-            text = "2025年4月7日",
+            text = ""+year+"年"+month+"月"+date+"日",
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
         )
