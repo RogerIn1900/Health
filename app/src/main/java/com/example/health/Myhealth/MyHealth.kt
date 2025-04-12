@@ -49,17 +49,27 @@ fun MyHealth(navController:NavController) {
     HealthTheme {
         LazyColumn {
             item {
-                Column {
-                    Image(
-                        painter = painterResource(id = R.drawable.background),
-                        contentDescription = "nothing",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(228.dp)
-                            .clickable {
-                                navController.navigate("Vitality")
-                            }
+                Box(modifier = Modifier.fillMaxSize()
+                    .padding(bottom = 80.dp)
+                ) {
+//                    Image(
+//                        painter = painterResource(id = R.drawable.background),
+//                        contentDescription = "nothing",
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(228.dp)
+//                            .clickable {
+//                                navController.navigate("Vitality")
+//                            }
+//                    )
+                    myGraph(modifier = Modifier
+                        .clickable {
+                            navController.navigate("Vitality")
+                        }
+                        .align(Alignment.Center)
+
                     )
+
                 }
                 Part2(navController)
                 GridLayoutExample()

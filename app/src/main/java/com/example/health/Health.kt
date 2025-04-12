@@ -34,6 +34,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import com.example.health.IndeterminateCircularIndicator
 import com.example.health.LinearDeterminateIndicator
 import com.example.health.MainViewModel.MainViewModel
@@ -50,6 +52,7 @@ import com.example.health.TopDesign.CaloriesPageDateViewTop
 import com.example.health.TopDesign.CaloriesPageTop
 import com.example.health.TopDesign.HomeTop
 import com.example.health.TopDesign.vitalityTop
+import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,6 +94,7 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
         Screen.CaloriesPageDateView.route  ->  "CaloriesPageDateView"
         else -> false
     }
+
 
     Scaffold(
         topBar = {
@@ -191,7 +195,8 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
                 enterTransition = {
                     slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
                         fullWidth  // 从右侧滑入
-                    } + fadeIn(animationSpec = tween(300))
+                    }
+//                    + fadeIn(animationSpec = tween(300))
                 },
                 exitTransition = {
                     slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
@@ -283,6 +288,11 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
             ) {
                 CaloriesPageDateView(navController)
             }
+
+
+
+
+
 
 // 2. 跳转时传递参数
 //            navController.navigate("detail_screen/123")

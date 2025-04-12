@@ -4,6 +4,7 @@ package com.example.health.Myhealth
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -356,7 +357,7 @@ fun graph() {
 
 //状态提升
 @Composable
-fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 65) {
+fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 65,modifier: Modifier = Modifier) {
     val datas = listOf(
         calories / 400.0,
         steps / 6000.0,
@@ -366,9 +367,9 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 65) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .height(150.dp) // 设置 Column 的大小为 300dp
-            .width(300.dp)
+        modifier = modifier
+//            .height(150.dp) // 设置 Column 的大小为 300dp
+//            .width(300.dp)
     ) {
         Canvas(
             modifier = Modifier
@@ -730,10 +731,11 @@ fun VitalityCard(day: Int,modifier: Modifier) {
             6 -> Text("六")
             7 -> Text("日")
         }
-        Image(
-            painter = painterResource(R.drawable.background),
-            contentDescription = ""
-        )
+//        Image(
+//            painter = painterResource(R.drawable.background),
+//            contentDescription = ""
+//        )
+        myGraph()
         Text(day.toString())
     }
 }

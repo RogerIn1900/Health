@@ -45,6 +45,22 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- 配置深层链接（支持 https 和自定义协议 myapp） -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 配置 https 链接 -->
+                <data
+                    android:scheme="https"
+                    android:host="chat.deepseek.com"
+                    android:pathPrefix="/share" />
+                <!-- 配置自定义协议链接 -->
+                <data
+                    android:scheme="myapp"
+                    android:host="share" />
+            </intent-filter>
         </activity>
 
         <provider
