@@ -53,6 +53,9 @@ android {
 
 dependencies {
 
+    //数据库相关依赖
+    implementation ("com.google.code.gson:gson:2.10.1")
+
     //日期，日历，相关依赖
     implementation ("com.jakewharton.threetenabp:threetenabp:1.4.0")
 
@@ -101,6 +104,9 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
+    implementation(libs.androidx.room.common.jvm)
+    implementation(libs.androidx.room.runtime.android)
+    implementation(libs.androidx.datastore.core.android)
     androidTestImplementation ("androidx.navigation:navigation-testing:$rootProject.composeNavigationVersion")
 
     implementation(libs.androidx.core.ktx)
