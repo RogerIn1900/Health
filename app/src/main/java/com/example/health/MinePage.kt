@@ -1,12 +1,15 @@
-package com.example.health.MinePage
+package com.example.health
 
 import android.app.Activity
+import android.graphics.fonts.FontStyle
+import android.provider.ContactsContract.CommonDataKinds.Im
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,20 +31,26 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,17 +59,15 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.health.R
 import com.example.health.ui.theme.HealthTheme
 
 
 
 @Composable
-fun MinePage(navController: NavController ){
+fun MinePage(){
     HealthTheme {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
@@ -68,7 +75,7 @@ fun MinePage(navController: NavController ){
             verticalArrangement = Arrangement.spacedBy(10.dp) // Add space between items
         ){
             item {
-                MinePart1(navController)     //个人信息、登陆界面
+                MinePart1()
                 Spacer(modifier = Modifier.height(10.dp))
                 MinePart2(modifier = Modifier.fillMaxWidth())
                 Spacer(modifier = Modifier.height(10.dp))
@@ -97,18 +104,14 @@ fun MinePage(navController: NavController ){
 
 
 @Composable
-fun MinePart1(navController : NavController) {
+fun MinePart1() {
 //    TODO("Mine information")
     val name:String ="deepseek";
     val sex:String = "男"
     val height  = 180
     val age = 18
 
-    Row(
-        modifier = Modifier.clickable {
-            navController.navigate("LoginPage")
-        }
-    ){
+    Row(){
         Image(
             painter = painterResource(id = R.mipmap.stand),
             contentDescription = "nothing",
@@ -149,7 +152,7 @@ fun MinePart2(modifier:Modifier = Modifier) {
 }
 
 @Composable
-fun MineCard(pic:Int = R.mipmap.sleep, title:String = "我的睡眠") {
+fun MineCard(pic:Int = R.mipmap.sleep,title:String = "我的睡眠") {
 //    TODO("Not yet implemented")
     Column (
         verticalArrangement = Arrangement.Center, // 垂直居中
@@ -176,7 +179,7 @@ fun MinePart3() {
             modifier = Modifier.padding(10.dp)
         ){
             Image(
-                painter = painterResource(id = R.mipmap.sleep),
+                painter = painterResource(id = R.mipmap.sleep ),
                 contentDescription = "head",
                 modifier = Modifier.size(64.dp)
             )
@@ -253,7 +256,7 @@ fun MineCard2() {
         Text("加入打卡", modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(5.dp))
         Image(
-            painter = painterResource(id = R.mipmap.sleep),
+            painter = painterResource(id = R.mipmap.sleep ),
             contentDescription = "",
             modifier = Modifier.width(60.dp)
 
@@ -775,7 +778,7 @@ fun PreviewMinePage() {
         Column {
 //        MinePart1()
 //        MinePart2()
-//            MinePage()
+            MinePage()
 //        MinePart6()
         }
     }

@@ -1,11 +1,22 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+
+    id("com.google.devtools.ksp")
+//    id("androidx.room")
+    alias(libs.plugins.compose.compiler)
+}
+
+ksp {
+    arg("option_name", "option_value")
+    // other options...
 }
 
 android {
     namespace = "com.example.health"
     compileSdk = 35
+
+
 
     defaultConfig {
         applicationId = "com.example.health"
@@ -17,6 +28,15 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas\".toString()",
+                    // other options...
+                )
+            }
         }
     }
 
@@ -48,13 +68,31 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+//    room {
+//        schemaDirectory("$projectDir/schemas")
+//    }
+//
+//    sourceSets {
+//        getByName("androidTest").assets.srcDirs += files("$projectDir/schemas")
+//    }
 }
 
 
 dependencies {
 
-    //数据库相关依赖
-    implementation ("com.google.code.gson:gson:2.10.1")
+    //数据库
+    val room_version = "2.6.0"
+
+    implementation("androidx.room:room-runtime:$room_version")
+//    ksp("androidx.room:room-compiler:2.5.0")
+    ksp("androidx.room:room-compiler:$room_version")
+    // 可选，Kotlin 扩展和协程支持
+    implementation("androidx.room:room-ktx:$room_version")
+    // 可选，Room测试帮助
+    testImplementation("androidx.room:room-testing:$room_version")
+
+
 
     //日期，日历，相关依赖
     implementation ("com.jakewharton.threetenabp:threetenabp:1.4.0")
@@ -104,9 +142,6 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
-    implementation(libs.androidx.room.common.jvm)
-    implementation(libs.androidx.room.runtime.android)
-    implementation(libs.androidx.datastore.core.android)
     androidTestImplementation ("androidx.navigation:navigation-testing:$rootProject.composeNavigationVersion")
 
     implementation(libs.androidx.core.ktx)
