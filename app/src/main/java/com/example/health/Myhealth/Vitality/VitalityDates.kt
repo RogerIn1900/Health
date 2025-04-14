@@ -112,7 +112,7 @@ fun MonthCalendar(month: YearMonth) {
                     if (week.size < 7) {
                         repeat(7 - week.size) {
                             Box(modifier = Modifier.size(40.dp))
-                        }
+                        } 
                     }
                 }
             }

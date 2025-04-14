@@ -68,9 +68,7 @@ fun MyHealth(navController:NavController) {
                         .align(Alignment.Center)
                         .size(300.dp,150.dp)
 
-
                     )
-
                 }
                 Part2(navController)
                 GridLayoutExample()
