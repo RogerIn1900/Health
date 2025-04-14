@@ -36,8 +36,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.health.IndeterminateCircularIndicator
 import com.example.health.LinearDeterminateIndicator
-import com.example.health.MainViewModel.MainViewModel
-import com.example.health.MinePage
+import com.example.health.ViewModel.MainViewModel.MainViewModel
+import com.example.health.MinePage.LoginPage
+import com.example.health.MinePage.MinePage
 import com.example.health.Myhealth.CaloriesPage.CaloriesPage
 import com.example.health.Myhealth.CaloriesPage.CaloriesPageDateView
 import com.example.health.Myhealth.MidActivity.MidActivity
@@ -149,10 +150,12 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
 //                }
 
             )
-            { MyHealth(navController) }
+            {
+                MyHealth(navController)
+            }
             composable(Screen.Move.route) { SearchScreen() }
             composable(Screen.Service.route) { ImageUploaderScreen() }
-            composable(Screen.Mine.route) { MinePage() }
+            composable(Screen.Mine.route) { MinePage(navController) }
 
             //Health页面的导航页
             composable(
@@ -294,20 +297,20 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
                 enterTransition = {
                     slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
                         fullWidth  // 从右侧滑入
-                    } + fadeIn(animationSpec = tween(300))
+                    } + fadeIn(animationSpec = tween(30))
                 },
                 exitTransition = {
                     slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
                         -fullWidth / 2  // 向左滑出
-                    } + fadeOut(animationSpec = tween(300))
+                    } + fadeOut(animationSpec = tween(30))
                 },
                 popEnterTransition = {
-                    fadeIn(animationSpec = tween(300))  // 返回时淡入
+                    fadeIn(animationSpec = tween(30))  // 返回时淡入
                 },
                 popExitTransition = {
-                    slideOutHorizontally(animationSpec = tween(300)) { fullWidth ->
+                    slideOutHorizontally(animationSpec = tween(30)) { fullWidth ->
                         fullWidth  // 向右滑出
-                    } + fadeOut(animationSpec = tween(300))
+                    } + fadeOut(animationSpec = tween(30))
                 }
             ){
                 VitalityDates(navController = navController)
@@ -315,7 +318,12 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
 
 
 
-
+            //MinePage页面的导航
+            composable(
+                route = "LoginPage"
+            ){
+                LoginPage()
+            }
 // 2. 跳转时传递参数
 //            navController.navigate("detail_screen/123")
         }
