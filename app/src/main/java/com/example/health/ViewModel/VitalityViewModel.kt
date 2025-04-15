@@ -22,6 +22,7 @@ class VitalityViewModel : ViewModel() {
 
     fun onCaloriesChanged(calories: Int){
 //        val c = if(calories>=0){calories}else 0
+        //没能解决负数也绘图
         val c = calories.takeIf { it >= 0 } ?: 0
         _calories.postValue(calories)
     }
