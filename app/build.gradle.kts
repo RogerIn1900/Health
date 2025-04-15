@@ -81,6 +81,7 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.runtime.livedata)
     //数据库
     val room_version = "2.6.0"
 

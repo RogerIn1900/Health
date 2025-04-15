@@ -36,15 +36,26 @@ import androidx.compose.ui.unit.sp
 import com.example.health.ui.theme.HealthTheme
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.health.Myhealth.Vitality.myGraph
 import com.example.health.R
+import com.example.health.ViewModel.VitalityViewModel
 import com.example.health.ui.theme.sleep_background
 
 @Composable
 fun MyHealth(navController:NavController) {
+    val vitalityViewModel : VitalityViewModel = viewModel()
+    val calories by vitalityViewModel.calories.observeAsState(237)
+    val steps by vitalityViewModel.steps.observeAsState(3920)
+    val midAcitivityTime by vitalityViewModel.midAcitivityTime.observeAsState(24)
+
+
     HealthTheme {
         LazyColumn {
             item {
@@ -61,7 +72,7 @@ fun MyHealth(navController:NavController) {
 //                                navController.navigate("Vitality")
 //                            }
 //                    )
-                    myGraph(modifier = Modifier
+                    myGraph(calories = calories,steps = steps,midAcitivityTime = midAcitivityTime,modifier = Modifier
                         .clickable {
                             navController.navigate("Vitality")
                         }
@@ -69,6 +80,74 @@ fun MyHealth(navController:NavController) {
                         .size(300.dp,150.dp)
 
                     )
+                }
+                //调试viewmodel
+                //添加数值
+                Row (
+                    horizontalArrangement = Arrangement.Center
+                ){
+                    Button(
+                        onClick = {
+                            vitalityViewModel.onCaloriesChanged(calories + 10)
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("卡路里 + 10")
+                    }
+
+                    Button(
+                        onClick = {
+                            vitalityViewModel.onStepsChanged(steps + 100)
+                        },
+                        modifier = Modifier.weight(1f)
+
+                    ) {
+                        Text("卡路里加 + 100")
+                    }
+
+                    Button(
+                        onClick = {
+                            vitalityViewModel.onMidAcitivityTimeChanged(midAcitivityTime + 1)
+                        },
+                        modifier = Modifier.weight(1f)
+
+                    ) {
+                        Text("卡路里 + 1")
+                    }
+                }
+                //减少数值
+                Row (
+                    horizontalArrangement = Arrangement.Center
+                ){
+                    Button(
+                        onClick = {
+                            vitalityViewModel.onCaloriesChanged(calories - 10)
+                        },
+                        modifier = Modifier.weight(1f)
+
+                    ) {
+                        Text("卡路里 - 10")
+                    }
+
+                    Button(
+                        onClick = {
+                            vitalityViewModel.onStepsChanged(steps - 100)
+                        },
+                        modifier = Modifier.weight(1f)
+
+                    ) {
+                        Text("卡路里加 - 100")
+                    }
+
+                    Button(
+                        onClick = {
+                            vitalityViewModel.onMidAcitivityTimeChanged(midAcitivityTime - 1)
+                        },
+                        modifier = Modifier.weight(1f)
+
+                    ) {
+                        Text("卡路里 - 1")
+                    }
                 }
                 Part2(navController)
                 GridLayoutExample()

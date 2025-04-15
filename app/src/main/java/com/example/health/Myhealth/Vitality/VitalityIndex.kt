@@ -1191,11 +1191,11 @@ fun drawArrow(
 
 //状态提升
 @Composable
-fun myGraph(calories:Int = 691,steps:Int = 10135,duration:Int = 55,modifier: Modifier = Modifier) {
+fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modifier: Modifier = Modifier) {
     val datas = listOf(
         calories / 400.0,
         steps / 6000.0,
-        duration / 30.0
+        midAcitivityTime / 30.0
     )
 
     Column(

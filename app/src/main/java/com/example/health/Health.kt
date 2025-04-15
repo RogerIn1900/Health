@@ -36,7 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.health.IndeterminateCircularIndicator
 import com.example.health.LinearDeterminateIndicator
-import com.example.health.MainViewModel.MainViewModel
+import com.example.health.ViewModel.MainViewModel.MainViewModel
 import com.example.health.MinePage
 import com.example.health.Myhealth.CaloriesPage.CaloriesPage
 import com.example.health.Myhealth.CaloriesPage.CaloriesPageDateView

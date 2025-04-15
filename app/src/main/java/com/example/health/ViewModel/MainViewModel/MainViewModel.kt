@@ -1,4 +1,4 @@
-package com.example.health.MainViewModel
+package com.example.health.ViewModel.MainViewModel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
