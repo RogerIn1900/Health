@@ -12,10 +12,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -160,7 +163,9 @@ fun DayCell(date: LocalDate, month: YearMonth) {
 
     Box(
         modifier = Modifier
-            .size(55.dp),
+//            .size(55.dp)
+//            .height(80.dp)
+            .width(55.dp),
         contentAlignment = Alignment.Center
     ) {
         // 如果是当前日期，可以添加特殊样式
@@ -173,11 +178,11 @@ fun DayCell(date: LocalDate, month: YearMonth) {
 
 
         Column (
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally // 水平居中
         ){
             if(isCurrentMonth){
-                myGraph(modifier = Modifier.size(35.dp))
+                myGraph(modifier = Modifier.size(40.dp))
 //                Box(
 //                    modifier = Modifier
 //                        .size(6.dp) // 点的大小
@@ -187,19 +192,34 @@ fun DayCell(date: LocalDate, month: YearMonth) {
 //                        )
 //                )
 
-                Text(
-                    text = date.dayOfMonth.toString(),
-                    color = if (isToday) MaterialTheme.colorScheme.onPrimary else textColor,
-//                    color =  textColor,
-                    fontSize = 10.sp,
-                    fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal,
-                    textAlign = TextAlign.Center,//要和外部的居中一起用才能实现
-                    modifier = Modifier.fillMaxWidth()
-                        .background(
-                            color = if (isToday) Color.Red else Color.Transparent,
-                            shape = CircleShape
-                        )
-                )
+
+                //这个点被挤掉了。。。
+                Box(
+                    modifier = Modifier
+                        .size(25.dp) // 点的大小
+//                        .background(
+//                            color = if (isToday) Color.Red else Color.Transparent,
+//                            shape = CircleShape
+//                        )
+                ){
+                    Text(
+                        text = date.dayOfMonth.toString(),
+//                        color = if (isToday) MaterialTheme.colorScheme.onPrimary else textColor,
+                        color =  textColor,
+                        fontSize = 15.sp,
+                        fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal,
+                        textAlign = TextAlign.Center,//要和外部的居中一起用才能实现
+                        modifier = Modifier.fillMaxWidth()
+//                            .background(
+//                                color = if (isToday) Color.Red else Color.Transparent,
+//                                shape = CircleShape
+//                            )
+                            .align(Center)
+                    )
+                }
+
+
+                //这个点被挤掉了。。。
                 Box(
                     modifier = Modifier
                         .size(6.dp) // 点的大小
@@ -209,17 +229,9 @@ fun DayCell(date: LocalDate, month: YearMonth) {
                         )
                 )
                 // 固定高度的占位容器，避免布局抖动
-//                Spacer(modifier = Modifier.height(2.dp)) // 控制点的高度间距
-                if(isToday){
-                    Box(
-                        modifier = Modifier
-                            .size(2.dp) // 点的大小
-                            .background(
-                                color = if (isToday) Color.Red else Color.Transparent,
-                                shape = CircleShape
-                            )
-                    )
-                }
+                Spacer(modifier = Modifier.height(2.dp)) // 控制点的高度间距
+
+
 
             }
         }
