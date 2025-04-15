@@ -183,24 +183,10 @@ fun DayCell(date: LocalDate, month: YearMonth) {
         ){
             if(isCurrentMonth){
                 myGraph(modifier = Modifier.size(40.dp))
-//                Box(
-//                    modifier = Modifier
-//                        .size(6.dp) // 点的大小
-//                        .background(
-//                            color = if (isToday) Color.Red else Color.Transparent,
-//                            shape = CircleShape
-//                        )
-//                )
 
-
-                //这个点被挤掉了。。。
                 Box(
                     modifier = Modifier
                         .size(25.dp) // 点的大小
-//                        .background(
-//                            color = if (isToday) Color.Red else Color.Transparent,
-//                            shape = CircleShape
-//                        )
                 ){
                     Text(
                         text = date.dayOfMonth.toString(),
@@ -210,10 +196,6 @@ fun DayCell(date: LocalDate, month: YearMonth) {
                         fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal,
                         textAlign = TextAlign.Center,//要和外部的居中一起用才能实现
                         modifier = Modifier.fillMaxWidth()
-//                            .background(
-//                                color = if (isToday) Color.Red else Color.Transparent,
-//                                shape = CircleShape
-//                            )
                             .align(Center)
                     )
                 }
@@ -230,9 +212,6 @@ fun DayCell(date: LocalDate, month: YearMonth) {
                 )
                 // 固定高度的占位容器，避免布局抖动
                 Spacer(modifier = Modifier.height(2.dp)) // 控制点的高度间距
-
-
-
             }
         }
 
