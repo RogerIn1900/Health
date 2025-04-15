@@ -1229,7 +1229,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
-
                 },
                 Paint().apply {
                     color = Color(0x4DFFC107) // 另一种棕色
@@ -1237,7 +1236,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
-
                 },
                 Paint().apply {
                     color = Color(0x4D2196F3) // 深蓝色
@@ -1245,7 +1243,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
-
                 }
             )
 
@@ -1257,7 +1254,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
-
                 },
                 Paint().apply {
                     color = Color(0xFFFFC107) // 另一种棕色
@@ -1265,7 +1261,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
-
                 },
                 Paint().apply {
                     color = Color(0xFF2196F3) // 深蓝色
@@ -1273,7 +1268,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
-
                 }
             )
 
@@ -1304,6 +1298,7 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
             }
 
             // 绘制三个半圆环的真实数值
+            //一倍以内
             paints.forEachIndexed { index, paint ->
                 val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
                 val sweepAngle = ((datas[index] % 180)* 180).toFloat()
@@ -1327,6 +1322,11 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                         )
                     }
                 }
+            }
+            // 1-2倍 大于2倍
+            paints.forEachIndexed { index, paint ->
+                val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
+                val sweepAngle = ((datas[index] % 180) * 180).toFloat()
 
                 // 如果 sweepAngle 大于 180f，绘制上层部分
                 if (sweepAngle > 180f) {
@@ -1338,7 +1338,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                         style = PaintingStyle.Stroke
 //                        strokeCap = Round
                     }
-
                     drawIntoCanvas { canvas ->
                         withTransform({
                             translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
@@ -1356,19 +1355,30 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                             )
                         }
                     }
+                }
+            }
 
-                    //绘制小箭头
-                    val canvasSize = size
-                    val centerX = canvasSize.width / 2
-                    val centerY = canvasSize.height
-                    val radius = maxRadius - index * ringWidth * 1.2f // 旋转半径
+                // 1-2倍
+            paints.forEachIndexed { index, paint ->
+                val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
+                val sweepAngle = ((datas[index] % 180)* 180).toFloat()
+
+                //绘制小箭头
+                val canvasSize = size
+                val centerX = canvasSize.width / 2
+                val centerY = canvasSize.height
 //                    val radius = maxRadius - index * ringWidth * 2.05f // 旋转半径
-                    val startAngle = 0f // 起始角度（以度为单位）
-                    val sweepAngle2 = 180f+80f// 扫过的角度（以度为单位）
+                val startAngle = 180f // 起始角度（以度为单位）
+                val sweepAngle2 = 180f+80f// 扫过的角度（以度为单位）
 //                    val sweepAngle = sweepAngle - 180f - 25f  // 扫过的角度（以度为单位）
 
+
+
+                // 如果 sweepAngle 大于 180f，绘制箭头
+                if (sweepAngle > 180){
+                    val drawAngle = sweepAngle % 180
                     // 计算圆弧的终点坐标
-                    val endAngle = startAngle + sweepAngle - (index +0.8f)*10f
+                    val endAngle = startAngle + drawAngle - (index +0.8f)*10f
                     val endAngleRadians = Math.toRadians(endAngle.toDouble())
                     val endX = centerX + radius * cos(endAngleRadians).toFloat()
                     val endY = centerY + radius * sin(endAngleRadians).toFloat()
@@ -1385,7 +1395,6 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                         color = paint.color
 //                        color = Color.White
                     )
-
                 }
             }
         }
