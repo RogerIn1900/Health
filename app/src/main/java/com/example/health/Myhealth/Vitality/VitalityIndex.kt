@@ -1104,39 +1104,6 @@ fun HealthBarChartWithInteractionsAndImage(
 
 
 
-@Composable
-fun MyGraphWithArrowAtEnd() {
-    Canvas(
-        modifier = Modifier
-            .size(300.dp)
-            .background(Color.LightGray)
-    ) {
-        val canvasSize = size
-        val centerX = canvasSize.width / 2
-        val centerY = canvasSize.height / 2
-        val radius = 200f // 旋转半径
-        val startAngle = 180f // 起始角度（以度为单位）
-        val sweepAngle = 90f  // 扫过的角度（以度为单位）
-        val rotationRadius = 150f
-
-        // 计算圆弧的终点坐标
-        val endAngle = startAngle + sweepAngle
-        val endAngleRadians = Math.toRadians(endAngle.toDouble())
-        val endX = centerX + radius * cos(endAngleRadians).toFloat()
-        val endY = centerY + radius * sin(endAngleRadians).toFloat()
-
-        // 绘制箭头
-        drawArrow(
-            drawScope = this, // 将 DrawScope 作为参数传递
-            startX = endX,
-            startY = endY,
-            angle = endAngle + 90f, // 箭头的旋转角度增加 90 度  箭头自身旋转
-            arrowHeadLength = 30f, // 箭头头部的长度
-            arrowHeadAngle = 30f, // 箭头头部的角度
-            color = Color.Red
-        )
-    }
-}
 
 /**
  * 在指定位置绘制箭头
@@ -1303,25 +1270,28 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                 val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
                 val sweepAngle = ((datas[index] % 180)* 180).toFloat()
 
-                // 绘制底层部分
-                drawIntoCanvas { canvas ->
-                    withTransform({
-                        translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
-                    }) {
-                        // 如果 sweepAngle 大于 180f，只绘制 180f 的部分
-                        val drawAngle = if (sweepAngle > 180f) 180f else sweepAngle
-                        canvas.nativeCanvas.drawArc(
-                            -radius, // 左边界
-                            -radius, // 上边界
-                            radius,  // 右边界
-                            radius,  // 下边界
-                            180f,   // 起始角度
-                            drawAngle,   // 扫过的角度
-                            false,  // 不使用中心点连接
-                            paint.asFrameworkPaint(), // 使用 Paint
-                        )
+                if(sweepAngle > 0){
+                    // 绘制底层部分
+                    drawIntoCanvas { canvas ->
+                        withTransform({
+                            translate(canvasWidth / 2, canvasHeight) // 将坐标系移动到 Canvas 的中心
+                        }) {
+                            // 如果 sweepAngle 大于 180f，只绘制 180f 的部分
+                            val drawAngle = if (sweepAngle > 180f) 180f else sweepAngle
+                            canvas.nativeCanvas.drawArc(
+                                -radius, // 左边界
+                                -radius, // 上边界
+                                radius,  // 右边界
+                                radius,  // 下边界
+                                180f,   // 起始角度
+                                drawAngle,   // 扫过的角度
+                                false,  // 不使用中心点连接
+                                paint.asFrameworkPaint(), // 使用 Paint
+                            )
+                        }
                     }
                 }
+
             }
             // 1-2倍 大于2倍
             paints.forEachIndexed { index, paint ->
@@ -1358,7 +1328,8 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
                 }
             }
 
-                // 1-2倍
+
+            //箭头绘制
             paints.forEachIndexed { index, paint ->
                 val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
                 val sweepAngle = ((datas[index] % 180)* 180).toFloat()

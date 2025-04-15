@@ -21,14 +21,18 @@ class VitalityViewModel : ViewModel() {
 
 
     fun onCaloriesChanged(calories: Int){
+//        val c = if(calories>=0){calories}else 0
+        val c = calories.takeIf { it >= 0 } ?: 0
         _calories.postValue(calories)
     }
 
     fun onStepsChanged(steps: Int){
+        val c = steps.takeIf { it >= 0 } ?: 0
         _steps.postValue(steps)
     }
 
     fun onMidAcitivityTimeChanged(midAcitivityTime: Int){
+        val c = midAcitivityTime.takeIf { it >= 0 } ?: 0
         _midAcitivityTime.postValue(midAcitivityTime)
     }
 }
