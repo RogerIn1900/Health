@@ -149,8 +149,7 @@ fun DayCell(date: LocalDate, month: YearMonth) {
 
     Box(
         modifier = Modifier
-            .size(40.dp)
-            .padding(4.dp),
+            .size(40.dp),
         contentAlignment = Alignment.Center
     ) {
         // 如果是当前日期，可以添加特殊样式
@@ -158,17 +157,21 @@ fun DayCell(date: LocalDate, month: YearMonth) {
         if (isToday) {
             Box(
                 modifier = Modifier
-                    .size(36.dp)
+                    .size(46.dp)
                     .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape)
             )
         }
 
-        Text(
-            text = date.dayOfMonth.toString(),
-            color = if (isToday) MaterialTheme.colorScheme.onPrimary else textColor,
-            fontSize = 16.sp,
-            fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal
-        )
+        Column {
+            myGraph()
+            Text(
+                text = date.dayOfMonth.toString(),
+                color = if (isToday) MaterialTheme.colorScheme.onPrimary else textColor,
+                fontSize = 16.sp,
+                fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal
+            )
+        }
+
     }
 }
 
