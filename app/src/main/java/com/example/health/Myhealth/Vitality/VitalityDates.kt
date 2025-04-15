@@ -21,11 +21,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +44,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
-
+import kotlin.math.min
 
 
 @Composable
@@ -160,28 +166,61 @@ fun DayCell(date: LocalDate, month: YearMonth) {
         // 如果是当前日期，可以添加特殊样式
         val isToday = date == LocalDate.now()
 
+        //字体调整
+        var textLayoutResult: TextLayoutResult? by remember { mutableStateOf(null) }
+        val textWidth = textLayoutResult?.size?.width?.toFloat() ?: 1f
+        val textHeight = textLayoutResult?.size?.height?.toFloat() ?: 1f
+
 
         Column (
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally // 水平居中
         ){
             if(isCurrentMonth){
-                myGraph(modifier = Modifier.size(40.dp))
+                myGraph(modifier = Modifier.size(35.dp))
+//                Box(
+//                    modifier = Modifier
+//                        .size(6.dp) // 点的大小
+//                        .background(
+//                            color = if (isToday) Color.Red else Color.Transparent,
+//                            shape = CircleShape
+//                        )
+//                )
+
                 Text(
                     text = date.dayOfMonth.toString(),
                     color = if (isToday) MaterialTheme.colorScheme.onPrimary else textColor,
+//                    color =  textColor,
                     fontSize = 10.sp,
                     fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal,
                     textAlign = TextAlign.Center,//要和外部的居中一起用才能实现
                     modifier = Modifier.fillMaxWidth()
+                        .background(
+                            color = if (isToday) Color.Red else Color.Transparent,
+                            shape = CircleShape
+                        )
                 )
-                if (isToday) {
-//                Image(
-//                    painter = painterResource(id = R.mipmap.calorie),
-//                    contentDescription = "",
-//                    modifier = Modifier.fillMaxWidth().height(2.dp)
-//                )
+                Box(
+                    modifier = Modifier
+                        .size(6.dp) // 点的大小
+                        .background(
+                            color = if (isToday) Color.Red else Color.Transparent,
+                            shape = CircleShape
+                        )
+                )
+                // 固定高度的占位容器，避免布局抖动
+//                Spacer(modifier = Modifier.height(2.dp)) // 控制点的高度间距
+                if(isToday){
+                    Box(
+                        modifier = Modifier
+                            .size(2.dp) // 点的大小
+                            .background(
+                                color = if (isToday) Color.Red else Color.Transparent,
+                                shape = CircleShape
+                            )
+                    )
                 }
+
             }
         }
 
