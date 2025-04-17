@@ -2,6 +2,7 @@ package com.example.health.Myhealth.Vitality
 
 import android.app.Application
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
@@ -112,16 +114,24 @@ fun MonthCalendar(month: YearMonth) {
         val dates = getDatesForMonth(month)
         val weeks = dates.chunked(7)
 
+        //获取宽度
+        var rowWidth by remember { mutableStateOf(0) }
+
         Column(modifier = Modifier.padding(horizontal = 8.dp)) {
             weeks.forEach { week ->
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .onSizeChanged {
+                            // 获取 Row 的实际宽度（像素）
+                            rowWidth = it.width
+                        },
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     week.forEach { date ->
-                        DayCell(date = date, month = month)
+                        DayCell(date = date, month = month, width  = 50 )
                     }
-
+//                    Text(rowWidth.toString())
+                    Log.d("Main 日历宽度","宽度" + rowWidth.toString())
                     // 如果一周不足7天，补充空单元格
                     if (week.size < 7) {
                         repeat(7 - week.size) {
@@ -157,15 +167,15 @@ fun WeekDaysHeader() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayCell(date: LocalDate, month: YearMonth) {
+fun DayCell(date: LocalDate, month: YearMonth, width : Int) {
     val isCurrentMonth = date.month == month.month
     val textColor = if (isCurrentMonth) MaterialTheme.colorScheme.onBackground else Color.Gray
 
     Box(
         modifier = Modifier
-//            .size(55.dp)
+//            .size(width.dp)
 //            .height(80.dp)
-            .width(55.dp),
+            .width(width.dp),
         contentAlignment = Alignment.Center
     ) {
         // 如果是当前日期，可以添加特殊样式
