@@ -20,15 +20,16 @@ data class VitalityState(
 
 @Keep //防止实体类混淆，导致无法找到
 @Entity(tableName = "Vitality_data")
-class VitalityEntity {
-    @PrimaryKey(autoGenerate = false)
+data class VitalityEntity (
+    @PrimaryKey()
     @ColumnInfo(name = "date")
-    val date:  Date = Date()
+    val date:  Date ,
     @ColumnInfo(name = "calories")
-    val calories : Int = 0
+    val calories : Int ,
     @ColumnInfo(name = "steps")
-    val steps : Int = 0
+    val steps : Int ,
     @ColumnInfo(name = "midActivity")
-    val midActivity : Int = 0
-
-}
+    val midActivity : Int ,
+    @ColumnInfo(name = "isDeleted")
+    val isDeleted: String = "0"
+)
