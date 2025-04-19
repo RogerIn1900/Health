@@ -84,15 +84,13 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     //数据库
     val room_version = "2.6.0"
-
     implementation("androidx.room:room-runtime:$room_version")
-//    ksp("androidx.room:room-compiler:2.5.0")
     ksp("androidx.room:room-compiler:$room_version")
     // 可选，Kotlin 扩展和协程支持
     implementation("androidx.room:room-ktx:$room_version")
     // 可选，Room测试帮助
     testImplementation("androidx.room:room-testing:$room_version")
-
+    implementation("androidx.room:room-paging:$room_version")
 
 
     //日期，日历，相关依赖
