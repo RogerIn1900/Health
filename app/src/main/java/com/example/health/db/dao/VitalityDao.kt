@@ -33,6 +33,4 @@ interface VitalityDao {
     //删除
     @Query("delete from Vitality_data")
     suspend fun clearAll()
-
-
 }

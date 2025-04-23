@@ -189,6 +189,12 @@ fun NavGraphBuilder.navMap(navController: NavController){
 
 fun NavController.toMain(){
     navigate(""){
-
+        popUpToId
+    }
+    navigate(""){
+        popUpToId
+    }
+    navigate(""){
+        popUpToId
     }
 }

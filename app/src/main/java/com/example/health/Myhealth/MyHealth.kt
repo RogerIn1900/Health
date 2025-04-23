@@ -1,5 +1,6 @@
 package com.example.health.Myhealth
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,16 +37,18 @@ import androidx.compose.ui.unit.sp
 import com.example.health.ui.theme.HealthTheme
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.health.Myhealth.Vitality.myGraph
 import com.example.health.R
-import com.example.health.ViewModel.VitalityViewModel
+import com.example.health.Myhealth.ViewModel.VitalityViewModel
 import com.example.health.ui.theme.sleep_background
 
 @Composable
@@ -83,72 +86,81 @@ fun MyHealth(navController:NavController) {
                 }
                 //调试viewmodel
                 //添加数值
-                Row (
-                    horizontalArrangement = Arrangement.Center
+//                Row (
+//                    horizontalArrangement = Arrangement.Center
+//                ){
+//                    Button(
+//                        onClick = {
+//                            vitalityViewModel.onCaloriesChanged(calories + 10)
+//                        },
+//                        modifier = Modifier.weight(1f)
+//                    ) {
+//                        Text("卡路里 + 10")
+//                    }
+//
+//                    Button(
+//                        onClick = {
+//                            vitalityViewModel.onStepsChanged(steps + 100)
+//                        },
+//                        modifier = Modifier.weight(1f)
+//
+//                    ) {
+//                        Text("卡路里加 + 100")
+//                    }
+//
+//                    Button(
+//                        onClick = {
+//                            vitalityViewModel.onMidAcitivityTimeChanged(midAcitivityTime + 1)
+//                        },
+//                        modifier = Modifier.weight(1f)
+//
+//                    ) {
+//                        Text("卡路里 + 1")
+//                    }
+//                }
+//                //减少数值
+//                Row (
+//                    horizontalArrangement = Arrangement.Center
+//                ){
+//                    Button(
+//                        onClick = {
+//                            vitalityViewModel.onCaloriesChanged(calories - 10)
+//                        },
+//                        modifier = Modifier.weight(1f)
+//
+//                    ) {
+//                        Text("卡路里 - 10")
+//                    }
+//
+//                    Button(
+//                        onClick = {
+//                            vitalityViewModel.onStepsChanged(steps - 100)
+//                        },
+//                        modifier = Modifier.weight(1f)
+//
+//                    ) {
+//                        Text("卡路里加 - 100")
+//                    }
+//
+//                    Button(
+//                        onClick = {
+//                            vitalityViewModel.onMidAcitivityTimeChanged(midAcitivityTime - 1)
+//                        },
+//                        modifier = Modifier.weight(1f)
+//
+//                    ) {
+//                        Text("卡路里 - 1")
+//                    }
+//                }
+                Row(
+                    modifier = Modifier
                 ){
-                    Button(
-                        onClick = {
-                            vitalityViewModel.onCaloriesChanged(calories + 10)
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("卡路里 + 10")
-                    }
+                    val con : Context
+                    var text by remember { mutableStateOf("") } // 状态管理
 
-                    Button(
-                        onClick = {
-                            vitalityViewModel.onStepsChanged(steps + 100)
-                        },
-                        modifier = Modifier.weight(1f)
 
-                    ) {
-                        Text("卡路里加 + 100")
-                    }
-
-                    Button(
-                        onClick = {
-                            vitalityViewModel.onMidAcitivityTimeChanged(midAcitivityTime + 1)
-                        },
-                        modifier = Modifier.weight(1f)
-
-                    ) {
-                        Text("卡路里 + 1")
-                    }
                 }
-                //减少数值
-                Row (
-                    horizontalArrangement = Arrangement.Center
-                ){
-                    Button(
-                        onClick = {
-                            vitalityViewModel.onCaloriesChanged(calories - 10)
-                        },
-                        modifier = Modifier.weight(1f)
 
-                    ) {
-                        Text("卡路里 - 10")
-                    }
-
-                    Button(
-                        onClick = {
-                            vitalityViewModel.onStepsChanged(steps - 100)
-                        },
-                        modifier = Modifier.weight(1f)
-
-                    ) {
-                        Text("卡路里加 - 100")
-                    }
-
-                    Button(
-                        onClick = {
-                            vitalityViewModel.onMidAcitivityTimeChanged(midAcitivityTime - 1)
-                        },
-                        modifier = Modifier.weight(1f)
-
-                    ) {
-                        Text("卡路里 - 1")
-                    }
-                }
                 Part2(navController)
                 GridLayoutExample()
             }
