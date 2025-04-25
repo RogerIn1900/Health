@@ -184,7 +184,6 @@ fun NavGraphBuilder.navMap(navController: NavController){
     ){
         VitalityDates(navController = navController)
     }
-
 }
 
 fun NavController.toMain(){
