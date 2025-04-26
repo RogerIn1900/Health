@@ -16,13 +16,6 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
@@ -33,14 +26,71 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.health.ui.theme.RingOrange
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+
+
+
+
+
+
+
+
+@Composable
+fun FitnessAppNavigation() {
+    val navController = rememberNavController()
+    val currentDate = remember { mutableStateOf(LocalDate.of(2025, 3, 5)) }
+
+    NavHost(navController = navController, startDestination = "main") {
+        composable("main") {
+            FitnessTrackingScreen(
+                navController = navController,
+                currentDate = currentDate.value,
+                onDateSelected = { date ->
+                    currentDate.value = date
+                    navController.navigate("dayDetail/${date}")
+                }
+            )
+        }
+        composable("dayDetail/{date}") { backStackEntry ->
+            val dateStr = backStackEntry.arguments?.getString("date") ?: return@composable
+            val selectedDate = LocalDate.parse(dateStr)
+            DayDetailScreen(
+                date = selectedDate,
+                navController = navController
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FitnessTrackingScreen() {
-    val lightBlue = Color(0xFF58CCED)
-    val blue = Color(0xFF3895D3)
-    val orange = Color(0xFFFF8F00)
-    val yellow = Color(0xFFFFD700)
+fun FitnessTrackingScreen(
+    navController: NavController,
+    currentDate: LocalDate,
+    onDateSelected: (LocalDate) -> Unit
+) {
     val backgroundGray = Color(0xFFF0F2F5)
 
     Scaffold(
@@ -70,10 +120,13 @@ fun FitnessTrackingScreen() {
                 .background(backgroundGray)
         ) {
             // Date Selector
-            DateSelector()
+            DateSelector(currentDate)
 
-            // Daily Progress Indicators
-            WeeklyProgressIndicators()
+            // Daily Progress Indicators - now with click handling
+            WeeklyProgressIndicators(
+                currentDate = currentDate,
+                onDateSelected = onDateSelected
+            )
 
             // Main Content
             Box(
@@ -112,7 +165,9 @@ fun FitnessTrackingScreen() {
 }
 
 @Composable
-fun DateSelector() {
+fun DateSelector(currentDate: LocalDate) {
+    val formatter = DateTimeFormatter.ofPattern("yyyy年M月d日")
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -126,7 +181,7 @@ fun DateSelector() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("2025年3月5日", fontWeight = FontWeight.Bold)
+            Text(currentDate.format(formatter), fontWeight = FontWeight.Bold)
             Icon(
                 imageVector = Icons.Default.ArrowForward,
                 contentDescription = "Expand",
@@ -153,7 +208,14 @@ fun DateSelector() {
 }
 
 @Composable
-fun WeeklyProgressIndicators() {
+fun WeeklyProgressIndicators(
+    currentDate: LocalDate,
+    onDateSelected: (LocalDate) -> Unit
+) {
+    // Get the dates for the current week (starting from Monday)
+    val startOfWeek = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
+    val datesOfWeek = (0..6).map { startOfWeek.plusDays(it.toLong()) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -161,15 +223,23 @@ fun WeeklyProgressIndicators() {
             .padding(bottom = 8.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        for (i in 1..7) {
+        for (i in 0..6) {
+            val date = datesOfWeek[i]
+            val isCurrentDate = date == currentDate
+
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .clickable { onDateSelected(date) }
+                    .padding(vertical = 4.dp, horizontal = 8.dp)
             ) {
-                RainbowIcon(isComplete = i < 6)
+                RainbowIcon(isComplete = i < 5)
                 Text(
-                    text = "$i",
+                    text = "${date.dayOfMonth}",
                     modifier = Modifier.padding(top = 4.dp),
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    fontWeight = if (isCurrentDate) FontWeight.Bold else FontWeight.Normal,
+                    color = if (isCurrentDate) Color.Blue else Color.Black
                 )
             }
         }
@@ -456,15 +526,147 @@ fun WeeklyBarChart() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DayDetailScreen(date: LocalDate, navController: NavController) {
+    val formatter = DateTimeFormatter.ofPattern("yyyy年M月d日")
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(date.format(formatter)) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // This is a placeholder for the day detail screen
+            // You would populate this with actual data for the selected date
+            Text(
+                text = "${date.format(formatter)} 的详细数据",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Sample stats for this day
+            StatsRow()
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Progress gauge for this specific day
+            ProgressGauge(progress = 0.63f)
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "此处将显示 ${date.dayOfMonth} 日的详细健康数据和统计信息",
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun BingoRing(
+    itemData :Int = 60,
+    target : Float = 50.toFloat(),
+    ringColor: Color = RingOrange,
+    ){
+
+    val sweepAngle = ((itemData/target) * 360).toFloat()
+
+
+
+    if(sweepAngle<360 && sweepAngle>=0) {
+        Canvas(
+            modifier = Modifier
+//                .fillMaxSize()
+                .size(36.dp)
+        ) {
+            val canvasSize = size
+            val canvasWidth = canvasSize.width
+            val canvasHeight = canvasSize.height
+
+            val ringWidth = (size.width*0.13f)
+            val maxRadius = (canvasWidth / 2) - ringWidth/2
+            val radius = maxRadius - ringWidth * 1.2f
+
+//        val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
+//        val sweepAngle = (datas[index] * 180).toFloat()
+
+            val paintLightGreen = Paint().apply{
+                color = ringColor
+                strokeWidth = ringWidth
+                isAntiAlias = true
+                style = PaintingStyle.Stroke
+            }
+
+            val paint = Paint().apply{
+                color = ringColor
+                strokeWidth = ringWidth
+                isAntiAlias = true
+                style = PaintingStyle.Stroke
+            }
+
+            drawIntoCanvas { canvas ->
+                withTransform({
+                    translate(canvasWidth / 2, canvasHeight / 2) // 将坐标系移动到 Canvas 的中心
+                }) {
+                    // 如果 sweepAngle 大于 180f，只绘制 180f 的部分
+//                        val drawAngle = if (sweepAngle > 180f) 180f else sweepAngle
+                    canvas.nativeCanvas.drawArc(
+                        -radius, // 左边界
+                        -radius, // 上边界
+                        radius,  // 右边界
+                        radius,  // 下边界
+                        -90f,   // 起始角度
+                        sweepAngle,   // 扫过的角度
+                        false,  // 不使用中心点连接
+                        paint.asFrameworkPaint(), // 使用 Paint
+                    )
+                }
+            }
+        }
+    }else{
+        Box(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(ringColor)
+                .size(36.dp)
+        ){
+            Image(
+                painter = painterResource(R.drawable.baseline_done_24),
+                contentDescription = "backgroud",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(2.dp)
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun FitnessTrackingScreenPreview() {
     MaterialTheme {
-        FitnessTrackingScreen()
+        BingoRing()
     }
 }
 
 @Composable
 fun StepNumber() {
-    FitnessTrackingScreen()
+    FitnessAppNavigation()
 }

@@ -53,6 +53,13 @@ import androidx.navigation.NavController
 import com.example.health.R
 import java.util.Date
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import com.example.health.Myhealth.StepNumber.BingoRing
+import com.example.health.ui.theme.RingBlue
+import com.example.health.ui.theme.RingOrange
+import com.example.health.ui.theme.RingYellow
+import com.example.health.ui.theme.backgroundBlue
+import com.example.health.ui.theme.backgroundOrange
+import com.example.health.ui.theme.backgroundYellow
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -70,7 +77,7 @@ fun VitalityIndex(navController:NavController) {
                 pic = R.mipmap.calorie,
                 name = "卡路里（千卡）",
                 data  =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f),
-                mycolor = Color.Red
+                mycolor = RingOrange
             )
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -78,7 +85,7 @@ fun VitalityIndex(navController:NavController) {
                 pic = R.mipmap.shoe,
                 name = "卡路里（千卡）",
                 data  =  listOf(120f, 15f, 50f, 125f, 30f, 50f, 90f),
-                mycolor = Color.Yellow
+                mycolor = RingYellow
             )
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -86,7 +93,7 @@ fun VitalityIndex(navController:NavController) {
                 pic = R.mipmap.clock,
                 name = "卡路里（千卡）",
                 data  =  listOf(33f,44f,55f,66f,77f,88f,99f),
-                mycolor = Color.Blue
+                mycolor = RingBlue
             )
 //            fun vitalityCard3(
 //                pic :Int = R.mipmap.calorie,
@@ -849,7 +856,8 @@ fun vitalityCard3(
 @Composable
 fun HealthBarChartWithInteractionsAndImage(
     data :List<Float> = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f), // 对应周一至周日的数据
-    mycolor:Color = Color.Yellow
+    mycolor:Color = Color.Yellow,
+    target : Float = 400.toFloat()
 ) {
     // 数据
 //    val data = listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f) // 对应周一至周日的数据
@@ -1090,12 +1098,13 @@ fun HealthBarChartWithInteractionsAndImage(
                             textAlign = TextAlign.Center
                         )
                     )
-                    // 添加图片（替换为你的图片资源）
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // 替换为你的图片资源
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
+//                    // 添加图片（替换为你的图片资源）
+//                    Image(
+//                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // 替换为你的图片资源
+//                        contentDescription = null,
+//                        modifier = Modifier.size(20.dp)
+//                    )
+                    BingoRing(itemData = data[index].toInt(),ringColor = mycolor)
                 }
             }
         }
@@ -1191,21 +1200,21 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
             // 定义颜色和画笔
             val transparentPaints = listOf(
                 Paint().apply {
-                    color = Color(0x4DFF5722) // 棕色
+                    color = backgroundOrange // 棕色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
                 },
                 Paint().apply {
-                    color = Color(0x4DFFC107) // 另一种棕色
+                    color = backgroundYellow // 另一种棕色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
                 },
                 Paint().apply {
-                    color = Color(0x4D2196F3) // 深蓝色
+                    color = backgroundBlue // 深蓝色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
@@ -1216,21 +1225,21 @@ fun myGraph(calories:Int = 691,steps:Int = 10135,midAcitivityTime:Int = 55,modif
 
             val paints = listOf(
                 Paint().apply {
-                    color = Color(0xFFFF5722) // 棕色
+                    color = RingOrange // 棕色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
                 },
                 Paint().apply {
-                    color = Color(0xFFFFC107) // 另一种棕色
+                    color =RingYellow // 另一种棕色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
 //                    strokeCap = Round
                 },
                 Paint().apply {
-                    color = Color(0xFF2196F3) // 深蓝色
+                    color = RingBlue // 深蓝色
                     strokeWidth = ringWidth
                     isAntiAlias = true
                     style = PaintingStyle.Stroke
