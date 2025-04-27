@@ -12,7 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.compose.example.Screen
 import com.example.compose.example.SearchScreen
-import com.example.health.MinePage
+import com.example.health.MinePage.LoginScreen
+import com.example.health.MinePage.MinePage
 import com.example.health.Myhealth.MidActivity.MidActivity
 import com.example.health.Myhealth.StepNumber.StepNumber
 import com.example.health.Myhealth.Vitality.VitalityDates
@@ -23,7 +24,7 @@ fun NavGraphBuilder.navMap(navController: NavController){
 
     composable(Screen.Move.route) { SearchScreen() }
     composable(Screen.Service.route) { ImageUploaderScreen() }
-    composable(Screen.Mine.route) { MinePage() }
+    composable(Screen.Mine.route) { MinePage(navController) }
 
 
     //Health页面的导航页
@@ -183,6 +184,13 @@ fun NavGraphBuilder.navMap(navController: NavController){
         }
     ){
         VitalityDates(navController = navController)
+    }
+
+    //minePage
+    composable(
+        route = "login",
+    ) {
+        LoginScreen()
     }
 }
 
