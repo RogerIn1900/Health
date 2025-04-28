@@ -5,6 +5,10 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,47 +25,43 @@ class MainActivity : ComponentActivity() {
         // 关键设置：让内容延伸到系统栏后面
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-
         setContent {
             HealthTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-//                }
-                MainApp()
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        MainApp()
+                    }
+                }
+
             }
         }
-        Toast.makeText(this,"onCreate",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show()
     }
 
     override fun onStart() {
         super.onStart()
-        Toast.makeText(this,"onStart",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
         super.onResume()
-        Toast.makeText(this,"onResume",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show()
     }
-
-
 
 
     override fun onPause() {
         super.onPause()
-        Toast.makeText(this,"onPause",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show()
     }
 
     override fun onStop() {
         super.onStop()
-        Toast.makeText(this,"onStop",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onDestroy(){
+    override fun onDestroy() {
         super.onDestroy()
-        Toast.makeText(this,"onDestroy",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "onDestroy", Toast.LENGTH_SHORT).show()
 
     }
 }
