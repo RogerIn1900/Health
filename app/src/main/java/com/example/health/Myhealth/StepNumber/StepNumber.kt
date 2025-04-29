@@ -50,94 +50,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-@Composable
-fun BingoRing(
-    itemData :Int = 60,
-    target : Float = 50.toFloat(),
-    ringColor: Color = RingOrange,
-    ){
-    val sweepAngle = ((itemData/target) * 360).toFloat()
 
-    if(sweepAngle<360 && sweepAngle>=0) {
-        Canvas(
-            modifier = Modifier
-//                .fillMaxSize()
-                .size(36.dp)
-        ) {
-            val canvasSize = size
-            val canvasWidth = canvasSize.width
-            val canvasHeight = canvasSize.height
 
-            val ringWidth = (size.width*0.13f)
-            val maxRadius = (canvasWidth / 2) - ringWidth/2
-            val radius = maxRadius - ringWidth * 1.2f
 
-//        val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
-//        val sweepAngle = (datas[index] * 180).toFloat()
 
-            val paintLightGreen = Paint().apply{
-                color = ringColor
-                strokeWidth = ringWidth
-                isAntiAlias = true
-                style = PaintingStyle.Stroke
-            }
 
-            val paint = Paint().apply{
-                color = ringColor
-                strokeWidth = ringWidth
-                isAntiAlias = true
-                style = PaintingStyle.Stroke
-            }
-
-            drawIntoCanvas { canvas ->
-                withTransform({
-                    translate(canvasWidth / 2, canvasHeight / 2) // 将坐标系移动到 Canvas 的中心
-                }) {
-                    // 如果 sweepAngle 大于 180f，只绘制 180f 的部分
-//                        val drawAngle = if (sweepAngle > 180f) 180f else sweepAngle
-                    canvas.nativeCanvas.drawArc(
-                        -radius, // 左边界
-                        -radius, // 上边界
-                        radius,  // 右边界
-                        radius,  // 下边界
-                        -90f,   // 起始角度
-                        sweepAngle,   // 扫过的角度
-                        false,  // 不使用中心点连接
-                        paint.asFrameworkPaint(), // 使用 Paint
-                    )
-                }
-            }
-        }
-    }else{
-        Box(
-            modifier = Modifier
-                .clip(CircleShape)
-                .background(ringColor)
-                .size(36.dp)
-        ){
-            Image(
-                painter = painterResource(R.drawable.baseline_done_24),
-                contentDescription = "backgroud",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(2.dp)
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FitnessTrackingScreenPreview() {
-    MaterialTheme {
-        BingoRing()
-    }
-}
-
-@Composable
-fun StepNumber() {
-    FitnessAppNavigation()
-}
 
 
 @Composable
@@ -660,4 +577,96 @@ fun DayDetailScreen(date: LocalDate, navController: NavController) {
             )
         }
     }
+}
+
+@Composable
+fun BingoRing(
+    itemData :Int = 60,
+    target : Float = 50.toFloat(),
+    ringColor: Color = RingOrange,
+    ){
+
+    val sweepAngle = ((itemData/target) * 360).toFloat()
+
+
+
+    if(sweepAngle<360 && sweepAngle>=0) {
+        Canvas(
+            modifier = Modifier
+//                .fillMaxSize()
+                .size(36.dp)
+        ) {
+            val canvasSize = size
+            val canvasWidth = canvasSize.width
+            val canvasHeight = canvasSize.height
+
+            val ringWidth = (size.width*0.13f)
+            val maxRadius = (canvasWidth / 2) - ringWidth/2
+            val radius = maxRadius - ringWidth * 1.2f
+
+//        val radius = maxRadius - index * ringWidth * 1.2f // 调整半径，确保圆环不重叠且不超出边界
+//        val sweepAngle = (datas[index] * 180).toFloat()
+
+            val paintLightGreen = Paint().apply{
+                color = ringColor
+                strokeWidth = ringWidth
+                isAntiAlias = true
+                style = PaintingStyle.Stroke
+            }
+
+            val paint = Paint().apply{
+                color = ringColor
+                strokeWidth = ringWidth
+                isAntiAlias = true
+                style = PaintingStyle.Stroke
+            }
+
+            drawIntoCanvas { canvas ->
+                withTransform({
+                    translate(canvasWidth / 2, canvasHeight / 2) // 将坐标系移动到 Canvas 的中心
+                }) {
+                    // 如果 sweepAngle 大于 180f，只绘制 180f 的部分
+//                        val drawAngle = if (sweepAngle > 180f) 180f else sweepAngle
+                    canvas.nativeCanvas.drawArc(
+                        -radius, // 左边界
+                        -radius, // 上边界
+                        radius,  // 右边界
+                        radius,  // 下边界
+                        -90f,   // 起始角度
+                        sweepAngle,   // 扫过的角度
+                        false,  // 不使用中心点连接
+                        paint.asFrameworkPaint(), // 使用 Paint
+                    )
+                }
+            }
+        }
+    }else{
+        Box(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(ringColor)
+                .size(36.dp)
+        ){
+            Image(
+                painter = painterResource(R.drawable.baseline_done_24),
+                contentDescription = "backgroud",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(2.dp)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FitnessTrackingScreenPreview() {
+    MaterialTheme {
+        BingoRing()
+    }
+}
+
+@Composable
+fun StepNumber() {
+    FitnessAppNavigation()
 }

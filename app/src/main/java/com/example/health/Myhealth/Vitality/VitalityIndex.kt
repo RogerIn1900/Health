@@ -95,16 +95,12 @@ fun VitalityIndex(navController:NavController) {
                 data  =  listOf(33f,44f,55f,66f,77f,88f,99f),
                 mycolor = RingBlue
             )
-            Spacer(modifier = Modifier.height(10.dp))
-
 //            fun vitalityCard3(
 //                pic :Int = R.mipmap.calorie,
 //                name :String = "卡路里（千卡）",
 //                a : Boolean = true,
 //                data:List<Float> =  listOf(140f, 105f, 70f, 35f, 0f, 50f, 90f)
-//            ){\
-
-
+//            ){
         }
     }
 }
