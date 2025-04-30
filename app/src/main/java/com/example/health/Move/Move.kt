@@ -1,6 +1,7 @@
 package com.example.health.Move
 
 import android.content.res.Resources
+import android.graphics.Paint.Align
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -42,26 +44,31 @@ import com.example.health.ui.theme.RingOrange
 
 @Composable
 fun Move() {
-    OptionPart()
-    Spacer(modifier = Modifier.padding(12.dp))
-    ActionRecord()
-    Spacer(modifier = Modifier.padding(12.dp))
-    TrainingMetrics()
-    Spacer(modifier = Modifier.padding(12.dp))
-    RunningGroup()
-    Spacer(modifier = Modifier.padding(12.dp))
-    TrainingPlan()
-    Spacer(modifier = Modifier.padding(12.dp))
-    ActivityRecommendation()
-    Spacer(modifier = Modifier.padding(12.dp))
-    CourseContent()
-    Spacer(modifier = Modifier.padding(12.dp))
-    DancePart()
-    Spacer(modifier = Modifier.padding(12.dp))
-    TrainingCourse()
-    Spacer(modifier = Modifier.padding(12.dp))
-    InteractionCourse()
-    Spacer(modifier = Modifier.padding(12.dp))
+    LazyColumn {
+        item{
+            OptionPart()
+            Spacer(modifier = Modifier.padding(12.dp))
+            ActionRecord()
+            Spacer(modifier = Modifier.padding(12.dp))
+            TrainingMetrics()
+            Spacer(modifier = Modifier.padding(12.dp))
+            RunningGroup()
+            Spacer(modifier = Modifier.padding(12.dp))
+            TrainingPlan()
+            Spacer(modifier = Modifier.padding(12.dp))
+            ActivityRecommendation()
+            Spacer(modifier = Modifier.padding(12.dp))
+            CourseContent()
+            Spacer(modifier = Modifier.padding(12.dp))
+            DancePart()
+            Spacer(modifier = Modifier.padding(12.dp))
+            TrainingCourse()
+            Spacer(modifier = Modifier.padding(12.dp))
+            InteractionCourse()
+            Spacer(modifier = Modifier.padding(12.dp))
+        }
+    }
+
 }
 
 data class ActivityOption(val resources: Int,val name: String)
@@ -81,7 +88,9 @@ fun OptionPart() {
         ActivityOption(R.mipmap.sleep,"睡觉"),
         ActivityOption(R.mipmap.sleep,"睡觉")
     )
-    LazyRow {
+    LazyRow(
+        modifier = Modifier.background(Color.DarkGray)
+    ) {
         itemsIndexed(itemList){index, item ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -102,12 +111,17 @@ fun OptionPart() {
     }
 }
 
+//运动记录
 @Composable
 fun ActionRecord() {
     val activityName = " 户外骑行"
     val exerciseVolume = "11.34公里"
-    Card() {
-        Column {
+    Card(
+        modifier = Modifier.padding(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.background(Color.DarkGray)
+        ) {
             Row (
                 modifier = Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -170,7 +184,7 @@ fun TrainingMetrics() {
     ) {
         Column(
             modifier = Modifier
-                .background(Color.Blue)
+                .background(Color.DarkGray)
                 .padding(start = 6.dp, end = 6.dp, top = 12.dp, bottom = 12.dp)
 //                .fillMaxSize()
         ) {
@@ -279,9 +293,13 @@ fun TrainingMetrics() {
     }
 }
 
+//运动跑团
 @Composable
 fun RunningGroup() {
-    Card() {
+    Card(
+        modifier = Modifier.padding(12.dp)
+        
+    ) {
         Column (
             modifier = Modifier.padding(12.dp)
         ){
@@ -340,7 +358,9 @@ fun TrainingPlan() {
         Dial(R.mipmap.sleep,"心情感应"),
 
         )
-    Card() {
+    Card(
+        modifier = Modifier.padding(12.dp)
+    ) {
         Column(
 
         ) {
@@ -396,17 +416,37 @@ fun TrainingPlan() {
 
 @Composable
 fun ActivityRecommendation() {
-
+    BasePartTwoPage(
+        PartName = "活动推荐",
+        cardName1 = "燃烧吧！燃脂君",
+        cardDescription1 = "主题活动",
+        resource1 = R.mipmap.sleep,
+        cardName2 = "迷蒙清明 沐雨前行",
+        cardDescription2 = "月度跑量",
+        resource2 = R.mipmap.sleep
+    )
 }
 
 @Composable
 fun CourseContent() {
-
+    BasePartTwoPage(
+        PartName = "课程内容",
+        cardName1 = "新用户专享福利",
+        cardDescription1 = "最高90天",
+        resource1 = R.mipmap.sleep,
+        cardName2 = "运动抽奖活动",
+        cardDescription2 = "赢健身好礼",
+        resource2 = R.mipmap.sleep
+    )
 }
 
 @Composable
 fun DancePart() {
-
+    BasePartOnePage(
+        PartName = "舞力全开",
+        cardName1 = "体感游戏控制器",
+        cardDescription1 = "释放双手，即刻舞动！"
+    )
 }
 
 @Composable
@@ -419,9 +459,169 @@ fun InteractionCourse() {
 
 }
 
+@Composable
+fun BasePartTwoPage(
+    PartName : String = "活动推荐",
+    cardName1 : String = "燃烧吧！燃脂君",
+    cardDescription1 : String ="主题活动",
+    resource1:Int = R.mipmap.sleep,
+    cardName2 : String = "迷蒙清明 沐雨前行",
+    cardDescription2 : String = "月度跑量",
+    resource2:Int = R.mipmap.sleep
+){
+    Card(
+        modifier = Modifier.padding(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .background(Color.Gray)
+                .padding(start = 6.dp, end = 6.dp, top = 12.dp, bottom = 12.dp)
+//                .fillMaxSize()
+        ) {
+            Text(
+                text = "${PartName}",
+                fontSize = 24.sp,
+                color = Color.White
+            )
+
+            Row(
+                modifier = Modifier.padding(12.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            )
+            {
+                Card(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                    ){
+                        Image(
+                            painter = painterResource(resource1),
+                            contentDescription = "",
+                            modifier = Modifier.background(RingOrange)
+                                .fillMaxWidth()
+                        )
+                        Column (
+                            modifier = Modifier.align(Alignment.TopStart)
+                                .padding(6.dp)
+                        ){
+                            Text(
+                                text = "${cardName1}",
+                                fontSize = 16.sp,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "${cardDescription1}",
+                                fontSize = 12.sp,
+                                color = Color.DarkGray
+                            )
+
+                        }
+                    }
+
+
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Card(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                    ){
+                        Image(
+                            painter = painterResource(resource2),
+                            contentDescription = "",
+                            modifier = Modifier.background(RingOrange)
+                                .fillMaxWidth()
+                        )
+                        Column (
+                            modifier = Modifier.align(Alignment.TopStart)
+                                .padding(6.dp)
+                        ){
+                            Text(
+                                text = "${cardName2}",
+                                fontSize = 16.sp,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "${cardDescription2}",
+                                fontSize = 12.sp,
+                                color = Color.DarkGray
+                            )
+
+                        }
+                    }
+
+
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun BasePartOnePage(
+    PartName : String = "活动推荐",
+    cardName1 : String = "燃烧吧！燃脂君",
+    cardDescription1 : String ="主题活动",
+    resource1:Int = R.mipmap.sleep
+){
+    Card(
+        modifier = Modifier.padding(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .background(Color.Gray)
+                .padding(start = 6.dp, end = 6.dp, top = 12.dp, bottom = 12.dp)
+//                .fillMaxSize()
+        ) {
+            Text(
+                text = "${PartName}",
+                fontSize = 24.sp,
+                color = Color.White
+            )
+
+            Row(
+                modifier = Modifier.padding(12.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            )
+            {
+                Card(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                    ){
+                        Image(
+                            painter = painterResource(resource1),
+                            contentDescription = "",
+                            modifier = Modifier.background(RingOrange)
+                                .fillMaxWidth()
+                        )
+                        Column (
+                            modifier = Modifier.align(Alignment.TopStart)
+                                .padding(6.dp)
+                        ){
+                            Text(
+                                text = "${cardName1}",
+                                fontSize = 16.sp,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "${cardDescription1}",
+                                fontSize = 12.sp,
+                                color = Color.DarkGray
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Preview
 @Composable
 fun MovePreview(){
-    TrainingPlan()
+    Move()
 }
