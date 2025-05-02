@@ -87,6 +87,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
@@ -157,7 +158,12 @@ fun DropdownMenuButton(isLightTheme : Boolean = true) {
 
     // 显示对话框
     if (showDialog) {
-        Dialog(onDismissRequest = { },
+        Dialog(
+            onDismissRequest = { },
+            properties = DialogProperties(
+                dismissOnClickOutside = false, // 正确位置
+                dismissOnBackPress = true
+            )
         ) {
             Box(
                 modifier = Modifier
@@ -167,7 +173,6 @@ fun DropdownMenuButton(isLightTheme : Boolean = true) {
                         shape = RoundedCornerShape(30.dp)
                     )
             ){
-
                 Surface(
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
