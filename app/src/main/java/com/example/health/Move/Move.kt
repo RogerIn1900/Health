@@ -40,35 +40,37 @@ import androidx.compose.ui.unit.sp
 import com.example.health.DevicePage.Dial
 import com.example.health.Myhealth.Cart
 import com.example.health.R
+import com.example.health.ui.theme.HealthTheme
 import com.example.health.ui.theme.RingOrange
 
 @Composable
 fun Move() {
-    LazyColumn {
-        item{
-            OptionPart()
-            Spacer(modifier = Modifier.padding(12.dp))
-            ActionRecord()
-            Spacer(modifier = Modifier.padding(12.dp))
-            TrainingMetrics()
-            Spacer(modifier = Modifier.padding(12.dp))
-            RunningGroup()
-            Spacer(modifier = Modifier.padding(12.dp))
-            TrainingPlan()
-            Spacer(modifier = Modifier.padding(12.dp))
-            ActivityRecommendation()
-            Spacer(modifier = Modifier.padding(12.dp))
-            CourseContent()
-            Spacer(modifier = Modifier.padding(12.dp))
-            DancePart()
-            Spacer(modifier = Modifier.padding(12.dp))
-            TrainingCourse()
-            Spacer(modifier = Modifier.padding(12.dp))
-            InteractionCourse()
-            Spacer(modifier = Modifier.padding(12.dp))
+    HealthTheme {
+        LazyColumn {
+            item{
+                OptionPart()
+                Spacer(modifier = Modifier.padding(12.dp))
+                ActionRecord()
+                Spacer(modifier = Modifier.padding(12.dp))
+                TrainingMetrics()
+                Spacer(modifier = Modifier.padding(12.dp))
+                RunningGroup()
+                Spacer(modifier = Modifier.padding(12.dp))
+                TrainingPlan()
+                Spacer(modifier = Modifier.padding(12.dp))
+                ActivityRecommendation()
+                Spacer(modifier = Modifier.padding(12.dp))
+                CourseContent()
+                Spacer(modifier = Modifier.padding(12.dp))
+                DancePart()
+                Spacer(modifier = Modifier.padding(12.dp))
+                TrainingCourse()
+                Spacer(modifier = Modifier.padding(12.dp))
+                InteractionCourse()
+                Spacer(modifier = Modifier.padding(12.dp))
+            }
         }
     }
-
 }
 
 data class ActivityOption(val resources: Int,val name: String)
@@ -89,7 +91,7 @@ fun OptionPart() {
         ActivityOption(R.mipmap.sleep,"睡觉")
     )
     LazyRow(
-        modifier = Modifier.background(Color.DarkGray)
+        modifier = Modifier
     ) {
         itemsIndexed(itemList){index, item ->
             Column(
@@ -120,7 +122,7 @@ fun ActionRecord() {
         modifier = Modifier.padding(12.dp)
     ) {
         Column(
-            modifier = Modifier.background(Color.DarkGray)
+            modifier = Modifier
         ) {
             Row (
                 modifier = Modifier.padding(12.dp),
@@ -184,7 +186,7 @@ fun TrainingMetrics() {
     ) {
         Column(
             modifier = Modifier
-                .background(Color.DarkGray)
+//                .background(Color.DarkGray)
                 .padding(start = 6.dp, end = 6.dp, top = 12.dp, bottom = 12.dp)
 //                .fillMaxSize()
         ) {
@@ -474,7 +476,7 @@ fun BasePartTwoPage(
     ) {
         Column(
             modifier = Modifier
-                .background(Color.Gray)
+//                .background(Color.Gray)
                 .padding(start = 6.dp, end = 6.dp, top = 12.dp, bottom = 12.dp)
 //                .fillMaxSize()
         ) {
@@ -572,7 +574,7 @@ fun BasePartOnePage(
     ) {
         Column(
             modifier = Modifier
-                .background(Color.Gray)
+//                .background(Color.Gray)
                 .padding(start = 6.dp, end = 6.dp, top = 12.dp, bottom = 12.dp)
 //                .fillMaxSize()
         ) {

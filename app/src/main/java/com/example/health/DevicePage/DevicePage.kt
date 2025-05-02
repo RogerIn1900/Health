@@ -73,6 +73,7 @@ fun PartDevice() {
         )
         Column(
             modifier = Modifier.weight(1.2f)
+                .padding(end = 12.dp)
 
         ) {
             Row {
