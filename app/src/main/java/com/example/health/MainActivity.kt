@@ -1,13 +1,22 @@
 package com.example.health
 
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import com.example.compose.example.MainApp
@@ -17,6 +26,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+
 
         // 关键设置：让内容延伸到系统栏后面
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -66,12 +77,32 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//获取主题颜色
+@Composable
+fun isSystemDarkMode(): Boolean {
+    val configuration = LocalContext.current.resources.configuration
+    return when (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+        Configuration.UI_MODE_NIGHT_YES -> true
+        Configuration.UI_MODE_NIGHT_NO -> false
+        else -> false // 默认浅色
+    }
+}
+
+@Composable
+fun isSystemLightMode(): Boolean{
+    val configuration = LocalContext.current.resources.configuration
+    return when (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK){
+        Configuration.UI_MODE_NIGHT_YES -> false
+        Configuration.UI_MODE_NIGHT_NO -> true
+        else -> false
+    }
+}
+
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+    if (isSystemDarkMode()){
+
+    }
 }
 
 @Preview(showBackground = true)

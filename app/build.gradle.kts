@@ -85,6 +85,7 @@ dependencies {
 
     //类转String
     implementation("com.google.code.gson:gson:2.8.9")
+    implementation(libs.cronet.embedded)
     //数据库
     val room_version = "2.6.0"
     implementation("androidx.room:room-runtime:$room_version")

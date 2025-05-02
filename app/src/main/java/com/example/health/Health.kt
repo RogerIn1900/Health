@@ -37,6 +37,10 @@ import com.example.health.TopDesign.CaloriesPageDateViewTop
 import com.example.health.TopDesign.CaloriesPageTop
 import com.example.health.TopDesign.HomeTop
 import com.example.health.TopDesign.vitalityTop
+import com.example.health.isSystemDarkMode
+import com.example.health.ui.theme.HealthTheme
+import com.example.health.ui.theme.darkBackgroundColor
+import com.example.health.ui.theme.lightBackgroundColor
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,67 +58,72 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
 //    val isBottomVisible by viewModel.isBottomVisible.collectAsState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val title :String = when (currentRoute){
+    val title: String = when (currentRoute) {
         Screen.Health.route -> stringResource(id = R.string.health)
-        Screen.Move.route  ->  stringResource(id = R.string.move)
-        Screen.Service.route  ->  stringResource(id = R.string.service)
-        Screen.Mine.route  ->  stringResource(id = R.string.mine)
+        Screen.Move.route -> stringResource(id = R.string.move)
+        Screen.Service.route -> stringResource(id = R.string.service)
+        Screen.Mine.route -> stringResource(id = R.string.mine)
         else -> "Unknown"
     }
-    val isBottomBarVisible = when (currentRoute){
+    val isBottomBarVisible = when (currentRoute) {
         Screen.Health.route -> true
-        Screen.Move.route  -> true
-        Screen.Service.route  ->  true
-        Screen.Mine.route  ->  true
-        Screen.CaloriesPage.route  ->  "CaloriesPage"
+        Screen.Move.route -> true
+        Screen.Service.route -> true
+        Screen.Mine.route -> true
+        Screen.CaloriesPage.route -> "CaloriesPage"
         else -> false
     }
-    val isTopBarVisible = when (currentRoute){
+    val isTopBarVisible = when (currentRoute) {
         Screen.Health.route -> true
-        Screen.Move.route  -> true
-        Screen.Service.route  ->  true
-        Screen.Mine.route  ->  true
-        Screen.CaloriesPage.route  ->  "CaloriesPage"
-        Screen.CaloriesPageDateView.route  ->  "CaloriesPageDateView"
+        Screen.Move.route -> true
+        Screen.Service.route -> true
+        Screen.Mine.route -> true
+        Screen.CaloriesPage.route -> "CaloriesPage"
+        Screen.CaloriesPageDateView.route -> "CaloriesPageDateView"
         else -> false
     }
 
 
-    Scaffold(
-        topBar = {
+    HealthTheme {
+        Scaffold(
+            topBar = {
 //            TopAppBar(title = { Text(title.toString()) })
 //            HomeTop(title)
-            if(isTopBarVisible == true){
+                if (isTopBarVisible == true) {
 
+                }
+                when (isTopBarVisible) {
+                    true -> {
+                        HomeTop(title)
+                    }
+
+                    false -> {
+                        //活力Top测试
+                        vitalityTop(navController)
+                    }
+
+                    "CaloriesPage" -> {
+                        CaloriesPageTop(navController)
+                    }
+
+                    "CaloriesPageDateView" -> {
+                        CaloriesPageDateViewTop(navController)
+                    }
+                }
+
+
+            },
+            bottomBar = {
+                if (isBottomBarVisible == true) BottomNavigationBar(navController)
             }
-            when(isTopBarVisible){
-                true -> {
-                    HomeTop(title)
-                }
-                false -> {
-                    //活力Top测试
-                    vitalityTop(navController)
-                }
-                "CaloriesPage" ->{
-                    CaloriesPageTop(navController)
-                }
-                "CaloriesPageDateView" ->{
-                    CaloriesPageDateViewTop(navController)
-                }
-            }
-
-
-                 },
-        bottomBar = {
-            if (isBottomBarVisible == true)BottomNavigationBar(navController)
-        }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = Screen.Health.route,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(Screen.Health.route,
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Health.route,
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable(
+                    Screen.Health.route,
 //                enterTransition = {
 //                    slideInHorizontally(animationSpec = tween(300)) { fullWidth ->
 //                        fullWidth  // 从右侧滑入
@@ -134,21 +143,19 @@ fun MainApp(viewModel: MainViewModel = MainViewModel()) {
 //                    } + fadeOut(animationSpec = tween(300))
 //                }
 
-            )
-            { MyHealth(navController) }
+                )
+                { MyHealth(navController) }
 
-            navMap(navController)
-
-
-
+                navMap(navController)
 
 
 // 2. 跳转时传递参数
 //            navController.navigate("detail_screen/123")
+            }
         }
     }
-}
 
+}
 
 
 @Composable
@@ -180,8 +187,16 @@ fun BottomNavigationBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+
+    //跟随系统会一直紫色，就通过主题判断
+    val backgroundColor = if(isSystemDarkMode()){
+        darkBackgroundColor
+    }else{
+        lightBackgroundColor
+    }
+
     BottomNavigation(
-        backgroundColor = MaterialTheme.colors.background,
+        backgroundColor = backgroundColor,
         elevation = 10.dp
     ) {
         items.forEach { screen ->
@@ -260,19 +275,63 @@ fun SettingsScreen() {
     }
 }
 
-sealed class Screen(val route: String, val resourceId: Int, val icon: ImageVector,selectedIcon :Int ,unselectedIcon :Int) {
-    object Health : Screen("health", R.string.health_c, Icons.Default.Home,R.mipmap.health_orange,R.mipmap.health_gray)
-    object Move : Screen("move", R.string.move_c, Icons.Default.Search,R.mipmap.move_orange,R.mipmap.move_gray)
-    object Service : Screen("service", R.string.service_c, Icons.Default.Person,R.mipmap.device_orange,R.mipmap.device_gray)
-    object Mine : Screen("mine", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
+sealed class Screen(
+    val route: String,
+    val resourceId: Int,
+    val icon: ImageVector,
+    selectedIcon: Int,
+    unselectedIcon: Int
+) {
+    object Health : Screen(
+        "health",
+        R.string.health_c,
+        Icons.Default.Home,
+        R.mipmap.health_orange,
+        R.mipmap.health_gray
+    )
+
+    object Move : Screen(
+        "move",
+        R.string.move_c,
+        Icons.Default.Search,
+        R.mipmap.move_orange,
+        R.mipmap.move_gray
+    )
+
+    object Service : Screen(
+        "service",
+        R.string.service_c,
+        Icons.Default.Person,
+        R.mipmap.device_orange,
+        R.mipmap.device_gray
+    )
+
+    object Mine : Screen(
+        "mine",
+        R.string.mine_c,
+        Icons.Default.Settings,
+        R.mipmap.mine_orange,
+        R.mipmap.mine_gray
+    )
 
     //health的子页面
-    object CaloriesPage : Screen("CaloriesPage", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
-    object CaloriesPageDateView : Screen("CaloriesPageDateView", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
+    object CaloriesPage : Screen(
+        "CaloriesPage",
+        R.string.mine_c,
+        Icons.Default.Settings,
+        R.mipmap.mine_orange,
+        R.mipmap.mine_gray
+    )
+
+    object CaloriesPageDateView : Screen(
+        "CaloriesPageDateView",
+        R.string.mine_c,
+        Icons.Default.Settings,
+        R.mipmap.mine_orange,
+        R.mipmap.mine_gray
+    )
     //object Vitality : Screen("mine", R.string.mine_c, Icons.Default.Settings,R.mipmap.mine_orange,R.mipmap.mine_gray)
 }
-
-
 
 
 @Preview

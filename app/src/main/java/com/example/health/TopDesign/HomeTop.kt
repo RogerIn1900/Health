@@ -3,16 +3,14 @@ package com.example.health.TopDesign
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material3.Surface
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -38,8 +36,11 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.ImageFormat
+import android.graphics.drawable.Icon
 import android.net.Uri
 import android.util.Log
 import android.util.Size
@@ -61,13 +62,22 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.geometry.Offset
@@ -75,12 +85,15 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.compose.rememberNavController
+import com.example.health.R
+import com.example.health.isSystemDarkMode
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -88,6 +101,7 @@ import com.google.zxing.BinaryBitmap
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.common.HybridBinarizer
+import org.chromium.base.Callback
 import java.io.IOException
 import java.util.UUID
 import java.util.concurrent.ExecutorService
@@ -103,6 +117,8 @@ fun HomeTop(title: String) {
 //    val context = LocalContext.current
 //    context.startActivity(intent)
 
+
+
     rememberNavController()
     TopAppBar(
         title = { Text(title.toString()) },
@@ -114,7 +130,7 @@ fun HomeTop(title: String) {
 
 //右上角的展开按钮
 @Composable
-fun DropdownMenuButton() {
+fun DropdownMenuButton(isLightTheme : Boolean = true) {
     var showDialog by remember { mutableStateOf(false) }
     //扫一扫
     var isScanning by remember { mutableStateOf(false) }
@@ -123,10 +139,20 @@ fun DropdownMenuButton() {
     var isBluetooth by remember { mutableStateOf(false) }
 
     IconButton(onClick = { showDialog = true }) {
-        Icon(Icons.Default.AddCircle,
-            contentDescription = "更多选项",
-            modifier = Modifier.size(36.dp)
-        )
+        if (!isSystemDarkMode()){
+            Image(
+                painter = painterResource(R.drawable.baseline_add_circle_outline_black_24),
+                contentDescription = "更多选项",
+                modifier = Modifier.size(36.dp)
+            )
+        }else{
+            Image(
+                painter = painterResource(R.drawable.baseline_add_circle_outline_white_24),
+                contentDescription = "更多选项",
+                modifier = Modifier.size(36.dp)
+            )
+        }
+
     }
 
     // 显示对话框
@@ -141,6 +167,7 @@ fun DropdownMenuButton() {
                         shape = RoundedCornerShape(30.dp)
                     )
             ){
+
                 Surface(
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
@@ -151,41 +178,40 @@ fun DropdownMenuButton() {
                             color = Color.Unspecified,
                             shape = RoundedCornerShape(30.dp)
                         )
+                        .width(200.dp)
+                        .height(100.dp)
                 ) {
                     Column(
                         modifier = Modifier
-                            .background(Color.White),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                            .fillMaxSize(),
+//                            .background(Color.White),
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
 
                         //蓝牙添加设备
-                        Button(
-                            colors = ButtonDefaults.buttonColors(Color.White),
+                        TextButton(
+//                            colors = ButtonDefaults.buttonColors(Color.White),
                             onClick = {
                                 showDialog = false
                                 isBluetooth = true
                             },
                             modifier = Modifier
-                                .width(200.dp)
-
-                            ,
+                                .fillMaxWidth()
                         ) {
                             Text("添加设备")
                         }
                         //使用相机扫一扫
-                        Button(
-                            colors = ButtonDefaults.buttonColors(Color.White),
+                        TextButton(
                             onClick = {
                                 showDialog = false
                                 isScanning = true
                             },
-                            modifier = Modifier
-                                .width(200.dp)
-                                .background(Color.White)
-
-                        ) {
+                            modifier = Modifier.fillMaxWidth()
+                        ){
                             Text("扫一扫")
                         }
+
 
                     }
                 }
