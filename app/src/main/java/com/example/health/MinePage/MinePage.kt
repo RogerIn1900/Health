@@ -50,7 +50,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -60,9 +59,7 @@ import com.example.health.ui.theme.HealthTheme
 
 
 @Composable
-fun MinePage(
-    navController : NavController
-){
+fun MinePage(){
     HealthTheme {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
@@ -70,7 +67,7 @@ fun MinePage(
             verticalArrangement = Arrangement.spacedBy(10.dp) // Add space between items
         ){
             item {
-                MinePart1(navController = navController)
+                MinePart1()
                 Spacer(modifier = Modifier.height(10.dp))
                 MinePart2(modifier = Modifier.fillMaxWidth())
                 Spacer(modifier = Modifier.height(10.dp))
@@ -99,21 +96,14 @@ fun MinePage(
 
 
 @Composable
-fun MinePart1(
-    navController: NavController
-) {
+fun MinePart1() {
 //    TODO("Mine information")
     val name:String ="deepseek";
     val sex:String = "男"
     val height  = 180
     val age = 18
 
-    Row(
-        modifier = Modifier
-            .clickable {
-                navController.navigate("login")
-            }
-    ){
+    Row(){
         Image(
             painter = painterResource(id = R.mipmap.stand),
             contentDescription = "nothing",
@@ -780,7 +770,7 @@ fun PreviewMinePage() {
         Column {
 //        MinePart1()
 //        MinePart2()
-//            MinePage()
+            MinePage()
 //        MinePart6()
         }
     }
