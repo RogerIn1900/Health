@@ -1,26 +1,16 @@
 package com.example.health
 
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import com.example.compose.example.MainApp
-import com.example.health.ui.theme.HealthTheme
+import com.example.health.ui.theme.DormitoryTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            HealthTheme {
+            DormitoryTheme {
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 //                    Greeting(
 //                        name = "Android",
@@ -46,35 +36,35 @@ class MainActivity : ComponentActivity() {
         }
         Toast.makeText(this,"onCreate",Toast.LENGTH_SHORT).show()
     }
-
-    override fun onStart() {
-        super.onStart()
-        Toast.makeText(this,"onStart",Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Toast.makeText(this,"onResume",Toast.LENGTH_SHORT).show()
-    }
-
-
-
-
-    override fun onPause() {
-        super.onPause()
-        Toast.makeText(this,"onPause",Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Toast.makeText(this,"onStop",Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroy(){
-        super.onDestroy()
-        Toast.makeText(this,"onDestroy",Toast.LENGTH_SHORT).show()
-
-    }
+//
+//    override fun onStart() {
+//        super.onStart()
+//        Toast.makeText(this,"onStart",Toast.LENGTH_SHORT).show()
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        Toast.makeText(this,"onResume",Toast.LENGTH_SHORT).show()
+//    }
+//
+//
+//
+//
+//    override fun onPause() {
+//        super.onPause()
+//        Toast.makeText(this,"onPause",Toast.LENGTH_SHORT).show()
+//    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        Toast.makeText(this,"onStop",Toast.LENGTH_SHORT).show()
+//    }
+//
+//    override fun onDestroy(){
+//        super.onDestroy()
+//        Toast.makeText(this,"onDestroy",Toast.LENGTH_SHORT).show()
+//
+//    }
 }
 
 //获取主题颜色
@@ -95,20 +85,5 @@ fun isSystemLightMode(): Boolean{
         Configuration.UI_MODE_NIGHT_YES -> false
         Configuration.UI_MODE_NIGHT_NO -> true
         else -> false
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    if (isSystemDarkMode()){
-
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    HealthTheme {
-        Greeting("Android")
     }
 }

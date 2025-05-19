@@ -86,6 +86,7 @@ dependencies {
     //类转String
     implementation("com.google.code.gson:gson:2.8.9")
     implementation(libs.cronet.embedded)
+    implementation(libs.androidx.espresso.core)
     //数据库
     val room_version = "2.6.0"
     implementation("androidx.room:room-runtime:$room_version")
@@ -145,6 +146,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
+
     androidTestImplementation ("androidx.navigation:navigation-testing:$rootProject.composeNavigationVersion")
 
     implementation(libs.androidx.core.ktx)

@@ -124,9 +124,9 @@ fun navBar() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val title :String = when (currentRoute){
-        Screen.Health.route -> stringResource(id = R.string.health)
-        Screen.Move.route  ->  stringResource(id = R.string.move)
-        Screen.Service.route  ->  stringResource(id = R.string.service)
+        Screen.Dormitory.route -> stringResource(id = R.string.dormitory)
+        Screen.Rest02.route  ->  stringResource(id = R.string.maintenance)
+        Screen.NoticeBoardScreen.route  ->  stringResource(id = R.string.NoticeBoardScreen)
         Screen.Mine.route  ->  stringResource(id = R.string.mine)
         else -> "Unknown"
     }
