@@ -24,11 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.health.ui.theme.DormitoryTheme
 import com.example.health.ui.theme.md_theme_dark_primary
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController:NavHostController) {
     // 假数据
     val student = remember {
         mutableStateOf(
@@ -55,7 +56,10 @@ fun ProfileScreen() {
                 Spacer(modifier = Modifier.height(8.dp))
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Button(onClick = { }) {
+            Button(onClick = {
+                navController.popBackStack()
+
+            }) {
                 Text("返回")
             }
         }
@@ -203,7 +207,7 @@ fun HomeScreen() {
 }
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(navController:NavHostController) {
     var no by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -237,7 +241,10 @@ fun RegisterScreen() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { },
+            onClick = {
+                navController.popBackStack()
+
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("注册")
@@ -249,7 +256,7 @@ fun RegisterScreen() {
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController:NavHostController) {
     var no by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     DormitoryTheme(){
@@ -285,7 +292,9 @@ fun LoginScreen() {
             ) {
                 Text("登录")
             }
-            TextButton(onClick = {  },
+            TextButton(onClick = {
+                navController.popBackStack()
+            },
                 modifier = Modifier.background(md_theme_dark_primary)
 
             ) {
@@ -300,5 +309,5 @@ fun LoginScreen() {
 @Preview
 @Composable
 fun preview(){
-    ProfileScreen()
+//    ProfileScreen(navController)
 }

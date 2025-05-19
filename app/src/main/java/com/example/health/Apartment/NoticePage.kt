@@ -10,19 +10,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.health.Apartment.Client.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -84,9 +78,9 @@ private fun NoticeItem(notice: Notice) {
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = notice.title, style = MaterialTheme.typography.h1)
+            Text(text = notice.title, style = MaterialTheme.typography.h4)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = notice.content, style = MaterialTheme.typography.h2)
+            Text(text = notice.content, style = MaterialTheme.typography.body1)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "发布时间: ${notice.createTime}",

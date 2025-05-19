@@ -22,15 +22,15 @@ fun NavGraphBuilder.navMap(navController: NavHostController){
     composable(Screen.NoticeBoardScreen.route) { NoticeBoardScreen() }
     composable(Screen.Mine.route) { MinePage(navController) }
     //剩余的主要页面
-    composable(Screen.STUDENT_INFO.route) { ProfileScreen() }
-    composable(Screen.ADMIN_INFO.route) { ProfileScreen() }
+    composable(Screen.STUDENT_INFO.route) { ProfileScreen(navController) }
+    composable(Screen.ADMIN_INFO.route) { ProfileScreen(navController) }
     composable(Screen.HYGIENE_CHECK.route) { NoticeBoardScreen() }
     //其他页面
     composable(Screen.DormitoryInfoScreen.route) { DormitoryInfoScreen() }
     composable(Screen.MaintenanceListScreen.route) { MaintenanceListScreen() }
     composable(Screen.MaintenanceApplyScreen.route) { MaintenanceApplyScreen() }
-    composable(Screen.RegisterScreen.route) { RegisterScreen() }
-    composable(Screen.LoginScreen.route) { LoginScreen() }
+    composable(Screen.RegisterScreen.route) { RegisterScreen(navController) }
+    composable(Screen.LoginScreen.route) { LoginScreen(navController) }
     composable(Screen.Rest01.route) { NoticeBoardScreen() }
     composable(Screen.Rest02.route) { DormitoryMaintenanceScreen() }
 
