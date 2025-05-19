@@ -33,4 +33,5 @@ fun NavGraphBuilder.navMap(navController: NavHostController){
     composable(Screen.LoginScreen.route) { LoginScreen() }
     composable(Screen.Rest01.route) { NoticeBoardScreen() }
     composable(Screen.Rest02.route) { DormitoryMaintenanceScreen() }
+
 }
