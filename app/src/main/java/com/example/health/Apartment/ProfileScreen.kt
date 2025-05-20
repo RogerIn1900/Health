@@ -96,7 +96,7 @@ fun DormitoryInfoScreen() {
 }
 
 @Composable
-fun MaintenanceListScreen() {
+fun MaintenanceListScreen(navController:NavHostController) {
     // 假数据
     val records = listOf(
         "2024-05-01 水龙头漏水（处理中）",
@@ -122,7 +122,10 @@ fun MaintenanceListScreen() {
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-        Button(onClick = {  }) {
+        Button(onClick = {
+            navController.popBackStack()
+
+        }) {
             Text("返回")
         }
     }
@@ -160,7 +163,9 @@ fun MaintenanceApplyScreen() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = {  },
+            onClick = {
+
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("提交")
@@ -249,7 +254,9 @@ fun RegisterScreen(navController:NavHostController) {
         ) {
             Text("注册")
         }
-        TextButton(onClick = { }) {
+        TextButton(onClick = {
+
+        }) {
             Text("返回登录")
         }
     }

@@ -27,7 +27,7 @@ fun NavGraphBuilder.navMap(navController: NavHostController){
     composable(Screen.HYGIENE_CHECK.route) { NoticeBoardScreen() }
     //其他页面
     composable(Screen.DormitoryInfoScreen.route) { DormitoryInfoScreen() }
-    composable(Screen.MaintenanceListScreen.route) { MaintenanceListScreen() }
+    composable(Screen.MaintenanceListScreen.route) { MaintenanceListScreen(navController) }
     composable(Screen.MaintenanceApplyScreen.route) { MaintenanceApplyScreen() }
     composable(Screen.RegisterScreen.route) { RegisterScreen(navController) }
     composable(Screen.LoginScreen.route) { LoginScreen(navController) }
