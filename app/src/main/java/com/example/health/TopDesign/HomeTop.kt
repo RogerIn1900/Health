@@ -459,146 +459,14 @@ fun ScanQRCodeScreen(
 }
 
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraPermission(onScanResult: (String) -> Unit) {
-    val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
-    if (permissionState.status.isGranted) {
-        CameraScanner(onScanResult)
-    } else {
-        LaunchedEffect(Unit) {
-            permissionState.launchPermissionRequest()
-        }
-    }
+    com.example.health.feature.scan.ScannerScreen { onScanResult(it.text) }
 }
-
 
 @Composable
 fun CameraScanner(onScanResult: (String) -> Unit) {
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val navController = rememberNavController()
-    AndroidView(
-        modifier = Modifier.fillMaxSize(),
-        factory = { ctx ->
-            val previewView = PreviewView(ctx)
-            val cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
-            val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
-
-            cameraProviderFuture.addListener({
-                val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-                val preview = Preview.Builder().build().also {
-                    it.setSurfaceProvider(previewView.surfaceProvider)
-                }
-
-                val imageAnalysis = ImageAnalysis.Builder()
-                    .setTargetResolution(Size(640, 480))
-                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                    .build()
-                    .also {
-                        it.setAnalyzer(cameraExecutor, QRCodeAnalyzer { qrCode ->
-                            // 处理扫描到的二维码信息
-//                            println("Scanned QR Code: $qrCode")
-                            Log.d("MainActivity","Scanned QR Code: $qrCode\"")
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(qrCode))
-                            context.startActivity(intent)
-
-//                            onScanResult(qrCode) // 将扫描结果传递给回调
-                        })
-                    }
-
-                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-                try {
-                    cameraProvider.unbindAll()
-                    cameraProvider.bindToLifecycle(
-                        lifecycleOwner,
-                        cameraSelector,
-                        preview,
-                        imageAnalysis
-                    )
-                } catch (exc: Exception) {
-                    exc.printStackTrace()
-                }
-            }, ContextCompat.getMainExecutor(ctx))
-
-            previewView
-        }
-    )
-}
-
-
-class QRCodeAnalyzer(private val onQrCodeScanned: (String) -> Unit) : ImageAnalysis.Analyzer {
-    private val reader = MultiFormatReader()
-
-    @ExperimentalGetImage
-    override fun analyze(image: ImageProxy) {
-        val mediaImage = image.image
-        if (mediaImage != null && image.format == ImageFormat.YUV_420_888) {
-            val rotationDegrees = image.imageInfo.rotationDegrees
-            val source = getLuminanceSource(mediaImage, rotationDegrees)
-            val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
-
-            try {
-                val result = reader.decode(binaryBitmap)
-                onQrCodeScanned(result.text)
-            } catch (e: Exception) {
-                // 解码失败
-            } finally {
-                image.close()
-            }
-        }
-    }
-
-    private fun getLuminanceSource(
-        image: android.media.Image,
-        rotationDegrees: Int
-    ): PlanarYUVLuminanceSource {
-        val yBuffer = image.planes[0].buffer
-        val uBuffer = image.planes[1].buffer
-        val vBuffer = image.planes[2].buffer
-        val ySize = yBuffer.remaining()
-        val uSize = uBuffer.remaining()
-        val vSize = vBuffer.remaining()
-
-        val nv21 = ByteArray(ySize + uSize + vSize)
-        // U and V are swapped
-        yBuffer.get(nv21, 0, ySize)
-        vBuffer.get(nv21, ySize, vSize)
-        uBuffer.get(nv21, ySize + vSize, uSize)
-
-        val width = image.width
-        val height = image.height
-
-        var rotatedWidth = width
-        var rotatedHeight = height
-        var data = nv21
-        if (rotationDegrees == Surface.ROTATION_90 || rotationDegrees == Surface.ROTATION_270) {
-            rotatedWidth = height
-            rotatedHeight = width
-            data = ByteArray(nv21.size)
-            for (y in 0 until height) {
-                for (x in 0 until width) {
-                    if (rotationDegrees == Surface.ROTATION_90) {
-                        data[x * height + height - y - 1] = nv21[x + y * width]
-                    } else if (rotationDegrees == Surface.ROTATION_270) {
-                        data[(width - x - 1) * height + y] = nv21[x + y * width]
-                    }
-                }
-            }
-        }
-
-        return PlanarYUVLuminanceSource(
-            data,
-            rotatedWidth,
-            rotatedHeight,
-            0,
-            0,
-            rotatedWidth,
-            rotatedHeight,
-            false
-        )
-    }
+    com.example.health.feature.scan.ScannerScreen { onScanResult(it.text) }
 }
 
 //蓝牙功能
