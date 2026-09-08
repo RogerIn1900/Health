@@ -8,7 +8,7 @@ plugins {
 }
 
 ksp {
-    arg("option_name", "option_value")
+    arg("room.schemaLocation", "$projectDir/schemas")
     // other options...
 }
 
