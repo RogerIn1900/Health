@@ -16,55 +16,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-
-
-        // 关键设置：让内容延伸到系统栏后面
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-
-        setContent {
-            DormitoryTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-//                }
-                MainApp()
-            }
-        }
-        Toast.makeText(this,"onCreate",Toast.LENGTH_SHORT).show()
+        setContent { com.example.health.feature.HealthRoot() }
     }
-//
-//    override fun onStart() {
-//        super.onStart()
-//        Toast.makeText(this,"onStart",Toast.LENGTH_SHORT).show()
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        Toast.makeText(this,"onResume",Toast.LENGTH_SHORT).show()
-//    }
-//
-//
-//
-//
-//    override fun onPause() {
-//        super.onPause()
-//        Toast.makeText(this,"onPause",Toast.LENGTH_SHORT).show()
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        Toast.makeText(this,"onStop",Toast.LENGTH_SHORT).show()
-//    }
-//
-//    override fun onDestroy(){
-//        super.onDestroy()
-//        Toast.makeText(this,"onDestroy",Toast.LENGTH_SHORT).show()
-//
-//    }
 }
 
 //获取主题颜色
