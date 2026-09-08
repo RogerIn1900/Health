@@ -147,7 +147,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
 
-    androidTestImplementation ("androidx.navigation:navigation-testing:$rootProject.composeNavigationVersion")
+    androidTestImplementation("androidx.navigation:navigation-testing:${libs.versions.navigationCompose.get()}")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
