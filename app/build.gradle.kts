@@ -86,7 +86,6 @@ dependencies {
     //类转String
     implementation("com.google.code.gson:gson:2.8.9")
     implementation(libs.cronet.embedded)
-    implementation(libs.androidx.espresso.core)
     //数据库
     val room_version = "2.6.0"
     implementation("androidx.room:room-runtime:$room_version")
@@ -140,7 +139,6 @@ dependencies {
     implementation ("androidx.compose.material3:material3:1.2.0") // 使用最新版本
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.android)
-    implementation(libs.androidx.ui.test.android)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
